@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8080', 'http://127.0.0.1:3000', 'http://localhost:3000']
 
 
 # Application definition
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'library',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 
@@ -163,8 +166,18 @@ LOGOUT_REDIRECT_URL = '/'       # Redirect the page when the users log out
 LOGIN_URL = '/login/'       # Login URL
 
 # REST Framework settings
-REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.AllowAny']}
+REST_FRAMEWORK = {
+     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+      ],
+}
+
+SIMPLE_JWT = {
+     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+     'ROTATE_REFRESH_TOKENS': True,
+     'BLACKLIST_AFTER_ROTATION': True
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
 
