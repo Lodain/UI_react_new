@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React from 'react';
+import Navbar from './Navbar';
 class App extends React.Component {
   state = {details: [],}
 
@@ -18,6 +19,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Navbar user={this.state.user} />
         <h1>Library Management System</h1>
         {this.state.details.map((output, id) => (
           <div key={id}>
