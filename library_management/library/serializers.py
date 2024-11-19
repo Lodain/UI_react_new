@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book, Author, Genre, Review, LendedBook, Wishlist
+from .models import *
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):

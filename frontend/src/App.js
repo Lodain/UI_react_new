@@ -1,11 +1,11 @@
 import axios from 'axios';
-
+import React from 'react';
 class App extends React.Component {
   state = {details: [],}
 
   componentDidMount() {
     let data;
-    axios.get('http://127.0.0.1:8080/api/books/')
+    axios.get('http://127.0.0.1:8080')
     .then(res => {
       data = res.data;
       this.setState({details: data});
@@ -19,6 +19,12 @@ class App extends React.Component {
     return (
       <div>
         <h1>Library Management System</h1>
+        {this.state.details.map((output, id) => (
+          <div key={id}>
+            <h1>{output.title}</h1>
+            <p>Authors: {output.authors.join(', ')}</p>
+          </div>
+        ))}
       </div>
     );
   }
