@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Library Management</title>
+            {% load static %}
+            <link rel="stylesheet" href="{% static 'css/homeStyle.css' %}">
+        </head>
+        <body>
+            <nav class="top-right-buttons">                
+                {% if user.is_staff %}
+                <button onclick="location.href='{% url 'librarian' %}'">Librarian</button>
+                {% endif%}
+                {% if user.is_superuser and user.is_staff %}
+                    <button onclick="location.href='{% url 'admin:index' %}'">Admin Page</button>
+                    <button onclick="location.href='{% url 'home' %}'">Home</button>
+                    <button onclick="location.href='{% url 'borrow' %}'">Borrow</button>
+                    <button onclick="location.href='{% url 'account' %}'">Account</button>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% elif user.is_authenticated %}
+                    <button onclick="location.href='{% url 'home' %}'">Home</button>
+                    <button onclick="location.href='{% url 'borrow' %}'">Borrow</button>
+                    <button onclick="location.href='{% url 'account' %}'">Account</button>
+                    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                <button onclick="location.href='{% url 'home' %}'">Home</button>
+                <button onclick="location.href='{% url 'register' %}'">Register</button>
+                <button onclick="location.href='{% url 'login' %}'">Login</button>
+                {% endif %}
+            </nav>
+        </body>
+    </html>

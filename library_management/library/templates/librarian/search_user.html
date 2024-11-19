@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+</head>
+<body>
+    {% include 'library/navbar.html' %}
+    <h2>Search Results</h2>
+    {% if query %}
+        <p>Showing results for: "{{ query }}"</p>
+    {% endif %}
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Booked By</th>
+                <th>Number</th>
+                <th>Booking Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.book.title }}</td>
+                <td>
+                    {% for author in book.book.authors.all %}
+                        {{ author.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ book.book.isbn }}</td>
+                <td>{{ book.user.username }}</td>
+                <td>{{ book.number }}</td>
+                <td>{{ book.borrowed_on }}</td>
+                <td>
+                    <form method="post" action="{% url 'return_book' book.book.isbn book.user.username %}">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" min="1" max="{{ book.number }}" value="1">
+                        <button type="submit">Return Book</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No books found matching your search criteria.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="{% url 'librarian' %}">Back to Librarian Dashboard</a>
+</body>
+</html>

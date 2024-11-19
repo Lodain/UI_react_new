@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/homeStyle.css' %}">
+</head>
+<body>
+    {% include 'library/navbar.html' %}
+    <h1>Account of {{ request.user.username }}</h1>
+    <p><b>Name:</b> {{request.user.first_name}}</p>
+    <p><b>Surname</b> {{request.user.last_name}}</p>
+    <p><b>Email:</b> {{request.user.email}}</p>
+    <p><a href="{% url 'change_password' %}">Change Password</a></p>
+
+    
+    <h3>List of borrowed books:</h3>
+        <ul>
+            {% for record in lended_books %}
+                <li>
+                    <b>Title:</b> {{ record.book.title }}<br>
+                    <b>Author:</b>
+                    
+                    {% for author in record.book.authors.all %}
+                        {{ author.name }} {% if not forloop.last %}, {% endif %}
+                    {% endfor %}<br>
+
+                    <b>ISBN:</b> {{ record.book.isbn }}<br>
+                    <b>Quantity:</b> {{ record.number }}<br>
+                    <b>Borrowing date:</b> {{ record.borrowed_on|date:"d/m/Y" }}<br>
+                    <b>Due Date:</b> {{ record.return_on|date:"d/m/Y" }}<br>
+                </li>
+            {% empty %}
+                <p>No borrowed books found.</p>
+            {% endfor %}
+        </ul>
+    <h3>Wishlist:</h3>
+    <ul>
+        {% for record in wishlist %}
+            <li>
+                <b>Title:</b> {{ record.book.title }}<br>
+                <b>Author:</b>
+                
+                {% for author in record.book.authors.all %}
+                    {{ author.name }} {% if not forloop.last %}, {% endif %}
+                {% endfor %}<br>
+
+                <b>ISBN:</b> {{ record.book.isbn }}<br>
+            </li>
+        {% empty %}
+            <p>No books in wishlist.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

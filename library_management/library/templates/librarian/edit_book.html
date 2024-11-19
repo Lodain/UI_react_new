@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Book</title>
+</head>
+<body>
+    {% include 'library/navbar.html' %}
+    <h1>Edit Book - {{ book.title }}</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+    
+    <!-- Delete Button -->
+    <form method="post" action="{% url 'delete_book' book.isbn %}" style="margin-top: 10px;">
+        {% csrf_token %}
+        <button type="submit" style="color: red;">Delete Book</button>
+    </form>
+    
+    <a href="{% url 'librarian' %}">Back to Librarian Dashboard</a>
+</body>
+</html>

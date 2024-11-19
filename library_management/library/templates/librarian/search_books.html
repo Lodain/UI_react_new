@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Books to Edit</title>
+</head>
+<body>
+    {% include 'library/navbar.html' %}
+    <h1>Search Books to Edit</h1>
+    <form method="get" action="{% url 'search_books_for_edit' %}" style="text-align: left; display: block;">
+        <input type="text" name="query" placeholder="Search by title or ISBN for editing">
+        <button type="submit">Search</button>
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>ISBN</th>
+                <th>Copies</th>
+                <th>Lended Copies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ book.title }}</td>
+                <td>{% for author in book.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                <td>{{ book.year }}</td>
+                <td>{{ book.isbn }}</td>
+                <td>{{ book.copies }}</td>
+                <td>{{ book.lended }}</td>
+                <td><a href="{% url 'edit_book' book.isbn %}">Edit</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">No books found.</td></trs>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'librarian' %}">Back to Librarian Dashboard</a>
+</body>
+</html>

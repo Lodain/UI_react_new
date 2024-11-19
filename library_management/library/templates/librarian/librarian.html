@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Librarian Dashboard</title>
+</head>
+<body>
+    {% include 'library/navbar.html' %}
+    <h1>Librarian Dashboard</h1>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Search Books to Edit</h2>
+    <form method="get" action="{% url 'search_books_for_edit' %}" style="text-align: left; display: block;">
+        <input type="text" name="query" placeholder="Search by title or ISBN for editing">
+        <button type="submit">Search</button>
+    </form>
+    <h2>All Booked Books</h2>
+    <form method="get" action="{% url 'search_user_books' %}" style="text-align: left; display: block;">
+        <input type="text" name="query" placeholder="Search by username or book title:">
+        <button type="submit">Search</button>
+    </form>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Booked By</th>
+                <th>Number</th>
+                <th>Booking Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in borrowed_books %}
+            <tr>
+                <td>{{ book.book.title }}</td>
+                <td>{% for author in book.book.authors.all %}{{ author.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                <td>{{ book.user.username }}</td>
+                <td>{{ book.number }}</td>
+                <td>{{ book.borrowed_on }}</td>
+                <td>
+                    <form method="post" action="{% url 'return_book' book.book.isbn book.user.username %}">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" min="1" max="{{ book.number }}" value="1">
+                        <button type="submit">Return Book</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Add a New Book</h2>
+    <a href="{% url 'add_book' %}">Go to Add Book Form</a>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Return Book Confirmation</title>
+</head>
+<body>
+    {% include 'library/navbar.html' %}
+    <h1>Return Book Confirmation</h1>
+    <p>The book "{{ book.title }}" has been returned successfully.</p>
+    <a href="{% url 'librarian' %}">Back to Librarian Dashboard</a>
+</body>
+</html>

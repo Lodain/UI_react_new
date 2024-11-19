@@ -1,0 +1,24 @@
+# Core Django framework
+# Remember to use Python 3.11.5
+Django==5.1.2
+
+# Environment variable management
+python-decouple==3.8
+
+# PostgreSQL database
+psycopg2-binary==2.9.6
+
+#Email Verification
+django-allauth==65.2.0
+
+#For images
+pillow==11.0.0
+
+#For dates
+python-dateutil==2.9.0
+
+#For REST API   
+djangorestframework==3.14.0
+
+#For Cross-Origin Resource Sharing
+django-cors-headers==4.3.1

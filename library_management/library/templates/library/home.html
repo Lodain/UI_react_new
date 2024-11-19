@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/homeStyle.css' %}">
+</head>
+<body>
+
+    {% include 'library/navbar.html' %}
+        
+    <h1>Library Management System</h1>
+    
+    <h2>Books</h2>
+    <ul>
+        {% for book in books %}
+            <li>
+                <b><a href="{% url 'book_detail' book.title %}">{{ book.title }}</a></b>             
+                by {% for author in book.authors.all %}
+                {{ author.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %} 
+                (ISBN: {{ book.isbn }}, Total copies: {{ book.copies }}, Available copies: {{ book.remaining_copies }})
+            </li>
+    {% endfor %}
+    </ul>
+
+    <h2>Members</h2>
+    <ul>
+        {% for member in members %}
+            <li>(Name: {{ member.first_name }} {{ member.last_name }}, Registered: {{ member.date_joined }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
