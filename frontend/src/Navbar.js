@@ -2,10 +2,11 @@ import './style/Navbar.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Navbar = ({ user, setUser }) => {
+const Navbar = ({ setUser }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [user, setUserState] = useState(null);
 
   const backendURL = 'http://127.0.0.1:8080';
 
@@ -13,7 +14,11 @@ const Navbar = ({ user, setUser }) => {
     const token = localStorage.getItem('access_token');
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser({ username }); // Adjust based on your state management
+      const storedUser = JSON.parse(sessionStorage.getItem('user'));
+      if (storedUser) {
+        setUser(storedUser);
+        setUserState(storedUser);
+      }
     }
   }, [setUser]);
 
@@ -25,8 +30,21 @@ const Navbar = ({ user, setUser }) => {
         localStorage.setItem('access_token', response.data.access);
         localStorage.setItem('refresh_token', response.data.refresh);
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-        setUser({ username }); // Update your user state accordingly
-        setShowLoginModal(false);
+        
+        // Fetch user information
+        axios.post(`${backendURL}/get-user-info/`, { username })
+          .then(userResponse => {
+            const userData = userResponse.data;
+            console.log('User data to be stored:', userData);
+            sessionStorage.setItem('user', JSON.stringify(userData));
+            setUser(userData);
+            setUserState(userData);
+            console.log('User set in session storage:', userData);
+            setShowLoginModal(false);
+          })
+          .catch(error => {
+            console.error('Error fetching user info:', error);
+          });
       })
       .catch(error => {
         console.error('Login error:', error);
@@ -37,9 +55,11 @@ const Navbar = ({ user, setUser }) => {
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('user');
     setUser(null);
+    setUserState(null);
     delete axios.defaults.headers.common['Authorization'];
-    window.location.href = '/login/';
+    window.location.href = '/';
   };
 
   return (

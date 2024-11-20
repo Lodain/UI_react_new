@@ -7,6 +7,12 @@ function App() {
   const [details, setDetails] = useState([]);
 
   useEffect(() => {
+    // Check if user information is stored in session storage
+    const storedUser = JSON.parse(sessionStorage.getItem('user'));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+
     axiosInstance.get('/')
       .then(res => {
         setDetails(res.data);
@@ -20,6 +26,7 @@ function App() {
     <div>
       <Navbar user={user} setUser={setUser} />
       <h1>Library Management System</h1>
+      {user && <h2>Welcome back, {user.username}!</h2>}
       {details.map((output, id) => (
         <div key={id}>
           <h2>{output.title}</h2>
