@@ -1,5 +1,5 @@
 import './style/Navbar.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Navbar = ({ user, setUser }) => {
@@ -7,25 +7,30 @@ const Navbar = ({ user, setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // Define the backend URL (you can also use environment variables)
   const backendURL = 'http://127.0.0.1:8080';
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      setUser({ username }); // Adjust based on your state management
+    }
+  }, [setUser]);
 
   const handleLogin = () => {
     console.log('Login button clicked');
     axios.post(`${backendURL}/token/`, { username, password })
       .then(response => {
         console.log('Login successful:', response.data);
-        // Store tokens securely
         localStorage.setItem('access_token', response.data.access);
         localStorage.setItem('refresh_token', response.data.refresh);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
         setUser({ username }); // Update your user state accordingly
         setShowLoginModal(false);
-        // Set Authorization header for future requests
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
       })
       .catch(error => {
         console.error('Login error:', error);
-        // Handle login errors (e.g., display error message)
+        // Optionally, display an error message to the user
       });
   };
 

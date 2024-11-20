@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import Navbar from './Navbar';
 import axiosInstance from './axiosConfig';
 
@@ -6,15 +7,16 @@ function App() {
   const [user, setUser] = useState(null);
   const [details, setDetails] = useState([]);
 
-  useEffect(() => {
-    axiosInstance.get('/')
+  /*
+  React.useEffect(() => {
+    axiosInstance.get('/some-protected-route/')
       .then(res => {
         setDetails(res.data);
       })
       .catch(err => {
         console.log(err);
       });
-  }, []);
+  }, []);*/
 
   return (
     <div>

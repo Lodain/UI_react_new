@@ -8,7 +8,6 @@ from rest_framework_simplejwt import views as jwt_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', ReactView.as_view(), name='book-list'),
-    path('login/', LoginView.as_view(template_name='library/login.html'), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('token/', 
           jwt_views.TokenObtainPairView.as_view(), 
