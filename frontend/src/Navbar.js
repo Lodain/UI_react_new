@@ -54,6 +54,9 @@ const Navbar = ({ setUser }) => {
       {user ? (
         <>
           <button onClick={() => window.location.href = '/account'}>Account</button>
+          <button onClick={() => window.location.href = '/borrow'}>Borrow</button>
+          {user.superuser && <button onClick={() => window.location.href = '/librarian'}>Librarian</button>}
+          {user.superuser && user.staff && <button onClick={() => window.location.href = '/admin'}>Admin Page</button>}
           <button onClick={() => {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
