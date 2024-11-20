@@ -18,4 +18,6 @@ urlpatterns = [
      path('get-user-info/', get_user_info, name='get_user_info'),
     path('lended-books/', get_lended_books, name='lended_books'),
     path('wishlist/', get_wishlist, name='wishlist'),
+    path('register/', register_user, name='register_user'),
+    path('verify-email/<uidb64>/<token>/', verify_email, name='verify_email'),
 ]
