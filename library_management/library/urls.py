@@ -20,5 +20,5 @@ urlpatterns = [
     path('wishlist/', get_wishlist, name='wishlist'),
     path('register/', register_user, name='register_user'),
     path('verify-email/<uidb64>/<token>/', verify_email, name='verify_email'),
-    path('borrow_book_api', borrow_book_api, name='borrow_book'),
+    path('borrow_book_api', borrow_book_api, name='borrow_book_api'),
 ]

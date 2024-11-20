@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axiosInstance from './axiosConfig';
-import Navbar from './Navbar';
 
 const Borrow = () => {
   const [query, setQuery] = useState('');
@@ -8,7 +7,7 @@ const Borrow = () => {
   const [message, setMessage] = useState('');
 
   const searchBooks = () => {
-    axiosInstance.get(`borrow_book?query=${query}`)
+    axiosInstance.get(`borrow_book_api?query=${query}`)
       .then(response => {
         setBooks(response.data);
       })
@@ -18,7 +17,7 @@ const Borrow = () => {
   };
 
   const borrowBook = (isbn) => {
-    axiosInstance.post('borrow_book/', { book_id: isbn })
+    axiosInstance.post('borrow_book_api', { book_id: isbn })
       .then(response => {
         setMessage(response.data.message);
         searchBooks(); // Refresh the book list
@@ -30,7 +29,6 @@ const Borrow = () => {
 
   return (
     <div>
-      <Navbar />
       <h2>Search and Borrow a Book</h2>
       <input
         type="text"
