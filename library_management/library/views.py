@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework.views import APIView 
 from .models import *
 from rest_framework.response import Response
@@ -10,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
@@ -21,6 +21,11 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import get_user_model
+from django.db.models import Q
+from datetime import date
+from dateutil.relativedelta import relativedelta
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 class ReactView(APIView):
     def get(self, request):
@@ -123,6 +128,54 @@ def verify_email(request, uidb64, token):
         return redirect('http://localhost:3000/verify-email?status=success')
     else:
         return redirect('http://localhost:3000/verify-email?status=failed')
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def borrow_book_api(request):
+    if request.method == 'GET':
+        search_query = request.GET.get('query')
+        books = Book.objects.filter(
+            Q(title__icontains=search_query) |
+            Q(isbn__iexact=search_query) |
+            Q(authors__name__icontains=search_query)
+        ).distinct()
+        book_data = [
+            {
+                'title': book.title,
+                'isbn': book.isbn,
+                'authors': [author.name for author in book.authors.all()],
+                'copies': book.copies,
+                'lended': book.lended
+            }
+            for book in books
+        ]
+        return Response(book_data)
+
+    elif request.method == 'POST':
+        book_id = request.data.get('book_id')
+        book = get_object_or_404(Book, isbn=book_id)
+
+        if book.copies > book.lended:
+            book.lended += 1
+            book.save()
+            borrowed_book, created = LendedBook.objects.get_or_create(
+                user=request.user,
+                book=book,
+                defaults={
+                    'number': 1,
+                    'borrowed_on': date.today(),
+                    'return_on': date.today() + relativedelta(months=1),
+                }
+            )
+            if not created:
+                borrowed_book.number += 1
+            borrowed_book.save()
+
+            Wishlist.objects.filter(user=request.user, book=book).delete()
+
+            return Response({'message': f"You have successfully borrowed '{book.title}'."}, status=200)
+        else:
+            return Response({'error': "Sorry, this book is currently unavailable for borrowing."}, status=400)
 
 
 
