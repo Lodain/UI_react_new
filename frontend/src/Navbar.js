@@ -50,7 +50,7 @@ const Navbar = ({ setUser }) => {
 
   return (
     <nav className="top-right-buttons">
-      <button onClick={() => window.location.href = '/home'}>Home</button>
+      <button onClick={() => window.location.href = '/'}>Home</button>
       {user ? (
         <>
           <button onClick={() => window.location.href = '/account'}>Account</button>

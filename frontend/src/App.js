@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import axiosInstance from './axiosConfig';
 import Account from './account';
+import EmailVerification from './EmailVerification';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,6 +40,7 @@ function App() {
         </>
       )}
       {window.location.pathname === '/account' && <Account />}
+      {window.location.pathname.startsWith('/verify-email') && <EmailVerification />}
     </div>
   );
 }
