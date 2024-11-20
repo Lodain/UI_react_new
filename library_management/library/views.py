@@ -33,5 +33,36 @@ def get_user_info(request):
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=404)
 
+@api_view(['GET'])
+def get_lended_books(request):
+    user = request.user
+    lended_books = LendedBook.objects.filter(user=user)
+    output = [
+        {
+            "title": lended_book.book.title,
+            "isbn": lended_book.book.isbn,
+            "authors": lended_book.book.authors.all().values_list('name', flat=True),
+            "number": lended_book.number,
+            "borrowed_on": lended_book.borrowed_on,
+            "return_on": lended_book.return_on
+        }
+        for lended_book in lended_books
+    ]
+    return Response(output)
+
+@api_view(['GET'])
+def get_wishlist(request):
+    user = request.user
+    wishlist_items = Wishlist.objects.filter(user=user)
+    output = [
+        {
+            "title": wishlist_item.book.title,
+            "isbn": wishlist_item.book.isbn,
+            "authors": wishlist_item.book.authors.all().values_list('name', flat=True)
+        }
+        for wishlist_item in wishlist_items
+    ]
+    return Response(output)
+
 
 

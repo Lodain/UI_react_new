@@ -37,17 +37,31 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class LendedBookSerializer(serializers.ModelSerializer):
-    book = BookSerializer(read_only=True)
+    book = serializers.SerializerMethodField()
     user = UserSerializer(read_only=True)
 
     class Meta:
         model = LendedBook
         fields = '__all__'
 
+    def get_book(self, obj):
+        return {
+            'title': obj.book.title,
+            'isbn': obj.book.isbn,
+            'authors': [author.name for author in obj.book.authors.all()]
+        }
+
 class WishlistSerializer(serializers.ModelSerializer):
-    book = BookSerializer(read_only=True)
+    book = serializers.SerializerMethodField()
     user = UserSerializer(read_only=True)
 
     class Meta:
         model = Wishlist
         fields = '__all__'
+
+    def get_book(self, obj):
+        return {
+            'title': obj.book.title,
+            'isbn': obj.book.isbn,
+            'authors': [author.name for author in obj.book.authors.all()]
+        }

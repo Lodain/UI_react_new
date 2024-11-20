@@ -16,4 +16,6 @@ urlpatterns = [
           jwt_views.TokenRefreshView.as_view(), 
           name ='token_refresh'),
      path('get-user-info/', get_user_info, name='get_user_info'),
+    path('lended-books/', get_lended_books, name='lended_books'),
+    path('wishlist/', get_wishlist, name='wishlist'),
 ]
