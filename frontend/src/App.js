@@ -33,26 +33,69 @@ function App() {
         <>
           <h1>Library Management System</h1>
           {user && <h2>Welcome back, {user.username}!</h2>}
+          <div align="center">
           {details.map((output, id) => (
-            <div className="card-container">
-            <Card key={id} style={{ maxWidth: 345, margin: '20px auto' }}>
-              <CardMedia
-                component="img"
-                height="140"
-                image={`http://127.0.0.1:8080${output.cover}`}
-                alt={output.title}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {output.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Authors: {output.authors.join(', ')}
-                </Typography>
-              </CardContent>
-            </Card>
+            <div className="card-container" key={id}>
+              <Card sx={{ 
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+              }}>
+                <CardMedia
+                  className="card-media"
+                  component="img"
+                  image={`http://127.0.0.1:8080${output.cover}`}
+                  alt={output.title}
+                  sx={{
+                    padding: '10px',
+                    objectFit: 'contain',
+                    height: 300
+                  }}
+                />
+                <CardContent sx={{ 
+                  padding: '8px', 
+                  flexGrow: 0,
+                  '&:last-child': { 
+                    paddingBottom: '8px' 
+                  }
+                }}>
+                  <Typography 
+                    gutterBottom 
+                    variant="h6" 
+                    component="div"
+                    sx={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: 'vertical',
+                      fontSize: '1rem',
+                      marginBottom: '4px'
+                    }}
+                  >
+                    {output.title}
+                  </Typography>
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary"
+                    sx={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 1,
+                      WebkitBoxOrient: 'vertical',
+                      fontSize: '0.8rem'
+                    }}
+                  >
+                    Authors: {output.authors.join(', ')}
+                  </Typography>
+                </CardContent>
+              </Card>
             </div>
           ))}
+          </div>
         </>
       )}
       {window.location.pathname === '/account' && <Account />}

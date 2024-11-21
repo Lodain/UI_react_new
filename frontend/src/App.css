@@ -40,4 +40,35 @@
 .card-container {
   justify-content: center;
   display: inline-block;
+  margin: 20px;
+  width: 300px;
+  height: 450px;
+}
+
+.card-media {
+  height: 300px !important;
+  object-fit: contain !important;
+  background-color: #f5f5f5;
+}
+
+.card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  font-size: 1rem !important;
+  line-height: 1.2 !important;
+  margin-bottom: 4px !important;
+}
+
+.card-authors {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  font-size: 0.8rem !important;
 }
