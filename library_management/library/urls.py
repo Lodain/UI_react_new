@@ -25,5 +25,8 @@ urlpatterns = [
     path('get_borrowed_books/', get_borrowed_books, name='get_borrowed_books'),
     path('search_borrowed_books/', search_borrowed_books, name='search_borrowed_books'),
     path('return_book_api/', return_book_api, name='return_book_api'),
+    path('add_book_api/', add_book_api, name='add_book_api'),
+    path('get_authors_api/', get_authors_api, name='get_authors_api'),
+    path('get_genres_api/', get_genres_api, name='get_genres_api'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

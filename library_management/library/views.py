@@ -26,6 +26,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import json
 
 class ReactView(APIView):
     def get(self, request):
@@ -251,6 +252,70 @@ def return_book_api(request):
             
     except LendedBook.DoesNotExist:
         return Response({'error': "Book not found."}, status=404)
+
+@api_view(['POST'])
+def add_book_api(request):
+    try:
+        data = request.data
+        
+        # Parse JSON strings back to lists
+        authors = json.loads(data['authors'])
+        genres = json.loads(data['genres'])
+        
+        # Verify all authors exist before creating the book
+        for author_name in authors:
+            try:
+                Author.objects.get(name=author_name)
+            except Author.DoesNotExist:
+                return Response({'error': f'Author "{author_name}" does not exist'}, status=400)
+        
+        # Verify all genres exist before creating the book
+        for genre_name in genres:
+            try:
+                Genre.objects.get(name=genre_name)
+            except Genre.DoesNotExist:
+                return Response({'error': f'Genre "{genre_name}" does not exist'}, status=400)
+        
+        # Create the book
+        book = Book.objects.create(
+            isbn=data['isbn'],
+            title=data['title'],
+            copies=data['copies'],
+            year=data['year']
+        )
+        
+        # Add existing authors
+        for author_name in authors:
+            author = Author.objects.get(name=author_name)
+            book.authors.add(author)
+            
+        # Add existing genres
+        for genre_name in genres:
+            genre = Genre.objects.get(name=genre_name)
+            book.genres.add(genre)
+            
+        # Handle cover image if provided
+        if 'cover' in request.FILES:
+            book.cover = request.FILES['cover']
+            book.save()
+            
+        return Response({'message': 'Book added successfully'}, status=201)
+    except json.JSONDecodeError:
+        return Response({'error': 'Invalid JSON format for authors or genres'}, status=400)
+    except Exception as e:
+        if 'book' in locals():  # Clean up if book was created
+            book.delete()
+        return Response({'error': str(e)}, status=400)
+
+@api_view(['GET'])
+def get_authors_api(request):
+    authors = Author.objects.all().values_list('name', flat=True)
+    return Response(list(authors))
+
+@api_view(['GET'])
+def get_genres_api(request):
+    genres = Genre.objects.all().values_list('name', flat=True)
+    return Response(list(genres))
 
 
 
