@@ -28,5 +28,6 @@ urlpatterns = [
     path('add_book_api/', add_book_api, name='add_book_api'),
     path('get_authors_api/', get_authors_api, name='get_authors_api'),
     path('get_genres_api/', get_genres_api, name='get_genres_api'),
+    path('book/<str:isbn>/', get_book_details, name='get_book_details'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

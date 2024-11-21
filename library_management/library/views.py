@@ -27,11 +27,13 @@ from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
+from django.db.models import Avg
 
 class ReactView(APIView):
     def get(self, request):
         output = [
             {
+                "isbn": output.isbn,
                 "title": output.title,
                 "authors": output.authors.all().values_list('name', flat=True),
                 "cover": output.cover.url
@@ -316,6 +318,40 @@ def get_authors_api(request):
 def get_genres_api(request):
     genres = Genre.objects.all().values_list('name', flat=True)
     return Response(list(genres))
+
+@api_view(['GET'])
+def get_book_details(request, isbn):
+    try:
+        book = Book.objects.prefetch_related('authors', 'reviews').get(isbn=isbn)
+        reviews = Review.objects.filter(book=book)
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg']
+        
+        # Check if book is in user's wishlist
+        in_wishlist = False
+        if request.user.is_authenticated:
+            in_wishlist = Wishlist.objects.filter(book=book, user=request.user).exists()
+        
+        output = {
+            "title": book.title,
+            "isbn": book.isbn,
+            "authors": book.authors.all().values_list('name', flat=True),
+            "cover": book.cover.url if book.cover else None,
+            "copies": book.copies,
+            "lended": book.lended,
+            "year": book.year,
+            "average_rating": float(average_rating) if average_rating else 0,
+            "reviews": [
+                {
+                    "user": review.user.username,
+                    "rating": review.rating,
+                    "content": review.content
+                } for review in reviews
+            ],
+            "in_wishlist": in_wishlist
+        }
+        return Response(output)
+    except Book.DoesNotExist:
+        return Response({'error': 'Book not found'}, status=404)
 
 
 

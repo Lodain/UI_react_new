@@ -7,6 +7,7 @@ import Account from './account';
 import EmailVerification from './EmailVerification';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import './App.css';
+import Book from './Book';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,13 +38,17 @@ function App() {
           <div align="center">
           {details.map((output, id) => (
             <div className="card-container" key={id}>
-              <Card sx={{ 
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden'
-              }}>
+              <Card 
+                sx={{ 
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                  cursor: 'pointer'
+                }}
+                onClick={() => window.location.href = `/book/${output.isbn}`}
+              >
                 <CardMedia
                   className="card-media"
                   component="img"
@@ -105,6 +110,7 @@ function App() {
       {window.location.pathname === '/borrow' && <Borrow />}
       {window.location.pathname.startsWith('/verify-email') && <EmailVerification />}
       {window.location.pathname === '/librarian' && <Librarian />}
+      {window.location.pathname.startsWith('/book/') && <Book />}
     </div>
   );
 }
