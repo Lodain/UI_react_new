@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Borrow from './Borrow';
+import Librarian from './librarian';
 import axiosInstance from './axiosConfig';
 import Account from './account';
 import EmailVerification from './EmailVerification';
@@ -103,6 +104,7 @@ function App() {
       {window.location.pathname === '/account' && <Account />}
       {window.location.pathname === '/borrow' && <Borrow />}
       {window.location.pathname.startsWith('/verify-email') && <EmailVerification />}
+      {window.location.pathname === '/librarian' && <Librarian />}
     </div>
   );
 }

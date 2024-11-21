@@ -22,5 +22,8 @@ urlpatterns = [
     path('register/', register_user, name='register_user'),
     path('verify-email/<uidb64>/<token>/', verify_email, name='verify_email'),
     path('borrow_book_api', borrow_book_api, name='borrow_book_api'),
+    path('get_borrowed_books/', get_borrowed_books, name='get_borrowed_books'),
+    path('search_borrowed_books/', search_borrowed_books, name='search_borrowed_books'),
+    path('return_book_api/', return_book_api, name='return_book_api'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

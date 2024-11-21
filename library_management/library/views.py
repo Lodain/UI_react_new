@@ -184,5 +184,73 @@ def borrow_book_api(request):
         else:
             return Response({'error': "Sorry, this book is currently unavailable for borrowing."}, status=400)
 
+@api_view(['GET'])
+def get_borrowed_books(request):
+    borrowed_books = LendedBook.objects.select_related('book', 'user').all()
+    output = [
+        {
+            "title": book.book.title,
+            "isbn": book.book.isbn,
+            "authors": book.book.authors.all().values_list('name', flat=True),
+            "borrowed_by": book.user.username,
+            "number": book.number,
+            "borrowed_on": book.borrowed_on,
+            "return_on": book.return_on
+        }
+        for book in borrowed_books
+    ]
+    return Response(output)
+
+@api_view(['GET'])
+def search_borrowed_books(request):
+    query = request.GET.get('query', '').strip()
+    searched_books = LendedBook.objects.none()
+
+    if query:
+        user_matches = User.objects.filter(username__icontains=query)
+        searched_books = LendedBook.objects.filter(
+            Q(user__in=user_matches) |
+            Q(book__title__icontains=query) |
+            Q(book__isbn__icontains=query) |
+            Q(book__authors__name__icontains=query)
+        ).distinct()
+
+    output = [
+        {
+            "title": book.book.title,
+            "isbn": book.book.isbn,
+            "authors": book.book.authors.all().values_list('name', flat=True),
+            "borrowed_by": book.user.username,
+            "number": book.number,
+            "borrowed_on": book.borrowed_on
+        }
+        for book in searched_books
+    ]
+    return Response(output)
+
+@api_view(['POST'])
+def return_book_api(request):
+    book_id = request.data.get('book_id')
+    username = request.data.get('username')
+    quantity = int(request.data.get('quantity', 1))
+    
+    try:
+        returned_book = get_object_or_404(LendedBook, book_id=book_id, user__username=username)
+        
+        if returned_book.number >= quantity:
+            if returned_book.number == quantity:
+                returned_book.delete()
+            else:
+                returned_book.number -= quantity
+                returned_book.save()
+                
+            Book.objects.filter(isbn=book_id).update(lended=models.F('lended') - quantity)
+            return Response({'message': f"{quantity} book(s) returned successfully."})
+        else:
+            return Response({'error': "Cannot return more books than borrowed."}, status=400)
+            
+    except LendedBook.DoesNotExist:
+        return Response({'error': "Book not found."}, status=404)
+
 
 
