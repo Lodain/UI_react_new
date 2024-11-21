@@ -34,6 +34,7 @@ function App() {
           <h1>Library Management System</h1>
           {user && <h2>Welcome back, {user.username}!</h2>}
           {details.map((output, id) => (
+            <div className="card-container">
             <Card key={id} style={{ maxWidth: 345, margin: '20px auto' }}>
               <CardMedia
                 component="img"
@@ -50,6 +51,7 @@ function App() {
                 </Typography>
               </CardContent>
             </Card>
+            </div>
           ))}
         </>
       )}
