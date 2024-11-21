@@ -87,8 +87,11 @@ function Librarian() {
     formData.append('year', newBook.year);
     
     // Add arrays as JSON strings
-    formData.append('authors', JSON.stringify(newBook.authors));
-    formData.append('genres', JSON.stringify(newBook.genres));
+    const nonEmptyAuthors = newBook.authors.filter(author => author.trim());
+    const nonEmptyGenres = newBook.genres.filter(genre => genre.trim());
+    
+    formData.append('authors', JSON.stringify(nonEmptyAuthors));
+    formData.append('genres', JSON.stringify(nonEmptyGenres));
     
     // Add cover if exists
     if (newBook.cover) {
@@ -227,42 +230,70 @@ function Librarian() {
           <div>
             <label>Authors:</label>
             <div>
-              <select
-                multiple
-                value={newBook.authors}
-                onChange={(e) => {
-                  const selectedAuthors = Array.from(e.target.selectedOptions).map(option => option.value);
-                  setNewBook({...newBook, authors: selectedAuthors});
-                }}
-                style={{ width: '200px', minHeight: '100px' }}
-              >
-                {availableAuthors.map((author) => (
-                  <option key={author} value={author}>
-                    {author}
-                  </option>
-                ))}
-              </select>
+              {newBook.authors.map((author, index) => (
+                <div key={index} style={{ marginBottom: '10px' }}>
+                  <select
+                    value={author}
+                    onChange={(e) => handleFieldChange('authors', index, e.target.value)}
+                    style={{ width: '200px' }}
+                  >
+                    <option value="">Select or type new author</option>
+                    {availableAuthors.map((existingAuthor) => (
+                      <option key={existingAuthor} value={existingAuthor}>
+                        {existingAuthor}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={author}
+                    onChange={(e) => handleFieldChange('authors', index, e.target.value)}
+                    placeholder="Or type new author name"
+                    style={{ marginLeft: '10px' }}
+                  />
+                  <button type="button" onClick={() => removeField('authors', index)} style={{ marginLeft: '10px' }}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={() => addField('authors')}>
+                Add Another Author
+              </button>
             </div>
           </div>
 
           <div>
             <label>Genres:</label>
             <div>
-              <select
-                multiple
-                value={newBook.genres}
-                onChange={(e) => {
-                  const selectedGenres = Array.from(e.target.selectedOptions).map(option => option.value);
-                  setNewBook({...newBook, genres: selectedGenres});
-                }}
-                style={{ width: '200px', minHeight: '100px' }}
-              >
-                {availableGenres.map((genre) => (
-                  <option key={genre} value={genre}>
-                    {genre}
-                  </option>
-                ))}
-              </select>
+              {newBook.genres.map((genre, index) => (
+                <div key={index} style={{ marginBottom: '10px' }}>
+                  <select
+                    value={genre}
+                    onChange={(e) => handleFieldChange('genres', index, e.target.value)}
+                    style={{ width: '200px' }}
+                  >
+                    <option value="">Select or type new genre</option>
+                    {availableGenres.map((existingGenre) => (
+                      <option key={existingGenre} value={existingGenre}>
+                        {existingGenre}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={genre}
+                    onChange={(e) => handleFieldChange('genres', index, e.target.value)}
+                    placeholder="Or type new genre name"
+                    style={{ marginLeft: '10px' }}
+                  />
+                  <button type="button" onClick={() => removeField('genres', index)} style={{ marginLeft: '10px' }}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={() => addField('genres')}>
+                Add Another Genre
+              </button>
             </div>
           </div>
 
