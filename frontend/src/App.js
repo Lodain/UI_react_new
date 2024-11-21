@@ -69,10 +69,11 @@ function App() {
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       display: '-webkit-box',
-                      WebkitLineClamp: 1,
+                      WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
                       fontSize: '1rem',
-                      marginBottom: '4px'
+                      marginBottom: '4px',
+                      minHeight: '2.4em'
                     }}
                   >
                     {output.title}
@@ -84,9 +85,10 @@ function App() {
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       display: '-webkit-box',
-                      WebkitLineClamp: 1,
+                      WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
-                      fontSize: '0.8rem'
+                      fontSize: '0.8rem',
+                      minHeight: '2em'
                     }}
                   >
                     Authors: {output.authors.join(', ')}
