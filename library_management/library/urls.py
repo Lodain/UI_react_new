@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 from .views import *
 from rest_framework_simplejwt import views as jwt_views
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,3 +23,4 @@ urlpatterns = [
     path('verify-email/<uidb64>/<token>/', verify_email, name='verify_email'),
     path('borrow_book_api', borrow_book_api, name='borrow_book_api'),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

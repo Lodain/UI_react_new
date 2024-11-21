@@ -34,6 +34,7 @@ function App() {
           {user && <h2>Welcome back, {user.username}!</h2>}
           {details.map((output, id) => (
             <div key={id}>
+              <img src={`http://127.0.0.1:8080${output.cover}`} alt={output.title} />
               <h2>{output.title}</h2>
               <p>Authors: {output.authors.join(', ')}</p>
             </div>

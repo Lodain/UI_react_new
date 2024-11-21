@@ -29,7 +29,14 @@ from django.contrib import messages
 
 class ReactView(APIView):
     def get(self, request):
-        output = [{"title": output.title, "authors": output.authors.all().values_list('name', flat=True)} for output in Book.objects.all()]
+        output = [
+            {
+                "title": output.title,
+                "authors": output.authors.all().values_list('name', flat=True),
+                "cover": output.cover.url
+            }
+            for output in Book.objects.all()
+        ]
         return Response(output)
 
 @api_view(['POST'])
