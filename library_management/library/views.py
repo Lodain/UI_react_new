@@ -353,5 +353,22 @@ def get_book_details(request, isbn):
     except Book.DoesNotExist:
         return Response({'error': 'Book not found'}, status=404)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def toggle_wishlist(request, isbn):
+    try:
+        book = get_object_or_404(Book, isbn=isbn)
+        wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, book=book)
+
+        if not created:
+            wishlist_item.delete()
+            in_wishlist = False
+        else:
+            in_wishlist = True
+
+        return Response({'in_wishlist': in_wishlist}, status=200)
+    except Book.DoesNotExist:
+        return Response({'error': 'Book not found'}, status=404)
+
 
 
