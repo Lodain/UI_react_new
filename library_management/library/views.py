@@ -436,5 +436,35 @@ def change_password_api(request):
     
     return Response({'message': 'Password changed successfully'}, status=200)
 
+@api_view(['POST'])
+def forgot_password(request):
+    email = request.data.get('email')
+    try:
+        user = User.objects.get(email=email)
+        
+        # Generate password reset token
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        
+        # Send reset email
+        reset_url = f"http://localhost:3000/reset-password/{uid}/{token}"
+        subject = 'Password Reset Request'
+        message = render_to_string('registration/password_reset_email.html', {
+            'user': user,
+            'reset_url': reset_url,
+        })
+        
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        
+        return Response({'message': 'Password reset instructions sent to your email'}, status=200)
+    except User.DoesNotExist:
+        return Response({'error': 'No user found with this email address'}, status=404)
+
 
 

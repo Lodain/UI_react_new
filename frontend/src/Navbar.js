@@ -9,6 +9,9 @@ const Navbar = ({ setUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUserState] = useState(null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [resetMessage, setResetMessage] = useState('');
 
   const backendURL = 'http://127.0.0.1:8080';
 
@@ -48,6 +51,17 @@ const Navbar = ({ setUser }) => {
       });
   };
 
+  const handleForgotPassword = () => {
+    axios.post(`${backendURL}/forgot-password/`, { email: forgotEmail })
+      .then(response => {
+        setResetMessage('Password reset instructions have been sent to your email.');
+        setForgotEmail('');
+      })
+      .catch(error => {
+        setResetMessage(error.response?.data?.error || 'An error occurred');
+      });
+  };
+
   return (
     <nav className="top-right-buttons">
       <button onClick={() => window.location.href = '/'}>Home</button>
@@ -77,21 +91,53 @@ const Navbar = ({ setUser }) => {
       {showLoginModal && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setShowLoginModal(false)}>&times;</span>
-            <h2>Login</h2>
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleLogin}>Login</button>
+            <span className="close" onClick={() => {
+              setShowLoginModal(false);
+              setShowForgotPassword(false);
+              setResetMessage('');
+            }}>&times;</span>
+            
+            {!showForgotPassword ? (
+              <>
+                <h2>Login</h2>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button onClick={handleLogin}>Login</button>
+                <p style={{ cursor: 'pointer', color: '#007bff' }} 
+                   onClick={() => setShowForgotPassword(true)}>
+                  Forgot Password?
+                </p>
+              </>
+            ) : (
+              <>
+                <h2>Forgot Password</h2>
+                {resetMessage && <p>{resetMessage}</p>}
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                />
+                <button onClick={handleForgotPassword}>Reset Password</button>
+                <p style={{ cursor: 'pointer', color: '#007bff' }}
+                   onClick={() => {
+                     setShowForgotPassword(false);
+                     setResetMessage('');
+                   }}>
+                  Back to Login
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}
