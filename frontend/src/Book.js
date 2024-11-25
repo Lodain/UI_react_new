@@ -68,7 +68,8 @@ function Book() {
         .then(response => {
           setBook({
             ...book,
-            reviews: [...book.reviews, response.data]
+            reviews: [...book.reviews, response.data],
+            average_rating: response.data.average_rating
           });
           setShowReviewForm(false);
           setNewReview({ rating: 0, content: '' });
@@ -85,7 +86,8 @@ function Book() {
         .then(response => {
           setBook({
             ...book,
-            reviews: book.reviews.filter(review => review.id !== reviewId)
+            reviews: book.reviews.filter(review => review.id !== reviewId),
+            average_rating: response.data.average_rating
           });
         })
         .catch(error => {

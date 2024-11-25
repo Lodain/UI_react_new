@@ -390,10 +390,15 @@ def add_review(request, isbn):
             content=content
         )
 
+        # Calculate new average rating
+        new_average = Review.objects.filter(book=book).aggregate(Avg('rating'))['rating__avg']
+
         return Response({
+            "id": review.id,
             "user": review.user.username,
             "rating": review.rating,
-            "content": review.content
+            "content": review.content,
+            "average_rating": float(new_average) if new_average else 0
         }, status=201)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
@@ -403,8 +408,16 @@ def add_review(request, isbn):
 def delete_review(request, isbn, review_id):
     try:
         review = get_object_or_404(Review, id=review_id, book__isbn=isbn, user=request.user)
+        book = review.book
         review.delete()
-        return Response({'message': 'Review deleted successfully'}, status=200)
+        
+        # Calculate new average rating
+        new_average = Review.objects.filter(book=book).aggregate(Avg('rating'))['rating__avg']
+        
+        return Response({
+            'message': 'Review deleted successfully',
+            'average_rating': float(new_average) if new_average else 0
+        }, status=200)
     except Review.DoesNotExist:
         return Response({'error': 'Review not found or you are not authorized to delete it'}, status=404)
 
