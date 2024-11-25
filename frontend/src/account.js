@@ -71,6 +71,37 @@ function Account() {
   return (
     <div>
       <h1>Account Information</h1>
+      
+      {success && (
+        <div 
+          style={{ 
+            color: 'green', 
+            backgroundColor: '#e8f5e9',
+            padding: '10px',
+            borderRadius: '4px',
+            marginBottom: '20px',
+            border: '1px solid #c8e6c9'
+          }}
+        >
+          {success}
+        </div>
+      )}
+
+      {error && (
+        <div 
+          style={{ 
+            color: '#721c24', 
+            backgroundColor: '#f8d7da',
+            padding: '10px',
+            borderRadius: '4px',
+            marginBottom: '20px',
+            border: '1px solid #f5c6cb'
+          }}
+        >
+          {error}
+        </div>
+      )}
+
       {user && (
         <div>
           <p><b>Name:</b> {user.first_name}</p>
@@ -132,9 +163,6 @@ function Account() {
 
       {showPasswordForm && (
         <form onSubmit={handlePasswordChange} style={{ maxWidth: '300px', margin: '20px 0' }}>
-          {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-          {success && <div style={{ color: 'green', marginBottom: '10px' }}>{success}</div>}
-          
           <div style={{ marginBottom: '15px' }}>
             <input
               type="password"
