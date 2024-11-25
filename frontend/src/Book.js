@@ -5,8 +5,15 @@ import { Card, CardContent, CardMedia, Typography, Rating, Button } from '@mui/m
 function Book() {
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Add user check
+    const storedUser = JSON.parse(sessionStorage.getItem('user'));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+
     // Extract ISBN from URL path
     const pathSegments = window.location.pathname.split('/');
     const isbn = pathSegments[pathSegments.length - 1];
@@ -85,24 +92,26 @@ function Book() {
             ({book.average_rating.toFixed(1)})
           </Typography>
 
-          <div style={{ marginTop: '20px', marginBottom: '20px' }}>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              onClick={handleBorrow}
-              disabled={book.copies <= book.lended}
-              sx={{ marginRight: '10px' }}
-            >
-              Borrow Book
-            </Button>
-            <Button 
-              variant="outlined" 
-              color="primary" 
-              onClick={handleWishlist}
-            >
-              {book.in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
-            </Button>
-          </div>
+          {user && (
+            <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                onClick={handleBorrow}
+                disabled={book.copies <= book.lended}
+                sx={{ marginRight: '10px' }}
+              >
+                Borrow Book
+              </Button>
+              <Button 
+                variant="outlined" 
+                color="primary" 
+                onClick={handleWishlist}
+              >
+                {book.in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              </Button>
+            </div>
+          )}
 
           <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
             Reviews
