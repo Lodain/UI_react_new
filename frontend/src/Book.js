@@ -178,28 +178,35 @@ function Book() {
             </Card>
           )}
           {book.reviews.length > 0 ? (
-            book.reviews.map((review, index) => (
-              <Card key={index} sx={{ mb: 2, backgroundColor: '#f5f5f5' }}>
-                <CardContent>
-                  <Typography variant="subtitle2">
-                    {review.user}
-                  </Typography>
-                  <Rating value={review.rating} readOnly size="small" />
-                  <Typography variant="body2">
-                    {review.content}
-                  </Typography>
-                  {user && user.username === review.user && (
-                    <Button 
-                      size="small" 
-                      color="error" 
-                      onClick={() => handleDeleteReview(review.id)}
-                    >
-                      Delete
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ))
+            book.reviews
+              .sort((a, b) => {
+                // If user is logged in, put their review first
+                if (user && a.user === user.username) return -1;
+                if (user && b.user === user.username) return 1;
+                return 0;
+              })
+              .map((review, index) => (
+                <Card key={index} sx={{ mb: 2, backgroundColor: '#f5f5f5' }}>
+                  <CardContent>
+                    <Typography variant="subtitle2">
+                      {review.user}
+                    </Typography>
+                    <Rating value={review.rating} readOnly size="small" />
+                    <Typography variant="body2">
+                      {review.content}
+                    </Typography>
+                    {user && user.username === review.user && (
+                      <Button 
+                        size="small" 
+                        color="error" 
+                        onClick={() => handleDeleteReview(review.id)}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              ))
           ) : (
             <Typography variant="body2">No reviews yet</Typography>
           )}
