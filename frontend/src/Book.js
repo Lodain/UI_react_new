@@ -6,6 +6,8 @@ function Book() {
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [newReview, setNewReview] = useState({ rating: 0, content: '' });
 
   useEffect(() => {
     // Add user check
@@ -52,6 +54,27 @@ function Book() {
         })
         .catch(error => {
           alert(error.response?.data?.error || 'Error updating wishlist');
+        });
+    }
+  };
+
+  const handleAddReview = () => {
+    setShowReviewForm(true);
+  };
+
+  const handleReviewSubmit = () => {
+    if (book) {
+      axiosInstance.post(`/add_review/${book.isbn}/`, newReview)
+        .then(response => {
+          setBook({
+            ...book,
+            reviews: [...book.reviews, response.data]
+          });
+          setShowReviewForm(false);
+          setNewReview({ rating: 0, content: '' });
+        })
+        .catch(error => {
+          alert(error.response?.data?.error || 'Error adding review');
         });
     }
   };
@@ -116,6 +139,27 @@ function Book() {
           <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
             Reviews
           </Typography>
+          {user && !book.reviews.some(review => review.user === user.username) && (
+            <Button onClick={handleAddReview}>+</Button>
+          )}
+          {showReviewForm && (
+            <Card sx={{ mb: 2, backgroundColor: '#f5f5f5' }}>
+              <CardContent>
+                <Rating
+                  value={newReview.rating}
+                  onChange={(event, newValue) => setNewReview({ ...newReview, rating: newValue })}
+                  size="small"
+                />
+                <textarea
+                  value={newReview.content}
+                  onChange={(e) => setNewReview({ ...newReview, content: e.target.value })}
+                  placeholder="Write your review here..."
+                  style={{ width: '100%', height: '100px' }}
+                />
+                <Button onClick={handleReviewSubmit}>Submit</Button>
+              </CardContent>
+            </Card>
+          )}
           {book.reviews.length > 0 ? (
             book.reviews.map((review, index) => (
               <Card key={index} sx={{ mb: 2, backgroundColor: '#f5f5f5' }}>

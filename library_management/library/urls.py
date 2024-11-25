@@ -30,5 +30,6 @@ urlpatterns = [
     path('get_genres_api/', get_genres_api, name='get_genres_api'),
     path('book/<str:isbn>/', get_book_details, name='get_book_details'),
     path('toggle_wishlist/<str:isbn>/', toggle_wishlist, name='toggle_wishlist'),
+    path('add_review/<str:isbn>/', add_review, name='add_review'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

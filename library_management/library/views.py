@@ -370,5 +370,32 @@ def toggle_wishlist(request, isbn):
     except Book.DoesNotExist:
         return Response({'error': 'Book not found'}, status=404)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_review(request, isbn):
+    try:
+        book = get_object_or_404(Book, isbn=isbn)
+        user = request.user
+        if Review.objects.filter(book=book, user=user).exists():
+            return Response({'error': 'You have already reviewed this book.'}, status=400)
+
+        rating = request.data.get('rating')
+        content = request.data.get('content')
+
+        review = Review.objects.create(
+            book=book,
+            user=user,
+            rating=rating,
+            content=content
+        )
+
+        return Response({
+            "user": review.user.username,
+            "rating": review.rating,
+            "content": review.content
+        }, status=201)
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
+
 
 
