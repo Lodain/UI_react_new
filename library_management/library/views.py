@@ -421,5 +421,20 @@ def delete_review(request, isbn, review_id):
     except Review.DoesNotExist:
         return Response({'error': 'Review not found or you are not authorized to delete it'}, status=404)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password_api(request):
+    user = request.user
+    old_password = request.data.get('oldPassword')
+    new_password = request.data.get('newPassword')
+
+    if not user.check_password(old_password):
+        return Response({'error': 'Current password is incorrect'}, status=400)
+
+    user.set_password(new_password)
+    user.save()
+    
+    return Response({'message': 'Password changed successfully'}, status=200)
+
 
 

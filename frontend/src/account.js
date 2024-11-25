@@ -5,6 +5,14 @@ function Account() {
   const [user, setUser] = useState(null);
   const [lendedBooks, setLendedBooks] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     // Fetch user information from session storage
@@ -31,6 +39,34 @@ function Account() {
         console.error('Error fetching wishlist:', err);
       });
   }, []);
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setError('New passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post('/change-password-api/', {
+        oldPassword: passwordData.oldPassword,
+        newPassword: passwordData.newPassword
+      });
+
+      setSuccess('Password changed successfully');
+      setShowPasswordForm(false);
+      setPasswordData({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to change password');
+    }
+  };
 
   return (
     <div>
@@ -76,6 +112,96 @@ function Account() {
           <p>No books in wishlist.</p>
         )}
       </ul>
+
+      <div>
+        <button 
+          onClick={() => setShowPasswordForm(!showPasswordForm)}
+          style={{
+            padding: '10px 20px',
+            margin: '20px 0',
+            backgroundColor: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          {showPasswordForm ? 'Cancel' : 'Change Password'}
+        </button>
+      </div>
+
+      {showPasswordForm && (
+        <form onSubmit={handlePasswordChange} style={{ maxWidth: '300px', margin: '20px 0' }}>
+          {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+          {success && <div style={{ color: 'green', marginBottom: '10px' }}>{success}</div>}
+          
+          <div style={{ marginBottom: '15px' }}>
+            <input
+              type="password"
+              placeholder="Current Password"
+              value={passwordData.oldPassword}
+              onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '5px',
+                borderRadius: '4px',
+                border: '1px solid #ddd'
+              }}
+              required
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <input
+              type="password"
+              placeholder="New Password"
+              value={passwordData.newPassword}
+              onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '5px',
+                borderRadius: '4px',
+                border: '1px solid #ddd'
+              }}
+              required
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <input
+              type="password"
+              placeholder="Confirm New Password"
+              value={passwordData.confirmPassword}
+              onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '5px',
+                borderRadius: '4px',
+                border: '1px solid #ddd'
+              }}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Update Password
+          </button>
+        </form>
+      )}
     </div>
   );
 }
