@@ -79,6 +79,21 @@ function Book() {
     }
   };
 
+  const handleDeleteReview = (reviewId) => {
+    if (book) {
+      axiosInstance.delete(`/delete_review/${book.isbn}/${reviewId}/`)
+        .then(response => {
+          setBook({
+            ...book,
+            reviews: book.reviews.filter(review => review.id !== reviewId)
+          });
+        })
+        .catch(error => {
+          alert(error.response?.data?.error || 'Error deleting review');
+        });
+    }
+  };
+
   if (error) return <div>Error: {error}</div>;
   if (!book) return <div>Loading...</div>;
 
@@ -171,6 +186,15 @@ function Book() {
                   <Typography variant="body2">
                     {review.content}
                   </Typography>
+                  {user && user.username === review.user && (
+                    <Button 
+                      size="small" 
+                      color="error" 
+                      onClick={() => handleDeleteReview(review.id)}
+                    >
+                      Delete
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))

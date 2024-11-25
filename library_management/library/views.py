@@ -342,6 +342,7 @@ def get_book_details(request, isbn):
             "average_rating": float(average_rating) if average_rating else 0,
             "reviews": [
                 {
+                    "id": review.id,
                     "user": review.user.username,
                     "rating": review.rating,
                     "content": review.content
@@ -396,6 +397,16 @@ def add_review(request, isbn):
         }, status=201)
     except Exception as e:
         return Response({'error': str(e)}, status=400)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_review(request, isbn, review_id):
+    try:
+        review = get_object_or_404(Review, id=review_id, book__isbn=isbn, user=request.user)
+        review.delete()
+        return Response({'message': 'Review deleted successfully'}, status=200)
+    except Review.DoesNotExist:
+        return Response({'error': 'Review not found or you are not authorized to delete it'}, status=404)
 
 
 
