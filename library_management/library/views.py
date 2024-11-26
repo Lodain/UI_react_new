@@ -466,5 +466,25 @@ def forgot_password(request):
     except User.DoesNotExist:
         return Response({'error': 'No user found with this email address'}, status=404)
 
+@api_view(['POST'])
+def reset_password_confirm(request):
+    uid = request.data.get('uid')
+    token = request.data.get('token')
+    new_password = request.data.get('new_password')
+    
+    try:
+        uid = urlsafe_base64_decode(uid).decode()
+        user = User.objects.get(pk=uid)
+        
+        if default_token_generator.check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return Response({'message': 'Password reset successful'}, status=200)
+        else:
+            return Response({'error': 'Invalid reset link'}, status=400)
+            
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return Response({'error': 'Invalid reset link'}, status=400)
+
 
 

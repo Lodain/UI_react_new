@@ -5,6 +5,7 @@ import Librarian from './librarian';
 import axiosInstance from './axiosConfig';
 import Account from './account';
 import EmailVerification from './EmailVerification';
+import ResetPassword from './ResetPassword';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import './App.css';
 import Book from './Book';
@@ -28,6 +29,13 @@ function App() {
       });
   }, []);
 
+  // Function to extract uid and token from URL
+  const getResetPasswordParams = () => {
+    const path = window.location.pathname;
+    const match = path.match(/\/reset-password\/([^\/]+)\/([^\/]+)/);
+    return match ? { uid: match[1], token: match[2] } : null;
+  };
+
   return (
     <div>
       <Navbar user={user} setUser={setUser} />
@@ -36,73 +44,73 @@ function App() {
           <h1>Library Management System</h1>
           {user && <h2>Welcome back, {user.username}!</h2>}
           <div align="center">
-          {details.map((output, id) => (
-            <div className="card-container" key={id}>
-              <Card 
-                sx={{ 
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  overflow: 'hidden',
-                  cursor: 'pointer'
-                }}
-                onClick={() => window.location.href = `/book/${output.isbn}`}
-              >
-                <CardMedia
-                  className="card-media"
-                  component="img"
-                  image={`http://127.0.0.1:8080${output.cover}`}
-                  alt={output.title}
-                  sx={{
-                    padding: '10px',
-                    objectFit: 'contain',
-                    height: 300
+            {details.map((output, id) => (
+              <div className="card-container" key={id}>
+                <Card 
+                  sx={{ 
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    cursor: 'pointer'
                   }}
-                />
-                <CardContent sx={{ 
-                  padding: '8px', 
-                  flexGrow: 0,
-                  '&:last-child': { 
-                    paddingBottom: '8px' 
-                  }
-                }}>
-                  <Typography 
-                    gutterBottom 
-                    variant="h6" 
-                    component="div"
+                  onClick={() => window.location.href = `/book/${output.isbn}`}
+                >
+                  <CardMedia
+                    className="card-media"
+                    component="img"
+                    image={`http://127.0.0.1:8080${output.cover}`}
+                    alt={output.title}
                     sx={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      fontSize: '1rem',
-                      marginBottom: '4px',
-                      minHeight: '2.4em'
+                      padding: '10px',
+                      objectFit: 'contain',
+                      height: 300
                     }}
-                  >
-                    {output.title}
-                  </Typography>
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary"
-                    sx={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
-                      fontSize: '0.8rem',
-                      minHeight: '2em'
-                    }}
-                  >
-                    Authors: {output.authors.join(', ')}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
+                  />
+                  <CardContent sx={{ 
+                    padding: '8px', 
+                    flexGrow: 0,
+                    '&:last-child': { 
+                      paddingBottom: '8px' 
+                    }
+                  }}>
+                    <Typography 
+                      gutterBottom 
+                      variant="h6" 
+                      component="div"
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        fontSize: '1rem',
+                        marginBottom: '4px',
+                        minHeight: '2.4em'
+                      }}
+                    >
+                      {output.title}
+                    </Typography>
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary"
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        fontSize: '0.8rem',
+                        minHeight: '2em'
+                      }}
+                    >
+                      Authors: {output.authors.join(', ')}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
           </div>
         </>
       )}
@@ -111,6 +119,9 @@ function App() {
       {window.location.pathname.startsWith('/verify-email') && <EmailVerification />}
       {window.location.pathname === '/librarian' && <Librarian />}
       {window.location.pathname.startsWith('/book/') && <Book />}
+      {window.location.pathname.startsWith('/reset-password/') && (
+        <ResetPassword {...getResetPasswordParams()} />
+      )}
     </div>
   );
 }

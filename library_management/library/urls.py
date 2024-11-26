@@ -34,5 +34,6 @@ urlpatterns = [
     path('delete_review/<str:isbn>/<int:review_id>/', delete_review, name='delete_review'),
     path('change-password-api/', change_password_api, name='change_password_api'),
     path('forgot-password/', forgot_password, name='forgot_password'),
+    path('reset-password-confirm/', reset_password_confirm, name='reset_password_confirm'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
