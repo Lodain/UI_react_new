@@ -57,7 +57,7 @@ function Account() {
     }
 
     try {
-      const response = await axiosInstance.post('/change-password-api/', {
+      await axiosInstance.post('/change-password-api/', {
         oldPassword: passwordData.oldPassword,
         newPassword: passwordData.newPassword
       });
