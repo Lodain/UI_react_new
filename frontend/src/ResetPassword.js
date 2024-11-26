@@ -18,7 +18,7 @@ function ResetPassword({ uid, token }) {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8080/reset-password-confirm/', {
+      await axios.post('http://127.0.0.1:8080/reset-password-confirm/', {
         uid,
         token,
         new_password: newPassword

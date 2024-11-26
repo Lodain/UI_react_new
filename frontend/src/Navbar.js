@@ -44,6 +44,7 @@ const Navbar = ({ setUser }) => {
             setUser(userData);
             setUserState(userData);
             setShowLoginModal(false);
+            window.location.href = '/';
           })
           .catch(error => {
             console.error('Error fetching user info:', error);

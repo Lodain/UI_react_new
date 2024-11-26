@@ -32,7 +32,7 @@ function App() {
   // Function to extract uid and token from URL
   const getResetPasswordParams = () => {
     const path = window.location.pathname;
-    const match = path.match(/\/reset-password\/([^\/]+)\/([^\/]+)/);
+    const match = path.match(/\/reset-password\/([^/]+)\/([^/]+)/);
     return match ? { uid: match[1], token: match[2] } : null;
   };
 
