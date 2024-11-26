@@ -14,9 +14,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [details, setDetails] = useState([]);
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
-  const [nextBookIndex, setNextBookIndex] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [slideDirection, setSlideDirection] = useState('next');
 
   useEffect(() => {
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
