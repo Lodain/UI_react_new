@@ -86,35 +86,62 @@
   width: 100%;
   height: 500px;
   background-color: #D8E4FC;
+  background-image: radial-gradient(#C5D6FB 1px, transparent 1px);
+  background-size: 10px 10px;
   padding: 20px 0;
   margin-bottom: 30px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
-.banner-content {
+.banner-text {
   max-width: 300px;
-  margin: 0 auto;
-  display: block;
-  position: relative;
+  text-align: left;
+  font-family: 'Lobster', cursive;
+  color: #4A90E2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: 100%;
 }
 
-.banner-card {
-  position: absolute;
-  transition: transform 0.5s ease-in-out;
-  transform: translateX(0);
+.banner-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.banner-text p {
+  font-size: 1.5rem;
+}
+
+.banner-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -20px;
+  margin-right:10%;
+}
+
+.banner-image {
   width: 300px;
   height: 450px;
   border-radius: 15px;
   overflow: hidden;
+  transition: transform 0.5s ease-in-out;
+  transform: translateX(0);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
-.banner-card.sliding-out {
-  animation: slideOut 0.5s ease-in-out forwards;
-}
-
-.banner-card-enter {
+.banner-image-enter {
   animation: slideIn 0.5s ease-in-out;
+}
+
+.banner-image.sliding-out {
+  animation: slideOut 0.5s ease-in-out forwards;
 }
 
 @keyframes slideIn {
@@ -164,4 +191,30 @@ body {
   color: #4A90E2;
   z-index: 1;
   text-align: left;
+}
+
+.banner-heading {
+    font-size: 2rem;
+    color: #4A90E2;
+    margin-bottom: 10px;
+}
+
+.banner-description {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.banner-cta {
+    background-color: #58DDD9;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.banner-cta:hover {
+    background-color: #4AC0B8;
 }
