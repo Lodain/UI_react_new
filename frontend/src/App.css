@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
 .App {
   text-align: center;
 }
@@ -77,23 +80,21 @@
 
 /* Banner container styles */
 .banner {
+  position: relative;
   width: 100%;
   height: 500px;
   background-color: #f8f9fa;
   padding: 20px 0;
   margin-bottom: 30px;
   overflow: hidden;
-  position: relative;
 }
 
 .banner-content {
   max-width: 300px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+  display: block;
   position: relative;
+  height: 100%;
 }
 
 .banner-card {
@@ -136,4 +137,20 @@
 .card-container, .banner-card {
   width: 300px;
   height: 450px;
+}
+
+body {
+  position: relative;
+}
+
+.banner-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  font-family: 'Lobster', cursive;
+  font-size: 3rem;
+  color: #333;
+  z-index: 1;
+  text-align: left;
 }

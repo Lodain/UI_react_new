@@ -62,6 +62,7 @@ function App() {
       {window.location.pathname === '/' && (
         <>
           <div className="banner">
+            <h1 className="banner-title">BiblioBase</h1>
             <div className="banner-content">
               {details.length > 0 && (
                 <Card 
@@ -131,7 +132,6 @@ function App() {
               )}
             </div>
           </div>
-          <h1>Library Management System</h1>
           {user && <h2>Welcome back, {user.username}!</h2>}
           <div align="center">
             {details.map((output, id) => (
