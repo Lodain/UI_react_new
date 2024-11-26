@@ -35,5 +35,6 @@ urlpatterns = [
     path('change-password-api/', change_password_api, name='change_password_api'),
     path('forgot-password/', forgot_password, name='forgot_password'),
     path('reset-password-confirm/', reset_password_confirm, name='reset_password_confirm'),
+    path('delete-account-api/', delete_account_api, name='delete_account_api'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -486,5 +486,27 @@ def reset_password_confirm(request):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         return Response({'error': 'Invalid reset link'}, status=400)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_account_api(request):
+    user = request.user
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    if not username or not password:
+        return Response({'error': 'Please provide both username and password'}, status=400)
+
+    if username != user.username:
+        return Response({'error': 'Username does not match'}, status=400)
+
+    if not user.check_password(password):
+        return Response({'error': 'Password is incorrect'}, status=400)
+
+    try:
+        user.delete()
+        return Response({'message': 'Account deleted successfully'}, status=200)
+    except Exception as e:
+        return Response({'error': 'Failed to delete account'}, status=400)
+
 
 

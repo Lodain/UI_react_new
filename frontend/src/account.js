@@ -13,6 +13,11 @@ function Account() {
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showDeleteForm, setShowDeleteForm] = useState(false);
+  const [deleteData, setDeleteData] = useState({
+    username: '',
+    password: ''
+  });
 
   useEffect(() => {
     // Fetch user information from session storage
@@ -65,6 +70,25 @@ function Account() {
       });
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to change password');
+    }
+  };
+
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    try {
+      await axiosInstance.post('/delete-account-api/', {
+        username: deleteData.username,
+        password: deleteData.password
+      });
+
+      // Clear session storage and redirect to home
+      sessionStorage.clear();
+      window.location.href = '/';
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete account');
     }
   };
 
@@ -227,6 +251,78 @@ function Account() {
             }}
           >
             Update Password
+          </button>
+        </form>
+      )}
+
+      {!showPasswordForm && (
+        <div>
+          <button 
+            onClick={() => setShowDeleteForm(!showDeleteForm)}
+            style={{
+              padding: '10px 20px',
+              margin: '20px 0',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            {showDeleteForm ? 'Cancel' : 'Delete Account'}
+          </button>
+        </div>
+      )}
+
+      {showDeleteForm && (
+        <form onSubmit={handleDeleteAccount} style={{ maxWidth: '300px', margin: '20px 0' }}>
+          <div style={{ marginBottom: '15px' }}>
+            <input
+              type="text"
+              placeholder="Confirm Username"
+              value={deleteData.username}
+              onChange={(e) => setDeleteData({...deleteData, username: e.target.value})}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '5px',
+                borderRadius: '4px',
+                border: '1px solid #ddd'
+              }}
+              required
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={deleteData.password}
+              onChange={(e) => setDeleteData({...deleteData, password: e.target.value})}
+              style={{
+                width: '100%',
+                padding: '8px',
+                marginBottom: '5px',
+                borderRadius: '4px',
+                border: '1px solid #ddd'
+              }}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            Confirm Delete Account
           </button>
         </form>
       )}
