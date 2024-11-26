@@ -93,7 +93,7 @@ const Navbar = ({ setUser }) => {
             <button onClick={() => window.location.href = '/account'}>Account</button>
             <button onClick={() => window.location.href = '/borrow'}>Borrow</button>
             {user.superuser && <button onClick={() => window.location.href = '/librarian'}>Librarian</button>}
-            {user.superuser && user.staff && <button onClick={() => window.location.href = 'http://127.0.0.1:8080/admin/'}>Admin Page</button>}
+            {user.superuser && user.staff && <button onClick={() => window.location.href = 'http://127.0.0.1:8080/admin/'}>Admin</button>}
           </>
         )}
       </div>

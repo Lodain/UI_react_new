@@ -218,3 +218,94 @@ body {
 .banner-cta:hover {
     background-color: #4AC0B8;
 }
+
+.skeleton-image {
+  width: 300px;
+  height: 450px;
+  background-color: #e0e0e0; /* Light gray color for skeleton */
+  border-radius: 15px;
+  animation: pulse 1.5s infinite; /* Add a pulsing animation */
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #f0f0f0;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
+
+.skeleton-card {
+  width: 300px;
+  height: 450px;
+  background-color: #e0e0e0; /* Light gray color for skeleton */
+  border-radius: 15px;
+  margin: 20px;
+  animation: pulse 1.5s infinite; /* Add a pulsing animation */
+  display: inline-block; /* Ensure cards are inline */
+}
+
+.skeleton-container {
+  display: flex; /* Use flexbox to arrange skeletons in a row */
+  justify-content: center; /* Center the skeletons horizontally */
+  flex-wrap: wrap; /* Allow wrapping if needed */
+}
+
+.login-modal {
+  background-color: #ECF1FE; /* Use the page's background color */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.login-modal h2 {
+  font-family: 'Lobster', cursive;
+  color: #4A90E2; /* Use the accent color */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-modal input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #C5D6FB;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.login-modal button {
+  background-color: #58DDD9; /* Use the button color */
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.login-modal button:hover {
+  background-color: #4AC0B8; /* Darken on hover */
+}
+
+.login-modal .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #4A90E2;
+}
