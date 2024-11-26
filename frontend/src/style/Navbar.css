@@ -36,11 +36,17 @@
 
   /* Add styles for the navbar */
 nav.top-right-buttons {
-    background-color: #333;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #ECF1FE;
     padding: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .left-buttons, .right-buttons {
@@ -49,9 +55,9 @@ nav.top-right-buttons {
 }
 
 .left-buttons button, .right-buttons button {
-    background-color: #61dafb;
+    background-color: #58DDD9;
     border: none;
-    color: white;
+    color: #F5F7FA;
     padding: 10px 20px;
     margin: 0 5px;
     border-radius: 5px;
@@ -60,5 +66,18 @@ nav.top-right-buttons {
 }
 
 .left-buttons button:hover, .right-buttons button:hover {
-    background-color: #21a1f1;
+    background-color: #10CFC9;
+}
+
+.navbar-title {
+    font-family: 'Lobster', cursive; /* Use the Lobster font */
+    font-size: 1.5rem; /* Adjust size as needed */
+    color: #4A90E2; /* Use the same color as the banner title */
+    margin-right: 20px; /* Space between title and buttons */
+}
+
+.right-buttons {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
 }

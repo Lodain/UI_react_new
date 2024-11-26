@@ -62,7 +62,6 @@ function App() {
       {window.location.pathname === '/' && (
         <>
           <div className="banner">
-            <h1 className="banner-title">BiblioBase</h1>
             <div className="banner-content">
               {details.length > 0 && (
                 <Card 

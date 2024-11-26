@@ -86,6 +86,7 @@ const Navbar = ({ setUser }) => {
   return (
     <nav className="top-right-buttons">
       <div className="left-buttons">
+        <span className="navbar-title">BiblioBase</span>
         <button onClick={() => window.location.href = '/'}>Home</button>
         {user && (
           <>
