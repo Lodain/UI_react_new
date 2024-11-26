@@ -12,23 +12,53 @@
   }
   
   .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 60%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   
   .close {
-    color: #aaa;
+    color: #333;
     float: right;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
   }
   
   .close:hover,
   .close:focus {
-    color: black;
+    color: #000;
     text-decoration: none;
     cursor: pointer;
   }
+
+  /* Add styles for the navbar */
+nav.top-right-buttons {
+    background-color: #333;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-buttons, .right-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.left-buttons button, .right-buttons button {
+    background-color: #61dafb;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.left-buttons button:hover, .right-buttons button:hover {
+    background-color: #21a1f1;
+}

@@ -85,13 +85,19 @@ const Navbar = ({ setUser }) => {
 
   return (
     <nav className="top-right-buttons">
-      <button onClick={() => window.location.href = '/'}>Home</button>
-      {user ? (
-        <>
-          <button onClick={() => window.location.href = '/account'}>Account</button>
-          <button onClick={() => window.location.href = '/borrow'}>Borrow</button>
-          {user.superuser && <button onClick={() => window.location.href = '/librarian'}>Librarian</button>}
-          {user.superuser && user.staff && <button onClick={() => window.location.href = 'http://127.0.0.1:8080/admin/'}>Admin Page</button>}
+      <div className="left-buttons">
+        <button onClick={() => window.location.href = '/'}>Home</button>
+        {user && (
+          <>
+            <button onClick={() => window.location.href = '/account'}>Account</button>
+            <button onClick={() => window.location.href = '/borrow'}>Borrow</button>
+            {user.superuser && <button onClick={() => window.location.href = '/librarian'}>Librarian</button>}
+            {user.superuser && user.staff && <button onClick={() => window.location.href = 'http://127.0.0.1:8080/admin/'}>Admin Page</button>}
+          </>
+        )}
+      </div>
+      <div className="right-buttons">
+        {user ? (
           <button onClick={() => {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
@@ -101,13 +107,13 @@ const Navbar = ({ setUser }) => {
             delete axios.defaults.headers.common['Authorization'];
             window.location.href = '/';
           }}>Logout</button>
-        </>
-      ) : (
-        <>
-          <button onClick={() => setShowLoginModal(true)}>Login</button>
-          <button onClick={() => setShowRegisterModal(true)}>Register</button>
-        </>
-      )}
+        ) : (
+          <>
+            <button onClick={() => setShowRegisterModal(true)}>Register</button>
+            <button onClick={() => setShowLoginModal(true)}>Login</button>
+          </>
+        )}
+      </div>
 
       {showLoginModal && (
         <div className="modal">
