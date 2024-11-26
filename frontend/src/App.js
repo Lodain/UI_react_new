@@ -13,6 +13,10 @@ import Book from './Book';
 function App() {
   const [user, setUser] = useState(null);
   const [details, setDetails] = useState([]);
+  const [currentBookIndex, setCurrentBookIndex] = useState(0);
+  const [nextBookIndex, setNextBookIndex] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [slideDirection, setSlideDirection] = useState('next');
 
   useEffect(() => {
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
@@ -29,6 +33,24 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    if (details.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      
+      setTimeout(() => {
+        setCurrentBookIndex((prevIndex) => 
+          prevIndex === details.length - 1 ? 0 : prevIndex + 1
+        );
+        setIsTransitioning(false);
+      }, 500);
+      
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [details]);
+
   // Function to extract uid and token from URL
   const getResetPasswordParams = () => {
     const path = window.location.pathname;
@@ -41,6 +63,76 @@ function App() {
       <Navbar user={user} setUser={setUser} />
       {window.location.pathname === '/' && (
         <>
+          <div className="banner">
+            <div className="banner-content">
+              {details.length > 0 && (
+                <Card 
+                  className={`banner-card ${isTransitioning ? 'sliding-out' : 'banner-card-enter'}`}
+                  sx={{ 
+                    maxWidth: 300,
+                    height: 450,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => window.location.href = `/book/${details[currentBookIndex].isbn}`}
+                >
+                  <CardMedia
+                    className="card-media"
+                    component="img"
+                    image={`http://127.0.0.1:8080${details[currentBookIndex].cover}`}
+                    alt={details[currentBookIndex].title}
+                    sx={{
+                      padding: '10px',
+                      objectFit: 'contain',
+                      height: 300
+                    }}
+                  />
+                  <CardContent sx={{ 
+                    padding: '8px', 
+                    flexGrow: 0,
+                    '&:last-child': { 
+                      paddingBottom: '8px' 
+                    }
+                  }}>
+                    <Typography 
+                      gutterBottom 
+                      variant="h6" 
+                      component="div"
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        fontSize: '1rem',
+                        marginBottom: '4px',
+                        minHeight: '2.4em'
+                      }}
+                    >
+                      {details[currentBookIndex].title}
+                    </Typography>
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary"
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        fontSize: '0.8rem',
+                        minHeight: '2em'
+                      }}
+                    >
+                      Authors: {details[currentBookIndex].authors.join(', ')}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
           <h1>Library Management System</h1>
           {user && <h2>Welcome back, {user.username}!</h2>}
           <div align="center">
