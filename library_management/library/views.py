@@ -508,5 +508,25 @@ def delete_account_api(request):
     except Exception as e:
         return Response({'error': 'Failed to delete account'}, status=400)
 
+@api_view(['POST'])
+def resend_verification_email(request):
+    email = request.data.get('email')
+    try:
+        user = User.objects.get(email=email, is_active=False)
+        
+        # Send verification email
+        subject = 'Verify your email'
+        message = render_to_string('registration/verification_email.html', {
+            'user': user,
+            'domain': request.get_host(),
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': default_token_generator.make_token(user),
+        })
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+        
+        return Response({'message': 'Verification email has been resent.'}, status=200)
+    except User.DoesNotExist:
+        return Response({'error': 'No inactive user found with this email address'}, status=404)
+
 
 

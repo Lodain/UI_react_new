@@ -12,6 +12,9 @@ const Navbar = ({ setUser }) => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [resetMessage, setResetMessage] = useState('');
+  const [showResendVerification, setShowResendVerification] = useState(false);
+  const [resendEmail, setResendEmail] = useState('');
+  const [resendMessage, setResendMessage] = useState('');
 
   const backendURL = 'http://127.0.0.1:8080';
 
@@ -48,6 +51,9 @@ const Navbar = ({ setUser }) => {
       })
       .catch(error => {
         console.error('Login error:', error);
+        if (error.response?.status === 401) {
+          setShowResendVerification(true);
+        }
       });
   };
 
@@ -59,6 +65,20 @@ const Navbar = ({ setUser }) => {
       })
       .catch(error => {
         setResetMessage(error.response?.data?.error || 'An error occurred');
+      });
+  };
+
+  const handleResendVerification = () => {
+    axios.post(`${backendURL}/resend-verification/`, { email: resendEmail })
+      .then(response => {
+        setResendMessage('Verification email has been resent. Please check your inbox.');
+        setTimeout(() => {
+          setShowResendVerification(false);
+          setResendMessage('');
+        }, 3000);
+      })
+      .catch(error => {
+        setResendMessage(error.response?.data?.error || 'An error occurred');
       });
   };
 
@@ -94,10 +114,12 @@ const Navbar = ({ setUser }) => {
             <span className="close" onClick={() => {
               setShowLoginModal(false);
               setShowForgotPassword(false);
+              setShowResendVerification(false);
+              setResendMessage('');
               setResetMessage('');
             }}>&times;</span>
             
-            {!showForgotPassword ? (
+            {!showForgotPassword && !showResendVerification ? (
               <>
                 <h2>Login</h2>
                 <input
@@ -118,7 +140,7 @@ const Navbar = ({ setUser }) => {
                   Forgot Password?
                 </p>
               </>
-            ) : (
+            ) : showForgotPassword ? (
               <>
                 <h2>Forgot Password</h2>
                 {resetMessage && <p>{resetMessage}</p>}
@@ -133,6 +155,25 @@ const Navbar = ({ setUser }) => {
                    onClick={() => {
                      setShowForgotPassword(false);
                      setResetMessage('');
+                   }}>
+                  Back to Login
+                </p>
+              </>
+            ) : (
+              <>
+                <h2>Resend Verification Email</h2>
+                {resendMessage && <p>{resendMessage}</p>}
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                />
+                <button onClick={handleResendVerification}>Resend Verification</button>
+                <p style={{ cursor: 'pointer', color: '#007bff' }}
+                   onClick={() => {
+                     setShowResendVerification(false);
+                     setResendMessage('');
                    }}>
                   Back to Login
                 </p>
