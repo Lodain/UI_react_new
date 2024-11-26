@@ -18,6 +18,7 @@ function Account() {
     username: '',
     password: ''
   });
+  const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
 
   useEffect(() => {
     // Fetch user information from session storage
@@ -84,9 +85,7 @@ function Account() {
         password: deleteData.password
       });
 
-      // Clear session storage and redirect to home
-      sessionStorage.clear();
-      window.location.href = '/';
+      setShowDeleteSuccessModal(true);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to delete account');
     }
@@ -325,6 +324,49 @@ function Account() {
             Confirm Delete Account
           </button>
         </form>
+      )}
+
+      {showDeleteSuccessModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            maxWidth: '400px',
+            textAlign: 'center'
+          }}>
+            <h2>Account Deleted Successfully</h2>
+            <p>Your account has been permanently deleted.</p>
+            <button
+              onClick={() => {
+                sessionStorage.clear();
+                window.location.href = '/';
+              }}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                marginTop: '15px'
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
