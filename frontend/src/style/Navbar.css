@@ -41,7 +41,7 @@ nav.top-right-buttons {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background-color: #ECF1FE;
+    background-color: #D8E4FC;
     padding: 10px;
     display: flex;
     justify-content: space-between;
@@ -55,7 +55,7 @@ nav.top-right-buttons {
 }
 
 .left-buttons button, .right-buttons button {
-    background-color: #58DDD9;
+    background-color: #3C76F1;
     border: none;
     color: #F5F7FA;
     padding: 10px 20px;
@@ -66,7 +66,7 @@ nav.top-right-buttons {
 }
 
 .left-buttons button:hover, .right-buttons button:hover {
-    background-color: #10CFC9;
+    background-color: #366AD9;
 }
 
 .navbar-title {
