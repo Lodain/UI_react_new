@@ -47,6 +47,8 @@ def get_user_info(request):
     username = request.data.get('username')
     try:
         user = User.objects.get(username=username)
+        if not user.is_active:
+            return Response({'error': 'User account is inactive. Please verify your email.'}, status=403)
         user_data = {
             'username': user.username,
             'first_name': user.first_name,

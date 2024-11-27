@@ -15,6 +15,7 @@ const Navbar = ({ setUser }) => {
   const [showResendVerification, setShowResendVerification] = useState(false);
   const [resendEmail, setResendEmail] = useState('');
   const [resendMessage, setResendMessage] = useState('');
+  const [loginErrorMessage, setLoginErrorMessage] = useState('');
 
   const backendURL = 'http://127.0.0.1:8080';
 
@@ -48,12 +49,23 @@ const Navbar = ({ setUser }) => {
           })
           .catch(error => {
             console.error('Error fetching user info:', error);
+            if (error.response?.status === 403) {
+              setShowResendVerification(true);
+              setLoginErrorMessage('User account is inactive. Please verify your email.');
+            } else {
+              setLoginErrorMessage('An error occurred. Please try again.');
+            }
           });
       })
       .catch(error => {
         console.error('Login error:', error);
         if (error.response?.status === 401) {
+          setLoginErrorMessage('Invalid credentials. Please try again.');
+        } else if (error.response?.status === 403) {
           setShowResendVerification(true);
+          setLoginErrorMessage('User account is inactive. Please verify your email.');
+        } else {
+          setLoginErrorMessage('An error occurred. Please try again.');
         }
       });
   };
@@ -125,11 +137,13 @@ const Navbar = ({ setUser }) => {
               setShowResendVerification(false);
               setResendMessage('');
               setResetMessage('');
+              setLoginErrorMessage('');
             }}>&times;</span>
             
             {!showForgotPassword && !showResendVerification ? (
               <>
                 <h2>Login</h2>
+                {loginErrorMessage && <p style={{ color: 'red' }}>{loginErrorMessage}</p>}
                 <input
                   type="text"
                   placeholder="Username"
