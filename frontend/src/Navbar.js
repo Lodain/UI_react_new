@@ -2,6 +2,7 @@ import './style/Navbar.css';
 import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
 import RegisterModal from './RegisterModal';
+import LoadingModal from './component/LoadingModal';
 
 const Navbar = ({ setUser }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -17,6 +18,9 @@ const Navbar = ({ setUser }) => {
   const [resendMessage, setResendMessage] = useState('');
   const [loginErrorMessage, setLoginErrorMessage] = useState('');
   const [isUserInactive, setIsUserInactive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const backendURL = 'http://127.0.0.1:8080';
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -31,11 +35,13 @@ const Navbar = ({ setUser }) => {
   }, [setUser]);
 
   const handleLogin = () => {
+    setIsLoading(true);
     axiosInstance.post('/get-user-info/', { username })
       .then(userResponse => {
         const userData = userResponse.data;
         if (userData.error) {
           setLoginErrorMessage(userData.error);
+          setIsLoading(false);
           return;
         }
         
@@ -49,11 +55,13 @@ const Navbar = ({ setUser }) => {
             setUser(userData);
             setUserState(userData);
             setShowLoginModal(false);
+            setIsLoading(false);
             window.location.href = '/';
           })
           .catch(error => {
             console.error('Token retrieval error:', error);
             setLoginErrorMessage('Invalid credentials. Please try again.');
+            setIsLoading(false);
           });
       })
       .catch(error => {
@@ -64,6 +72,7 @@ const Navbar = ({ setUser }) => {
         } else {
           setLoginErrorMessage('Invalid credentials. Please try again.');
         }
+        setIsLoading(false);
       });
   };
 
@@ -214,6 +223,7 @@ const Navbar = ({ setUser }) => {
         </div>
       )}
 
+      <LoadingModal show={isLoading} />
       <RegisterModal show={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
     </nav>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import LoadingModal from './component/LoadingModal';
 
 const RegisterModal = ({ show, onClose }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const RegisterModal = ({ show, onClose }) => {
     email: '',
     password: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -19,14 +21,17 @@ const RegisterModal = ({ show, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsLoading(true);
     axios.post('http://127.0.0.1:8080/register/', formData)
       .then(response => {
         alert('Registration successful! Please check your email to verify your account.');
         onClose();
+        setIsLoading(false);
       })
       .catch(error => {
         console.error('Registration error:', error);
         alert('Registration failed. Please try again.');
+        setIsLoading(false);
       });
     console.log(formData);
   };
@@ -47,6 +52,7 @@ const RegisterModal = ({ show, onClose }) => {
           <button type="submit">Register</button>
         </form>
       </div>
+      <LoadingModal show={isLoading} />
     </div>
   );
 };
