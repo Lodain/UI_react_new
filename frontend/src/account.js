@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
+import './style/account.css';
 
 function Account() {
   const [user, setUser] = useState(null);
@@ -96,31 +97,13 @@ function Account() {
       <h1>Account Information</h1>
       
       {success && (
-        <div 
-          style={{ 
-            color: 'green', 
-            backgroundColor: '#e8f5e9',
-            padding: '10px',
-            borderRadius: '4px',
-            marginBottom: '20px',
-            border: '1px solid #c8e6c9'
-          }}
-        >
+        <div className="success-message">
           {success}
         </div>
       )}
 
       {error && (
-        <div 
-          style={{ 
-            color: '#721c24', 
-            backgroundColor: '#f8d7da',
-            padding: '10px',
-            borderRadius: '4px',
-            marginBottom: '20px',
-            border: '1px solid #f5c6cb'
-          }}
-        >
+        <div className="error-message">
           {error}
         </div>
       )}
@@ -170,15 +153,7 @@ function Account() {
       <div>
         <button 
           onClick={() => setShowPasswordForm(!showPasswordForm)}
-          style={{
-            padding: '10px 20px',
-            margin: '20px 0',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
+          className={`button change-password-button`}
         >
           {showPasswordForm ? 'Cancel' : 'Change Password'}
         </button>
@@ -192,13 +167,7 @@ function Account() {
               placeholder="Current Password"
               value={passwordData.oldPassword}
               onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
-              style={{
-                width: '100%',
-                padding: '8px',
-                marginBottom: '5px',
-                borderRadius: '4px',
-                border: '1px solid #ddd'
-              }}
+              className="input-field"
               required
             />
           </div>
@@ -209,13 +178,7 @@ function Account() {
               placeholder="New Password"
               value={passwordData.newPassword}
               onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-              style={{
-                width: '100%',
-                padding: '8px',
-                marginBottom: '5px',
-                borderRadius: '4px',
-                border: '1px solid #ddd'
-              }}
+              className="input-field"
               required
             />
           </div>
@@ -226,28 +189,14 @@ function Account() {
               placeholder="Confirm New Password"
               value={passwordData.confirmPassword}
               onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-              style={{
-                width: '100%',
-                padding: '8px',
-                marginBottom: '5px',
-                borderRadius: '4px',
-                border: '1px solid #ddd'
-              }}
+              className="input-field"
               required
             />
           </div>
 
           <button
             type="submit"
-            style={{
-              width: '100%',
-              padding: '10px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
+            className="update-password-button"
           >
             Update Password
           </button>
@@ -258,15 +207,7 @@ function Account() {
         <div>
           <button 
             onClick={() => setShowDeleteForm(!showDeleteForm)}
-            style={{
-              padding: '10px 20px',
-              margin: '20px 0',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
+            className={`button delete-account-button`}
           >
             {showDeleteForm ? 'Cancel' : 'Delete Account'}
           </button>
@@ -281,13 +222,7 @@ function Account() {
               placeholder="Confirm Username"
               value={deleteData.username}
               onChange={(e) => setDeleteData({...deleteData, username: e.target.value})}
-              style={{
-                width: '100%',
-                padding: '8px',
-                marginBottom: '5px',
-                borderRadius: '4px',
-                border: '1px solid #ddd'
-              }}
+              className="input-field"
               required
             />
           </div>
@@ -298,28 +233,14 @@ function Account() {
               placeholder="Confirm Password"
               value={deleteData.password}
               onChange={(e) => setDeleteData({...deleteData, password: e.target.value})}
-              style={{
-                width: '100%',
-                padding: '8px',
-                marginBottom: '5px',
-                borderRadius: '4px',
-                border: '1px solid #ddd'
-              }}
+              className="input-field"
               required
             />
           </div>
 
           <button
             type="submit"
-            style={{
-              width: '100%',
-              padding: '10px',
-              backgroundColor: '#dc3545',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
+            className="delete-account-button"
           >
             Confirm Delete Account
           </button>
@@ -327,25 +248,8 @@ function Account() {
       )}
 
       {showDeleteSuccessModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            maxWidth: '400px',
-            textAlign: 'center'
-          }}>
+        <div className="modal">
+          <div className="modal-content">
             <h2>Account Deleted Successfully</h2>
             <p>Your account has been permanently deleted.</p>
             <button
@@ -353,15 +257,7 @@ function Account() {
                 sessionStorage.clear();
                 window.location.href = '/';
               }}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                marginTop: '15px'
-              }}
+              className="button change-password-button"
             >
               OK
             </button>
