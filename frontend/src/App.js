@@ -127,6 +127,9 @@ function App() {
                 )}
               </div>
             </div>
+            <div className="books-title">
+              Books:
+            </div>
             <div className="search-container">
               <input
                 type="text"
