@@ -103,27 +103,30 @@ def register_user(request):
     if User.objects.filter(username=username).exists():
         return Response({'error': 'Username already exists'}, status=400)
 
-    user = User.objects.create_user(
-        username=username,
-        email=email,
-        password=password,
-        first_name=first_name,
-        last_name=last_name
-    )
-    user.is_active = False
-    user.save()
+    try:
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name
+        )
+        user.is_active = False
+        user.save()
 
-    # Send verification email
-    subject = 'Verify your email'
-    message = render_to_string('registration/verification_email.html', {
-        'user': user,
-        'domain': request.get_host(),
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': default_token_generator.make_token(user),
-    })
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+        # Send verification email
+        subject = 'Verify your email'
+        message = render_to_string('registration/verification_email.html', {
+            'user': user,
+            'domain': request.get_host(),
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': default_token_generator.make_token(user),
+        })
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
-    return Response({'message': 'User registered successfully. Please check your email to verify your account.'}, status=201)
+        return Response({'message': 'User registered successfully. Please check your email to verify your account.'}, status=201)
+    except Exception as e:
+        return Response({'error': str(e)}, status=400)
 
 @api_view(['GET'])
 def verify_email(request, uidb64, token):
