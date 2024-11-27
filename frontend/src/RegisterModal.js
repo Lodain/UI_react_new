@@ -61,7 +61,7 @@ const RegisterModal = ({ show, onClose }) => {
         </div>
         <LoadingModal show={isLoading} />
       </div>
-      <SuccessModal show={isSuccess} onClose={() => setIsSuccess(false)} />
+      <SuccessModal show={isSuccess} onClose={() => { setIsSuccess(false); onClose(); }} />
     </>
   );
 };

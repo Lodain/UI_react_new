@@ -20,7 +20,6 @@ const Navbar = ({ setUser }) => {
   const [isUserInactive, setIsUserInactive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const backendURL = 'http://127.0.0.1:8080';
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
