@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
 import RegisterModal from './RegisterModal';
 import LoadingModal from './component/LoadingModal';
+import LoginImage from './img/Login.PNG';
 
 const Navbar = ({ setUser }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -151,73 +152,81 @@ const Navbar = ({ setUser }) => {
               setLoginErrorMessage('');
               setIsUserInactive(false);
             }}>&times;</span>
-            
-            {!showForgotPassword && !showResendVerification ? (
-              <>
-                <h2>Login</h2>
-                {loginErrorMessage && <p style={{ color: 'red' }}>{loginErrorMessage}</p>}
-                {isUserInactive && (
-                  <p style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => setShowResendVerification(true)}>
-                    Resend verification email?
-                  </p>
+            <div className="login-modal-body">
+              <img src={LoginImage} alt="Login" className="login-image" />
+              <div className="login-form">
+                {!showForgotPassword && !showResendVerification ? (
+                  <>
+                    <h2>Login</h2>
+                    {loginErrorMessage && (
+                      <p style={{ color: isUserInactive ? '#FFBB38' : 'red' }}>
+                        {loginErrorMessage}
+                      </p>
+                    )}
+                    {isUserInactive && (
+                      <p style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => setShowResendVerification(true)}>
+                        Resend verification email?
+                      </p>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      value={username}
+                      onChange={handleInputChange(setUsername)}
+                    />
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={handleInputChange(setPassword)}
+                    />
+                    <button onClick={handleLogin}>Login</button>
+                    <p style={{ cursor: 'pointer', color: '#007bff' }} 
+                       onClick={() => setShowForgotPassword(true)}>
+                      Forgot Password?
+                    </p>
+                  </>
+                ) : showForgotPassword ? (
+                  <>
+                    <h2>Forgot Password</h2>
+                    {resetMessage && <p>{resetMessage}</p>}
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                    />
+                    <button onClick={handleForgotPassword}>Reset Password</button>
+                    <p style={{ cursor: 'pointer', color: '#007bff' }}
+                       onClick={() => {
+                         setShowForgotPassword(false);
+                         setResetMessage('');
+                       }}>
+                      Back to Login
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h2>Resend Verification Email</h2>
+                    {resendMessage && <p>{resendMessage}</p>}
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={resendEmail}
+                      onChange={(e) => setResendEmail(e.target.value)}
+                    />
+                    <button onClick={handleResendVerification}>Resend Verification</button>
+                    <p style={{ cursor: 'pointer', color: '#007bff' }}
+                       onClick={() => {
+                         setShowResendVerification(false);
+                         setResendMessage('');
+                       }}>
+                      Back to Login
+                    </p>
+                  </>
                 )}
-                <input
-                  type="text"
-                  placeholder="Username"
-                  value={username}
-                  onChange={handleInputChange(setUsername)}
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={handleInputChange(setPassword)}
-                />
-                <button onClick={handleLogin}>Login</button>
-                <p style={{ cursor: 'pointer', color: '#007bff' }} 
-                   onClick={() => setShowForgotPassword(true)}>
-                  Forgot Password?
-                </p>
-              </>
-            ) : showForgotPassword ? (
-              <>
-                <h2>Forgot Password</h2>
-                {resetMessage && <p>{resetMessage}</p>}
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={forgotEmail}
-                  onChange={(e) => setForgotEmail(e.target.value)}
-                />
-                <button onClick={handleForgotPassword}>Reset Password</button>
-                <p style={{ cursor: 'pointer', color: '#007bff' }}
-                   onClick={() => {
-                     setShowForgotPassword(false);
-                     setResetMessage('');
-                   }}>
-                  Back to Login
-                </p>
-              </>
-            ) : (
-              <>
-                <h2>Resend Verification Email</h2>
-                {resendMessage && <p>{resendMessage}</p>}
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={resendEmail}
-                  onChange={(e) => setResendEmail(e.target.value)}
-                />
-                <button onClick={handleResendVerification}>Resend Verification</button>
-                <p style={{ cursor: 'pointer', color: '#007bff' }}
-                   onClick={() => {
-                     setShowResendVerification(false);
-                     setResendMessage('');
-                   }}>
-                  Back to Login
-                </p>
-              </>
-            )}
+              </div>
+            </div>
           </div>
         </div>
       )}
