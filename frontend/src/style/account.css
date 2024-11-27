@@ -67,3 +67,55 @@
     max-width: 400px;
     text-align: center;
   }
+  
+  .account-container {
+    display: flex;
+    gap: 20px;
+    min-height: calc(100vh - 100px); /* Adjust based on your header/footer */
+    padding: 20px;
+  }
+  
+  .account-sidebar {
+    width: 30%;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .account-content {
+    width: 70%;
+  }
+  
+  .account-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .menu-button {
+    width: 100%;
+    text-align: left;
+    padding: 12px 20px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .menu-button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .menu-button.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .content-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }

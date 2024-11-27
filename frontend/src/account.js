@@ -20,6 +20,7 @@ function Account() {
     password: ''
   });
   const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('account');
 
   useEffect(() => {
     // Fetch user information from session storage
@@ -92,6 +93,167 @@ function Account() {
     }
   };
 
+  const renderContent = () => {
+    switch(activeTab) {
+      case 'account':
+        return (
+          <div>
+            {user && (
+              <div>
+                <p><b>Name:</b> {user.first_name}</p>
+                <p><b>Surname:</b> {user.last_name}</p>
+                <p><b>Email:</b> {user.email}</p>
+                <p><b>Username:</b> {user.username}</p>
+              </div>
+            )}
+
+            <div>
+              <button 
+                onClick={() => setShowPasswordForm(!showPasswordForm)}
+                className={`button change-password-button`}
+              >
+                {showPasswordForm ? 'Cancel' : 'Change Password'}
+              </button>
+            </div>
+
+            {showPasswordForm && (
+              <form onSubmit={handlePasswordChange} style={{ maxWidth: '300px', margin: '20px 0' }}>
+                <div style={{ marginBottom: '15px' }}>
+                  <input
+                    type="password"
+                    placeholder="Current Password"
+                    value={passwordData.oldPassword}
+                    onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+
+                <div style={{ marginBottom: '15px' }}>
+                  <input
+                    type="password"
+                    placeholder="New Password"
+                    value={passwordData.newPassword}
+                    onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+
+                <div style={{ marginBottom: '15px' }}>
+                  <input
+                    type="password"
+                    placeholder="Confirm New Password"
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="update-password-button"
+                >
+                  Update Password
+                </button>
+              </form>
+            )}
+
+            {!showPasswordForm && (
+              <div>
+                <button 
+                  onClick={() => setShowDeleteForm(!showDeleteForm)}
+                  className={`button delete-account-button`}
+                >
+                  {showDeleteForm ? 'Cancel' : 'Delete Account'}
+                </button>
+              </div>
+            )}
+
+            {showDeleteForm && (
+              <form onSubmit={handleDeleteAccount} style={{ maxWidth: '300px', margin: '20px 0' }}>
+                <div style={{ marginBottom: '15px' }}>
+                  <input
+                    type="text"
+                    placeholder="Confirm Username"
+                    value={deleteData.username}
+                    onChange={(e) => setDeleteData({...deleteData, username: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+
+                <div style={{ marginBottom: '15px' }}>
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={deleteData.password}
+                    onChange={(e) => setDeleteData({...deleteData, password: e.target.value})}
+                    className="input-field"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="delete-account-button"
+                >
+                  Confirm Delete Account
+                </button>
+              </form>
+            )}
+          </div>
+        );
+
+      case 'borrowed':
+        return (
+          <div>
+            <h2>Borrowed Books</h2>
+            <ul>
+              {lendedBooks.length > 0 ? (
+                lendedBooks.map((book, index) => (
+                  <li key={index}>
+                    <b>Title:</b> {book.title}<br />
+                    <b>Authors:</b> {book.authors.join(', ')}<br />
+                    <b>ISBN:</b> {book.isbn}<br />
+                    <b>Quantity:</b> {book.number}<br />
+                    <b>Borrowing Date:</b> {book.borrowed_on}<br />
+                    <b>Due Date:</b> {book.return_on}<br />
+                  </li>
+                ))
+              ) : (
+                <p>No borrowed books found.</p>
+              )}
+            </ul>
+          </div>
+        );
+
+      case 'wishlist':
+        return (
+          <div>
+            <h2>Wishlist</h2>
+            <ul>
+              {wishlist.length > 0 ? (
+                wishlist.map((book, index) => (
+                  <li key={index}>
+                    <b>Title:</b> {book.title}<br />
+                    <b>Authors:</b> {book.authors.join(', ')}<br />
+                    <b>ISBN:</b> {book.isbn}<br />
+                  </li>
+                ))
+              ) : (
+                <p>No books in wishlist.</p>
+              )}
+            </ul>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div>
       <h1>Account Information</h1>
@@ -108,144 +270,36 @@ function Account() {
         </div>
       )}
 
-      {user && (
-        <div>
-          <p><b>Name:</b> {user.first_name}</p>
-          <p><b>Surname:</b> {user.last_name}</p>
-          <p><b>Email:</b> {user.email}</p>
-          <p><b>Username:</b> {user.username}</p>
+      <div className="account-container">
+        <div className="account-sidebar">
+          <div className="account-menu">
+            <button 
+              className={`menu-button ${activeTab === 'account' ? 'active' : ''}`}
+              onClick={() => setActiveTab('account')}
+            >
+              Account Information
+            </button>
+            <button 
+              className={`menu-button ${activeTab === 'borrowed' ? 'active' : ''}`}
+              onClick={() => setActiveTab('borrowed')}
+            >
+              Borrowed Books
+            </button>
+            <button 
+              className={`menu-button ${activeTab === 'wishlist' ? 'active' : ''}`}
+              onClick={() => setActiveTab('wishlist')}
+            >
+              Wishlist
+            </button>
+          </div>
         </div>
-      )}
 
-      <h2>Lended Books</h2>
-      <ul>
-        {lendedBooks.length > 0 ? (
-          lendedBooks.map((book, index) => (
-            <li key={index}>
-              <b>Title:</b> {book.title}<br />
-              <b>Authors:</b> {book.authors.join(', ')}<br />
-              <b>ISBN:</b> {book.isbn}<br />
-              <b>Quantity:</b> {book.number}<br />
-              <b>Borrowing Date:</b> {book.borrowed_on}<br />
-              <b>Due Date:</b> {book.return_on}<br />
-            </li>
-          ))
-        ) : (
-          <p>No borrowed books found.</p>
-        )}
-      </ul>
-
-      <h2>Wishlist</h2>
-      <ul>
-        {wishlist.length > 0 ? (
-          wishlist.map((book, index) => (
-            <li key={index}>
-              <b>Title:</b> {book.title}<br />
-              <b>Authors:</b> {book.authors.join(', ')}<br />
-              <b>ISBN:</b> {book.isbn}<br />
-            </li>
-          ))
-        ) : (
-          <p>No books in wishlist.</p>
-        )}
-      </ul>
-
-      <div>
-        <button 
-          onClick={() => setShowPasswordForm(!showPasswordForm)}
-          className={`button change-password-button`}
-        >
-          {showPasswordForm ? 'Cancel' : 'Change Password'}
-        </button>
+        <div className="account-content">
+          <div className="content-container">
+            {renderContent()}
+          </div>
+        </div>
       </div>
-
-      {showPasswordForm && (
-        <form onSubmit={handlePasswordChange} style={{ maxWidth: '300px', margin: '20px 0' }}>
-          <div style={{ marginBottom: '15px' }}>
-            <input
-              type="password"
-              placeholder="Current Password"
-              value={passwordData.oldPassword}
-              onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
-              className="input-field"
-              required
-            />
-          </div>
-
-          <div style={{ marginBottom: '15px' }}>
-            <input
-              type="password"
-              placeholder="New Password"
-              value={passwordData.newPassword}
-              onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-              className="input-field"
-              required
-            />
-          </div>
-
-          <div style={{ marginBottom: '15px' }}>
-            <input
-              type="password"
-              placeholder="Confirm New Password"
-              value={passwordData.confirmPassword}
-              onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-              className="input-field"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="update-password-button"
-          >
-            Update Password
-          </button>
-        </form>
-      )}
-
-      {!showPasswordForm && (
-        <div>
-          <button 
-            onClick={() => setShowDeleteForm(!showDeleteForm)}
-            className={`button delete-account-button`}
-          >
-            {showDeleteForm ? 'Cancel' : 'Delete Account'}
-          </button>
-        </div>
-      )}
-
-      {showDeleteForm && (
-        <form onSubmit={handleDeleteAccount} style={{ maxWidth: '300px', margin: '20px 0' }}>
-          <div style={{ marginBottom: '15px' }}>
-            <input
-              type="text"
-              placeholder="Confirm Username"
-              value={deleteData.username}
-              onChange={(e) => setDeleteData({...deleteData, username: e.target.value})}
-              className="input-field"
-              required
-            />
-          </div>
-
-          <div style={{ marginBottom: '15px' }}>
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={deleteData.password}
-              onChange={(e) => setDeleteData({...deleteData, password: e.target.value})}
-              className="input-field"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="delete-account-button"
-          >
-            Confirm Delete Account
-          </button>
-        </form>
-      )}
 
       {showDeleteSuccessModal && (
         <div className="modal">
