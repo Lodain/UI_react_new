@@ -3,6 +3,11 @@
 
 .App {
   text-align: center;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .App-logo {
@@ -88,14 +93,15 @@
   background-color: #D8E4FC;
   background-image: radial-gradient(#C5D6FB 1px, transparent 1px);
   background-size: 10px 10px;
-  padding: 20px 0;
-  margin-bottom: 30px;
+  padding: 40px 0;
+  margin-bottom: 60px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-left: 50px;
   padding-right: 50px;
+  box-sizing: border-box;
 }
 
 .banner-text {
@@ -179,6 +185,9 @@ body {
   margin: 0;
   padding-top: 60px;
   background-color: #ECF1FE;
+  min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .banner-title {
@@ -253,6 +262,10 @@ body {
   display: flex; /* Use flexbox to arrange skeletons in a row */
   justify-content: center; /* Center the skeletons horizontally */
   flex-wrap: wrap; /* Allow wrapping if needed */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .login-modal {
@@ -308,4 +321,93 @@ body {
   font-size: 1.5rem;
   cursor: pointer;
   color: #4A90E2;
+}
+
+.search-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.search-input {
+  width: 30%;
+  max-width: 300px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 2px solid #4A90E2;
+  border-radius: 25px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #58DDD9;
+}
+
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 60px);
+  padding-bottom: 120px;
+  margin-bottom: 80px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Webkit browsers (Chrome, Safari, newer versions of Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: none;
+  opacity: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #366Ad9;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #366Ad9;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #366Ad9 transparent;
+}
+
+/* Optional: If you want to style the scrollbar for Internet Explorer */
+body {
+  -ms-overflow-style: none;
+}
+
+/* Additional rule to ensure transparency */
+::-webkit-scrollbar,
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background-color: rgba(0, 0, 0, 0);
+}
+.banner-center-image {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.banner-center-img {
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
 }

@@ -9,6 +9,8 @@ import ResetPassword from './ResetPassword';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import './App.css';
 import Book from './Book';
+import axios from 'axios';
+import home from './img/home.png';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -16,6 +18,9 @@ function App() {
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
@@ -52,6 +57,30 @@ function App() {
     return () => clearInterval(interval);
   }, [details]);
 
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery) {
+        searchBooks(searchQuery);
+      } else {
+        setSearchResults([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  const searchBooks = async (query) => {
+    setIsSearching(true);
+    try {
+      const response = await axios.get(`http://127.0.0.1:8080/search-books/?query=${query}`);
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error('Error searching books:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   // Function to extract uid and token from URL
   const getResetPasswordParams = () => {
     const path = window.location.pathname;
@@ -60,122 +89,202 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="App">
       <Navbar user={user} setUser={setUser} />
-      {window.location.pathname === '/' && (
-        <>
-          <div className="banner">
-            <div className="banner-text">
-              <h2>Welcome to BiblioBase</h2>
-              <p>Discover a world of books and knowledge.</p>
+      <div className="main-content">
+        {window.location.pathname === '/' && (
+          <>
+            <div className="banner">
+              <div className="banner-text">
+                <h2>Welcome to BiblioBase</h2>
+                <p>Discover a world of books and knowledge.</p>
+              </div>
+              <div className="banner-center-image">
+                <img 
+                  src={home}
+                  alt="Banner Center"
+                  className="banner-center-img"
+                />
+              </div>
+              <div className="banner-content">
+                {loading ? (
+                  <div className="skeleton-image"></div>
+                ) : (
+                  details.length > 0 && (
+                    <img
+                      className={`banner-image ${isTransitioning ? 'sliding-out' : 'banner-image-enter'}`}
+                      src={`http://127.0.0.1:8080${details[currentBookIndex].cover}`}
+                      alt={details[currentBookIndex].title}
+                      onClick={() => window.location.href = `/book/${details[currentBookIndex].isbn}`}
+                      style={{
+                        maxWidth: '300px',
+                        height: '450px',
+                        objectFit: 'contain',
+                        cursor: 'pointer'
+                      }}
+                    />
+                  )
+                )}
+              </div>
             </div>
-            <div className="banner-content">
-              {loading ? (
-                <div className="skeleton-image"></div>
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Search books by title, ISBN, author, or genre"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            <div align="center">
+              {searchQuery ? (
+                isSearching ? (
+                  <div className="skeleton-container">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <div className="skeleton-card" key={index}></div>
+                    ))}
+                  </div>
+                ) : (
+                  searchResults.map((book, id) => (
+                    <div className="card-container" key={id}>
+                      <Card 
+                        sx={{ 
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          overflow: 'hidden',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => window.location.href = `/book/${book.isbn}`}
+                      >
+                        <CardMedia
+                          className="card-media"
+                          component="img"
+                          image={book.cover ? `http://127.0.0.1:8080${book.cover}` : 'placeholder-image-url'}
+                          alt={book.title}
+                          sx={{
+                            padding: '10px',
+                            objectFit: 'contain',
+                            height: 300
+                          }}
+                        />
+                        <CardContent sx={{ 
+                          padding: '8px', 
+                          flexGrow: 0,
+                          '&:last-child': { 
+                            paddingBottom: '8px' 
+                          }
+                        }}>
+                          <Typography 
+                            gutterBottom 
+                            variant="h6" 
+                            component="div"
+                            className="card-title"
+                          >
+                            {book.title}
+                          </Typography>
+                          <Typography 
+                            variant="body2" 
+                            color="text.secondary"
+                            className="card-authors"
+                          >
+                            Authors: {book.authors.join(', ')}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ))
+                )
               ) : (
-                details.length > 0 && (
-                  <img
-                    className={`banner-image ${isTransitioning ? 'sliding-out' : 'banner-image-enter'}`}
-                    src={`http://127.0.0.1:8080${details[currentBookIndex].cover}`}
-                    alt={details[currentBookIndex].title}
-                    onClick={() => window.location.href = `/book/${details[currentBookIndex].isbn}`}
-                    style={{
-                      maxWidth: '300px',
-                      height: '450px',
-                      objectFit: 'contain',
-                      cursor: 'pointer'
-                    }}
-                  />
+                loading ? (
+                  <div className="skeleton-container">
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <div className="skeleton-card" key={index}></div>
+                    ))}
+                  </div>
+                ) : (
+                  details.map((output, id) => (
+                    <div className="card-container" key={id}>
+                      <Card 
+                        sx={{ 
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          overflow: 'hidden',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => window.location.href = `/book/${output.isbn}`}
+                      >
+                        <CardMedia
+                          className="card-media"
+                          component="img"
+                          image={`http://127.0.0.1:8080${output.cover}`}
+                          alt={output.title}
+                          sx={{
+                            padding: '10px',
+                            objectFit: 'contain',
+                            height: 300
+                          }}
+                        />
+                        <CardContent sx={{ 
+                          padding: '8px', 
+                          flexGrow: 0,
+                          '&:last-child': { 
+                            paddingBottom: '8px' 
+                          }
+                        }}>
+                          <Typography 
+                            gutterBottom 
+                            variant="h6" 
+                            component="div"
+                            sx={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              fontSize: '1rem',
+                              marginBottom: '4px',
+                              minHeight: '2.4em'
+                            }}
+                          >
+                            {output.title}
+                          </Typography>
+                          <Typography 
+                            variant="body2" 
+                            color="text.secondary"
+                            sx={{
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              fontSize: '0.8rem',
+                              minHeight: '2em'
+                            }}
+                          >
+                            Authors: {output.authors.join(', ')}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  ))
                 )
               )}
             </div>
-          </div>
-          {user && <h2>Welcome back, {user.username}!</h2>}
-          <div align="center">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <div className="skeleton-card" key={index}></div>
-              ))
-            ) : (
-              details.map((output, id) => (
-                <div className="card-container" key={id}>
-                  <Card 
-                    sx={{ 
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      overflow: 'hidden',
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => window.location.href = `/book/${output.isbn}`}
-                  >
-                    <CardMedia
-                      className="card-media"
-                      component="img"
-                      image={`http://127.0.0.1:8080${output.cover}`}
-                      alt={output.title}
-                      sx={{
-                        padding: '10px',
-                        objectFit: 'contain',
-                        height: 300
-                      }}
-                    />
-                    <CardContent sx={{ 
-                      padding: '8px', 
-                      flexGrow: 0,
-                      '&:last-child': { 
-                        paddingBottom: '8px' 
-                      }
-                    }}>
-                      <Typography 
-                        gutterBottom 
-                        variant="h6" 
-                        component="div"
-                        sx={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                          fontSize: '1rem',
-                          marginBottom: '4px',
-                          minHeight: '2.4em'
-                        }}
-                      >
-                        {output.title}
-                      </Typography>
-                      <Typography 
-                        variant="body2" 
-                        color="text.secondary"
-                        sx={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                          fontSize: '0.8rem',
-                          minHeight: '2em'
-                        }}
-                      >
-                        Authors: {output.authors.join(', ')}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))
-            )}
-          </div>
-        </>
-      )}
-      {window.location.pathname === '/account' && <Account />}
-      {window.location.pathname === '/borrow' && <Borrow />}
-      {window.location.pathname.startsWith('/verify-email') && <EmailVerification />}
-      {window.location.pathname === '/librarian' && <Librarian />}
-      {window.location.pathname.startsWith('/book/') && <Book />}
-      {window.location.pathname.startsWith('/reset-password/') && (
-        <ResetPassword {...getResetPasswordParams()} />
-      )}
+          </>
+        )}
+        {window.location.pathname === '/account' && <Account />}
+        {window.location.pathname === '/borrow' && <Borrow />}
+        {window.location.pathname.startsWith('/verify-email') && <EmailVerification />}
+        {window.location.pathname === '/librarian' && <Librarian />}
+        {window.location.pathname.startsWith('/book/') && <Book />}
+        {window.location.pathname.startsWith('/reset-password/') && (
+          <ResetPassword {...getResetPasswordParams()} />
+        )}
+      </div>
     </div>
   );
 }

@@ -533,5 +533,26 @@ def resend_verification_email(request):
     except User.DoesNotExist:
         return Response({'error': 'No inactive user found with this email address'}, status=404)
 
+@api_view(['GET'])
+def search_books(request):
+    query = request.GET.get('query', '')
+    books = Book.objects.filter(
+        Q(title__icontains=query) |
+        Q(isbn__icontains=query) |
+        Q(authors__name__icontains=query) |
+        Q(genres__name__icontains=query)
+    ).distinct()
+
+    output = [
+        {
+            "isbn": book.isbn,
+            "title": book.title,
+            "authors": book.authors.all().values_list('name', flat=True),
+            "cover": book.cover.url if book.cover else None
+        }
+        for book in books
+    ]
+    return Response(output)
+
 
 
