@@ -3,6 +3,7 @@ import axiosInstance from './axiosConfig';
 import './style/account.css';
 import AccountImage from './img/Account.png';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
+import LoadingModal from './component/LoadingModal';
 
 function Account() {
   const [user, setUser] = useState(null);
@@ -23,6 +24,7 @@ function Account() {
   });
   const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
   const [activeTab, setActiveTab] = useState('account');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Fetch user information from session storage
@@ -54,9 +56,11 @@ function Account() {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setIsLoading(true);
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       setError('New passwords do not match');
+      setIsLoading(false);
       return;
     }
 
@@ -75,6 +79,8 @@ function Account() {
       });
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to change password');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,6 +88,7 @@ function Account() {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setIsLoading(true);
 
     try {
       await axiosInstance.post('/delete-account-api/', {
@@ -92,6 +99,8 @@ function Account() {
       setShowDeleteSuccessModal(true);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to delete account');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -126,7 +135,10 @@ function Account() {
                       type="password"
                       placeholder="Current Password"
                       value={passwordData.oldPassword}
-                      onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
+                      onChange={(e) => {
+                        setError('');
+                        setPasswordData({...passwordData, oldPassword: e.target.value});
+                      }}
                       className="input-field"
                       required
                     />
@@ -136,7 +148,10 @@ function Account() {
                       type="password"
                       placeholder="New Password"
                       value={passwordData.newPassword}
-                      onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                      onChange={(e) => {
+                        setError('');
+                        setPasswordData({...passwordData, newPassword: e.target.value});
+                      }}
                       className="input-field"
                       required
                     />
@@ -146,7 +161,10 @@ function Account() {
                       type="password"
                       placeholder="Confirm New Password"
                       value={passwordData.confirmPassword}
-                      onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                      onChange={(e) => {
+                        setError('');
+                        setPasswordData({...passwordData, confirmPassword: e.target.value});
+                      }}
                       className="input-field"
                       required
                     />
@@ -177,7 +195,10 @@ function Account() {
                       type="text"
                       placeholder="Confirm Username"
                       value={deleteData.username}
-                      onChange={(e) => setDeleteData({...deleteData, username: e.target.value})}
+                      onChange={(e) => {
+                        setError('');
+                        setDeleteData({...deleteData, username: e.target.value});
+                      }}
                       className="input-field"
                       required
                     />
@@ -187,7 +208,10 @@ function Account() {
                       type="password"
                       placeholder="Confirm Password"
                       value={deleteData.password}
-                      onChange={(e) => setDeleteData({...deleteData, password: e.target.value})}
+                      onChange={(e) => {
+                        setError('');
+                        setDeleteData({...deleteData, password: e.target.value});
+                      }}
                       className="input-field"
                       required
                     />
@@ -252,6 +276,8 @@ function Account() {
                       <CardContent sx={{ 
                         padding: '8px', 
                         flexGrow: 1,
+                        backgroundColor: '#394e75',
+                        color: 'white',
                         '&:last-child': { 
                           paddingBottom: '8px' 
                         }
@@ -261,17 +287,21 @@ function Account() {
                           variant="h6" 
                           component="div"
                           className="card-title"
+                          sx={{ color: 'white' }}
                         >
                           {book.title}
                         </Typography>
                         <Typography 
                           variant="body2" 
-                          color="text.secondary"
                           className="card-authors"
+                          sx={{ color: '#e0e0e0' }}
                         >
                           Authors: {book.authors.join(', ')}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: '#e0e0e0' }}
+                        >
                           Due: {book.return_on}
                           {book.number > 1 && ` (${book.number} copies)`}
                         </Typography>
@@ -319,6 +349,8 @@ function Account() {
                       <CardContent sx={{ 
                         padding: '8px', 
                         flexGrow: 1,
+                        backgroundColor: '#394e75',
+                        color: 'white',
                         '&:last-child': { 
                           paddingBottom: '8px' 
                         }
@@ -328,17 +360,21 @@ function Account() {
                           variant="h6" 
                           component="div"
                           className="card-title"
+                          sx={{ color: 'white' }}
                         >
                           {book.title}
                         </Typography>
                         <Typography 
                           variant="body2" 
-                          color="text.secondary"
                           className="card-authors"
+                          sx={{ color: '#e0e0e0' }}
                         >
                           Authors: {book.authors.join(', ')}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography 
+                          variant="body2" 
+                          sx={{ color: '#e0e0e0' }}
+                        >
                           ISBN: {book.isbn}
                         </Typography>
                       </CardContent>
@@ -359,7 +395,7 @@ function Account() {
 
   return (
     <div>
-      
+      <LoadingModal show={isLoading} />
       {success && (
         <div className="success-message">
           {success}
