@@ -215,10 +215,29 @@ function Account() {
                         display: 'flex',
                         flexDirection: 'column',
                         overflow: 'hidden',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        position: 'relative'
                       }}
                       onClick={() => window.location.href = `/book/${book.isbn}`}
                     >
+                      {book.number > 1 && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '10px',
+                          right: '10px',
+                          backgroundColor: '#1976d2',
+                          color: 'white',
+                          borderRadius: '50%',
+                          width: '30px',
+                          height: '30px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          zIndex: 1
+                        }}>
+                          {book.number}
+                        </div>
+                      )}
                       <CardMedia
                         className="card-media"
                         component="img"
@@ -254,6 +273,7 @@ function Account() {
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                           Due: {book.return_on}
+                          {book.number > 1 && ` (${book.number} copies)`}
                         </Typography>
                       </CardContent>
                     </Card>
