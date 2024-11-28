@@ -155,7 +155,8 @@ def borrow_book_api(request):
         books = Book.objects.filter(
             Q(title__icontains=search_query) |
             Q(isbn__iexact=search_query) |
-            Q(authors__name__icontains=search_query)
+            Q(authors__name__icontains=search_query) |
+            Q(genres__name__icontains=search_query)
         ).distinct()
         book_data = [
             {
@@ -163,6 +164,7 @@ def borrow_book_api(request):
                 'title': book.title,
                 'isbn': book.isbn,
                 'authors': [author.name for author in book.authors.all()],
+                'genres': [genre.name for genre in book.genres.all()],
                 'copies': book.copies,
                 'lended': book.lended
             }

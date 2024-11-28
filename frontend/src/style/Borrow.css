@@ -154,3 +154,10 @@
 .modal-account-button:hover {
   background-color: #0EBAB5;
 }
+
+.card-genres {
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+  font-style: italic;
+}

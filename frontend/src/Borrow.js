@@ -159,7 +159,7 @@ const Borrow = () => {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search by title, author, or ISBN"
+        placeholder="Search by title, author, genre, or ISBN"
       />
       {message && <p>{message}</p>}
       <div className={`book-list ${(books.length > 0 || isLoading) ? 'visible' : ''}`} align="center">
