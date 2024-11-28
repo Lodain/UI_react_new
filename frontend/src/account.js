@@ -289,20 +289,66 @@ function Account() {
       case 'wishlist':
         return (
           <div>
-            <h2>Wishlist</h2>
-            <ul>
+            <div align="center">
               {wishlist.length > 0 ? (
                 wishlist.map((book, index) => (
-                  <li key={index}>
-                    <b>Title:</b> {book.title}<br />
-                    <b>Authors:</b> {book.authors.join(', ')}<br />
-                    <b>ISBN:</b> {book.isbn}<br />
-                  </li>
+                  <div className="card-container" key={index}>
+                    <Card 
+                      sx={{ 
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'hidden',
+                        cursor: 'pointer',
+                        position: 'relative'
+                      }}
+                      onClick={() => window.location.href = `/book/${book.isbn}`}
+                    >
+                      <CardMedia
+                        className="card-media"
+                        component="img"
+                        image={`http://127.0.0.1:8080${book.cover}`}
+                        alt={book.title}
+                        sx={{
+                          padding: '10px',
+                          objectFit: 'contain',
+                          height: 300
+                        }}
+                      />
+                      <CardContent sx={{ 
+                        padding: '8px', 
+                        flexGrow: 1,
+                        '&:last-child': { 
+                          paddingBottom: '8px' 
+                        }
+                      }}>
+                        <Typography 
+                          gutterBottom 
+                          variant="h6" 
+                          component="div"
+                          className="card-title"
+                        >
+                          {book.title}
+                        </Typography>
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary"
+                          className="card-authors"
+                        >
+                          Authors: {book.authors.join(', ')}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          ISBN: {book.isbn}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </div>
                 ))
               ) : (
                 <p>No books in wishlist.</p>
               )}
-            </ul>
+            </div>
           </div>
         );
 

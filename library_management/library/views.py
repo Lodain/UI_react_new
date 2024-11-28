@@ -86,6 +86,7 @@ def get_wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=user)
     output = [
         {
+            "cover": wishlist_item.book.cover.url if wishlist_item.book.cover else None,
             "title": wishlist_item.book.title,
             "isbn": wishlist_item.book.isbn,
             "authors": wishlist_item.book.authors.all().values_list('name', flat=True)
