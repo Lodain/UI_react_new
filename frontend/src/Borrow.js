@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import axiosInstance from './axiosConfig';
 import './style/Borrow.css';
 import { Card, CardMedia, CardContent, Typography, Skeleton } from '@mui/material';
@@ -49,6 +49,19 @@ const Borrow = () => {
   const [borrowedBook, setBorrowedBook] = useState(null);
   const [isBorrowing, setIsBorrowing] = useState(false);
 
+  const searchBooks = useCallback(() => {
+    axiosInstance.get(`borrow_book_api?query=${query}`)
+      .then(response => {
+        setBooks(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching books:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [query]);
+
   React.useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (query) {
@@ -60,20 +73,7 @@ const Borrow = () => {
     }, 300);
 
     return () => clearTimeout(delayDebounce);
-  }, [query]);
-
-  const searchBooks = () => {
-    axiosInstance.get(`borrow_book_api?query=${query}`)
-      .then(response => {
-        setBooks(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching books:', error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  }, [query, searchBooks]);
 
   const LoadingSkeleton = () => (
     <div className="card-container">
