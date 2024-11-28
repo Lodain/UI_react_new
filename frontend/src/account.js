@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
 import './style/account.css';
+import AccountImage from './img/Account.png';
 
 function Account() {
   const [user, setUser] = useState(null);
@@ -117,47 +118,43 @@ function Account() {
             </div>
 
             {showPasswordForm && (
-              <form onSubmit={handlePasswordChange} style={{ maxWidth: '300px', margin: '20px 0' }}>
-                <div style={{ marginBottom: '15px' }}>
-                  <input
-                    type="password"
-                    placeholder="Current Password"
-                    value={passwordData.oldPassword}
-                    onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
-                    className="input-field"
-                    required
-                  />
-                </div>
-
-                <div style={{ marginBottom: '15px' }}>
-                  <input
-                    type="password"
-                    placeholder="New Password"
-                    value={passwordData.newPassword}
-                    onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
-                    className="input-field"
-                    required
-                  />
-                </div>
-
-                <div style={{ marginBottom: '15px' }}>
-                  <input
-                    type="password"
-                    placeholder="Confirm New Password"
-                    value={passwordData.confirmPassword}
-                    onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
-                    className="input-field"
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="update-password-button"
-                >
-                  Update Password
-                </button>
-              </form>
+              <div className="form-container">
+                <form onSubmit={handlePasswordChange} style={{ maxWidth: '300px' }}>
+                  <div style={{ marginBottom: '15px' }}>
+                    <input
+                      type="password"
+                      placeholder="Current Password"
+                      value={passwordData.oldPassword}
+                      onChange={(e) => setPasswordData({...passwordData, oldPassword: e.target.value})}
+                      className="input-field"
+                      required
+                    />
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <input
+                      type="password"
+                      placeholder="New Password"
+                      value={passwordData.newPassword}
+                      onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                      className="input-field"
+                      required
+                    />
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <input
+                      type="password"
+                      placeholder="Confirm New Password"
+                      value={passwordData.confirmPassword}
+                      onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                      className="input-field"
+                      required
+                    />
+                  </div>
+                  <button type="submit" className="update-password-button">
+                    Update Password
+                  </button>
+                </form>
+              </div>
             )}
 
             {!showPasswordForm && (
@@ -172,36 +169,33 @@ function Account() {
             )}
 
             {showDeleteForm && (
-              <form onSubmit={handleDeleteAccount} style={{ maxWidth: '300px', margin: '20px 0' }}>
-                <div style={{ marginBottom: '15px' }}>
-                  <input
-                    type="text"
-                    placeholder="Confirm Username"
-                    value={deleteData.username}
-                    onChange={(e) => setDeleteData({...deleteData, username: e.target.value})}
-                    className="input-field"
-                    required
-                  />
-                </div>
-
-                <div style={{ marginBottom: '15px' }}>
-                  <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={deleteData.password}
-                    onChange={(e) => setDeleteData({...deleteData, password: e.target.value})}
-                    className="input-field"
-                    required
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="delete-account-button"
-                >
-                  Confirm Delete Account
-                </button>
-              </form>
+              <div className="form-container">
+                <form onSubmit={handleDeleteAccount} style={{ maxWidth: '300px' }}>
+                  <div style={{ marginBottom: '15px' }}>
+                    <input
+                      type="text"
+                      placeholder="Confirm Username"
+                      value={deleteData.username}
+                      onChange={(e) => setDeleteData({...deleteData, username: e.target.value})}
+                      className="input-field"
+                      required
+                    />
+                  </div>
+                  <div style={{ marginBottom: '15px' }}>
+                    <input
+                      type="password"
+                      placeholder="Confirm Password"
+                      value={deleteData.password}
+                      onChange={(e) => setDeleteData({...deleteData, password: e.target.value})}
+                      className="input-field"
+                      required
+                    />
+                  </div>
+                  <button type="submit" className="delete-account-button">
+                    Delete Account
+                  </button>
+                </form>
+              </div>
             )}
           </div>
         );
@@ -256,7 +250,6 @@ function Account() {
 
   return (
     <div>
-      <h1>Account Information</h1>
       
       {success && (
         <div className="success-message">
@@ -292,6 +285,7 @@ function Account() {
               Wishlist
             </button>
           </div>
+          <img src={AccountImage} alt="Account" style={{ width: '100%', borderRadius: '8px', marginBottom: '20px' }} />
         </div>
 
         <div className="account-content">

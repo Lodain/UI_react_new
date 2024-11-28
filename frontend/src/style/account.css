@@ -88,6 +88,7 @@
   
   .account-sidebar {
     width: 30%;
+    height: auto;
     padding: 20px;
     background-color: #f8f9fa;
     border-radius: 8px;
@@ -129,4 +130,13 @@
     background-color: #fff;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin: 20px 0;
   }
