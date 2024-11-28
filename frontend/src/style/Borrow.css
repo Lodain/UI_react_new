@@ -1,0 +1,156 @@
+.book-list {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  padding: 20px;
+}
+
+.book-list.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.card-container {
+  display: inline-block;
+  width: 300px;
+  margin: 10px;
+  vertical-align: top;
+}
+
+.card-media {
+  transition: transform 0.2s;
+}
+
+.card-media:hover {
+  transform: scale(1.05);
+}
+
+.card-title {
+  font-size: 0.9rem !important;
+  line-height: 1.2 !important;
+  margin-bottom: 4px !important;
+}
+
+.borrow-button {
+  width: 100%;
+  padding: 6px;
+  background-color: #58DDD9;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.borrow-button:hover {
+  background-color: #0EBAB5;
+}
+
+.borrow-button.disabled {
+  background-color: #c8c8c8;
+  cursor: not-allowed;
+}
+
+.borrow-button.disabled:hover {
+  background-color: #c8c8c8;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  animation: modalAppear 0.3s ease;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  color: #394e75;
+  margin: 0;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.modal-book-cover {
+  max-height: 200px;
+  margin: 10px 0;
+}
+
+.modal-book-title {
+  font-weight: bold;
+  color: #394e75;
+  margin: 10px 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-close-button,
+.modal-account-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.modal-close-button {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.modal-close-button:hover {
+  background-color: #d0d0d0;
+}
+
+.modal-account-button {
+  background-color: #58DDD9;
+  color: white;
+}
+
+.modal-account-button:hover {
+  background-color: #0EBAB5;
+}

@@ -159,6 +159,7 @@ def borrow_book_api(request):
         ).distinct()
         book_data = [
             {
+                'cover': book.cover.url if book.cover else None,
                 'title': book.title,
                 'isbn': book.isbn,
                 'authors': [author.name for author in book.authors.all()],
