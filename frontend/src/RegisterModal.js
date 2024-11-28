@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoadingModal from './component/LoadingModal';
 import SuccessModal from './component/SuccessModal';
@@ -42,13 +42,25 @@ const RegisterModal = ({ show, onClose }) => {
     console.log(formData);
   };
 
+  const toggleBodyOverflow = (isModalOpen) => {
+    document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
+  };
+
+  useEffect(() => {
+    toggleBodyOverflow(show);
+    return () => toggleBodyOverflow(false); // Reset overflow when component unmounts
+  }, [show]);
+
   if (!show) return null;
 
   return (
     <>
       <div className="modal">
         <div className="modal-content">
-          <span className="close" onClick={onClose}>&times;</span>
+          <span className="close" onClick={() => {
+            onClose();
+            toggleBodyOverflow(false); // Reset overflow when modal closes
+          }}>&times;</span>
           <div className="register-modal-body">
             <img src={RegisterImage} alt="Register" className="register-image" />
             <div className="register-form">

@@ -90,7 +90,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar user={user} setUser={setUser} />
+      <Navbar user={user} setUser={setUser} currentPath={window.location.pathname} />
       <div className="main-content">
         {window.location.pathname === '/' && (
           <>

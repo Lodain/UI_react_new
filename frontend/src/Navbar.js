@@ -5,12 +5,13 @@ import RegisterModal from './RegisterModal';
 import LoadingModal from './component/LoadingModal';
 import LoginImage from './img/Login.PNG';
 
-const Navbar = ({ setUser }) => {
+const Navbar = ({ user, setUser, currentPath }) => {
+  const isActive = (path) => currentPath === path;
+
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUserState] = useState(null);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [resetMessage, setResetMessage] = useState('');
@@ -21,6 +22,13 @@ const Navbar = ({ setUser }) => {
   const [isUserInactive, setIsUserInactive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const toggleBodyOverflow = (isModalOpen) => {
+    document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
+  };
+
+  useEffect(() => {
+    toggleBodyOverflow(showLoginModal || showRegisterModal);
+  }, [showLoginModal, showRegisterModal]);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -29,7 +37,6 @@ const Navbar = ({ setUser }) => {
       const storedUser = JSON.parse(sessionStorage.getItem('user'));
       if (storedUser) {
         setUser(storedUser);
-        setUserState(storedUser);
       }
     }
   }, [setUser]);
@@ -53,9 +60,6 @@ const Navbar = ({ setUser }) => {
             
             sessionStorage.setItem('user', JSON.stringify(userData));
             setUser(userData);
-            setUserState(userData);
-            setShowLoginModal(false);
-            setIsLoading(false);
             window.location.href = '/';
           })
           .catch(error => {
@@ -111,13 +115,13 @@ const Navbar = ({ setUser }) => {
     <nav className="top-right-buttons">
       <div className="left-buttons">
         <span className="navbar-title">BiblioBase</span>
-        <button onClick={() => window.location.href = '/'}>Home</button>
+        <button className={isActive('/') ? 'active' : ''} onClick={() => window.location.href = '/'}>Home</button>
         {user && (
           <>
-            <button onClick={() => window.location.href = '/account'}>Account</button>
-            <button onClick={() => window.location.href = '/borrow'}>Borrow</button>
-            {user.superuser && <button onClick={() => window.location.href = '/librarian'}>Librarian</button>}
-            {user.superuser && user.staff && <button onClick={() => window.location.href = 'http://127.0.0.1:8080/admin/'}>Admin</button>}
+            <button className={isActive('/account') ? 'active' : ''} onClick={() => window.location.href = '/account'}>Account</button>
+            <button className={isActive('/borrow') ? 'active' : ''} onClick={() => window.location.href = '/borrow'}>Borrow</button>
+            {user.superuser && <button className={isActive('/librarian') ? 'active' : ''} onClick={() => window.location.href = '/librarian'}>Librarian</button>}
+            {user.superuser && user.staff && <button className={isActive('http://127.0.0.1:8080/admin/') ? 'active' : ''} onClick={() => window.location.href = 'http://127.0.0.1:8080/admin/'}>Admin</button>}
           </>
         )}
       </div>
@@ -128,7 +132,6 @@ const Navbar = ({ setUser }) => {
             localStorage.removeItem('refresh_token');
             sessionStorage.removeItem('user');
             setUser(null);
-            setUserState(null);
             delete axiosInstance.defaults.headers.common['Authorization'];
             window.location.href = '/';
           }}>Logout</button>
@@ -151,6 +154,7 @@ const Navbar = ({ setUser }) => {
               setResetMessage('');
               setLoginErrorMessage('');
               setIsUserInactive(false);
+              toggleBodyOverflow(false);
             }}>&times;</span>
             <div className="login-modal-body">
               <img src={LoginImage} alt="Login" className="login-image" />

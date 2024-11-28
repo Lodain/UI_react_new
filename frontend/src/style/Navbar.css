@@ -137,3 +137,8 @@ nav.top-right-buttons {
   flex: 1;
   padding: 20px;
 }
+
+.left-buttons button.active, .right-buttons button.active {
+    background-color: #FFBB38; /* Change to your desired active color */
+    color: #FFFFFF; /* Ensure text is readable */
+}

@@ -27,6 +27,8 @@
     border-radius: 10px;
     width: 95% !important;
     max-width: 1000px !important;
+    height: 80% !important;
+    max-height: 430px !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     animation: fadeIn 0.3s ease-in-out;
 }
