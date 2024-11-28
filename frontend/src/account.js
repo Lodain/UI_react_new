@@ -208,8 +208,10 @@ function Account() {
               {lendedBooks.length > 0 ? (
                 lendedBooks.map((book, index) => (
                   <li key={index}>
+                    <img src={`http://127.0.0.1:8080${book.cover}`} alt={`${book.title} cover`} className="book-cover" /><br />
                     <b>Title:</b> {book.title}<br />
                     <b>Authors:</b> {book.authors.join(', ')}<br />
+                    <b>Genres:</b> {book.genres.join(', ')}<br />
                     <b>ISBN:</b> {book.isbn}<br />
                     <b>Quantity:</b> {book.number}<br />
                     <b>Borrowing Date:</b> {book.borrowed_on}<br />

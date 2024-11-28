@@ -69,6 +69,8 @@ def get_lended_books(request):
         {
             "title": lended_book.book.title,
             "isbn": lended_book.book.isbn,
+            "cover": lended_book.book.cover.url if lended_book.book.cover else None,
+            "genres": lended_book.book.genres.all().values_list('name', flat=True),
             "authors": lended_book.book.authors.all().values_list('name', flat=True),
             "number": lended_book.number,
             "borrowed_on": lended_book.borrowed_on,
