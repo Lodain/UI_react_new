@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
 import './style/account.css';
 import AccountImage from './img/Account.png';
+import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 
 function Account() {
   const [user, setUser] = useState(null);
@@ -203,25 +204,65 @@ function Account() {
       case 'borrowed':
         return (
           <div>
-            <h2>Borrowed Books</h2>
-            <ul>
+            <div align="center">
               {lendedBooks.length > 0 ? (
                 lendedBooks.map((book, index) => (
-                  <li key={index}>
-                    <img src={`http://127.0.0.1:8080${book.cover}`} alt={`${book.title} cover`} className="book-cover" /><br />
-                    <b>Title:</b> {book.title}<br />
-                    <b>Authors:</b> {book.authors.join(', ')}<br />
-                    <b>Genres:</b> {book.genres.join(', ')}<br />
-                    <b>ISBN:</b> {book.isbn}<br />
-                    <b>Quantity:</b> {book.number}<br />
-                    <b>Borrowing Date:</b> {book.borrowed_on}<br />
-                    <b>Due Date:</b> {book.return_on}<br />
-                  </li>
+                  <div className="card-container" key={index}>
+                    <Card 
+                      sx={{ 
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'hidden',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => window.location.href = `/book/${book.isbn}`}
+                    >
+                      <CardMedia
+                        className="card-media"
+                        component="img"
+                        image={`http://127.0.0.1:8080${book.cover}`}
+                        alt={book.title}
+                        sx={{
+                          padding: '10px',
+                          objectFit: 'contain',
+                          height: 300
+                        }}
+                      />
+                      <CardContent sx={{ 
+                        padding: '8px', 
+                        flexGrow: 1,
+                        '&:last-child': { 
+                          paddingBottom: '8px' 
+                        }
+                      }}>
+                        <Typography 
+                          gutterBottom 
+                          variant="h6" 
+                          component="div"
+                          className="card-title"
+                        >
+                          {book.title}
+                        </Typography>
+                        <Typography 
+                          variant="body2" 
+                          color="text.secondary"
+                          className="card-authors"
+                        >
+                          Authors: {book.authors.join(', ')}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Due: {book.return_on}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </div>
                 ))
               ) : (
                 <p>No borrowed books found.</p>
               )}
-            </ul>
+            </div>
           </div>
         );
 
