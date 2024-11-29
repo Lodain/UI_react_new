@@ -344,6 +344,7 @@ def get_book_details(request, isbn):
         
         output = {
             "title": book.title,
+            "genres": book.genres.all().values_list('name', flat=True),
             "isbn": book.isbn,
             "authors": book.authors.all().values_list('name', flat=True),
             "cover": book.cover.url if book.cover else None,

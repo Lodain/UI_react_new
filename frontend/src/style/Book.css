@@ -1,0 +1,95 @@
+.book-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+}
+
+.book-cover-section {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+}
+
+.book-cover-section img {
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.book-details-section {
+  background: white;
+  padding: 20px;
+}
+
+.book-actions {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.review-section {
+  margin-top: 30px;
+}
+
+.review-form {
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.review-card {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+
+.review-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.review-content {
+  color: #333;
+  line-height: 1.6;
+  text-align: left;
+  flex: 1;
+}
+
+.delete-button {
+  width: 100px;
+  min-width: 100px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+}
+
+.delete-button:hover {
+  background-color: #FF8C8C !important;
+  color: white !important;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.genres-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.genre-tag {
+  background-color: #f0f0f0;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  color: #666;
+}

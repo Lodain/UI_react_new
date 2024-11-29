@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
-import { Card, CardContent, CardMedia, Typography, Rating, Button } from '@mui/material';
+import { Typography, Rating, Button } from '@mui/material';
+import './style/Book.css';
 
 function Book() {
   const [book, setBook] = useState(null);
@@ -100,118 +101,167 @@ function Book() {
   if (!book) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Card sx={{ maxWidth: 800, margin: '0 auto' }}>
+    <div className="book-container">
+      <div className="book-cover-section">
         {book.cover && (
-          <CardMedia
-            component="img"
-            height="400"
-            image={`http://127.0.0.1:8080${book.cover}`}
+          <img
+            src={`http://127.0.0.1:8080${book.cover}`}
             alt={book.title}
-            sx={{ objectFit: 'contain' }}
           />
         )}
-        <CardContent>
-          <Typography variant="h4" gutterBottom>
-            {book.title}
-          </Typography>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            by {book.authors.join(', ')}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            ISBN: {book.isbn}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Year: {book.year}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Available Copies: {book.copies - book.lended}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Average Rating: <Rating value={book.average_rating} readOnly precision={0.5} />
-            ({book.average_rating.toFixed(1)})
-          </Typography>
+        
+        {user && (
+          <div className="book-actions">
+            <Button 
+              variant="contained" 
+              fullWidth
+              sx={{ 
+                mb: 1, 
+                backgroundColor: '#394e75', 
+                '&:hover': { backgroundColor: '#2c3c59' },
+                height: '52px',
+                fontSize: '0.9rem'  // Smaller font
+              }}
+              onClick={handleBorrow}
+              disabled={book.copies <= book.lended}
+            >
+              Borrow
+            </Button>
+            <Button 
+              variant="outlined"
+              fullWidth
+              sx={{ 
+                color: '#394e75', 
+                borderColor: '#394e75',
+                '&:hover': { 
+                  borderColor: '#2c3c59',
+                  backgroundColor: 'rgba(57, 78, 117, 0.04)'
+                },
+                height: '52px',
+                fontSize: '0.9rem'  // Smaller font
+              }}
+              onClick={handleWishlist}
+            >
+              {book.in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+            </Button>
+          </div>
+        )}
+      </div>
 
-          {user && (
-            <div style={{ marginTop: '20px', marginBottom: '20px' }}>
-              <Button 
-                variant="contained" 
-                color="primary" 
-                onClick={handleBorrow}
-                disabled={book.copies <= book.lended}
-                sx={{ marginRight: '10px' }}
-              >
-                Borrow Book
-              </Button>
+      <div className="book-details-section">
+        <Typography variant="h4" gutterBottom>
+          {book.title}
+        </Typography>
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          by {book.authors.join(', ')}
+        </Typography>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+          <Rating value={book.average_rating} readOnly precision={0.5} />
+          <Typography variant="body2" color="text.secondary">
+            {book.average_rating.toFixed(1)} · {book.reviews.length} ratings
+          </Typography>
+        </div>
+
+        {/* Book details */}
+        <Typography variant="body2" color="text.secondary" paragraph>
+          ISBN: {book.isbn} · Published {book.year} · {book.copies - book.lended} available copies
+        </Typography>
+
+        {/* Add genres display */}
+        {book.genres && book.genres.length > 0 && (
+          <div className="genres-container">
+            {book.genres.map((genre, index) => (
+              <span key={index} className="genre-tag">
+                {genre}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="review-section">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <Typography variant="h6">
+              Reviews
+            </Typography>
+            
+            {user && !book.reviews.some(review => review.user === user.username) && !showReviewForm && (
               <Button 
                 variant="outlined" 
-                color="primary" 
-                onClick={handleWishlist}
+                onClick={handleAddReview}
+                startIcon={<span>✎</span>}
+                sx={{ 
+                  fontSize: '0.8rem',
+                  padding: '4px 12px',
+                  width: 'fit-content',
+                  '&:hover': {
+                    backgroundColor: '#d8e4fc'
+                  }
+                }}
               >
-                {book.in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                Write a review
+              </Button>
+            )}
+          </div>
+          
+          {/* Review form */}
+          {showReviewForm && (
+            <div className="review-form">
+              <Rating
+                value={newReview.rating}
+                onChange={(event, newValue) => setNewReview({ ...newReview, rating: newValue })}
+                size="large"
+                sx={{ mb: 2 }}
+              />
+              <textarea
+                value={newReview.content}
+                onChange={(e) => setNewReview({ ...newReview, content: e.target.value })}
+                placeholder="What did you think?"
+                style={{ width: '100%', minHeight: '150px', padding: '10px', marginBottom: '10px' }}
+              />
+              <Button 
+                variant="contained" 
+                onClick={handleReviewSubmit}
+                sx={{ 
+                  width: 'fit-content',  // Fit content width
+                  '&:hover': {
+                    backgroundColor: '#3c76f1'  // Hover color
+                  }
+                }}
+              >
+                Post Review
               </Button>
             </div>
           )}
 
-          <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
-            Reviews
-          </Typography>
-          {user && !book.reviews.some(review => review.user === user.username) && (
-            <Button onClick={handleAddReview}>+</Button>
-          )}
-          {showReviewForm && (
-            <Card sx={{ mb: 2, backgroundColor: '#f5f5f5' }}>
-              <CardContent>
-                <Rating
-                  value={newReview.rating}
-                  onChange={(event, newValue) => setNewReview({ ...newReview, rating: newValue })}
-                  size="small"
-                />
-                <textarea
-                  value={newReview.content}
-                  onChange={(e) => setNewReview({ ...newReview, content: e.target.value })}
-                  placeholder="Write your review here..."
-                  style={{ width: '100%', height: '100px' }}
-                />
-                <Button onClick={handleReviewSubmit}>Submit</Button>
-              </CardContent>
-            </Card>
-          )}
-          {book.reviews.length > 0 ? (
-            book.reviews
-              .sort((a, b) => {
-                // If user is logged in, put their review first
-                if (user && a.user === user.username) return -1;
-                if (user && b.user === user.username) return 1;
-                return 0;
-              })
-              .map((review, index) => (
-                <Card key={index} sx={{ mb: 2, backgroundColor: '#f5f5f5' }}>
-                  <CardContent>
-                    <Typography variant="subtitle2">
-                      {review.user}
-                    </Typography>
-                    <Rating value={review.rating} readOnly size="small" />
-                    <Typography variant="body2">
-                      {review.content}
-                    </Typography>
-                    {user && user.username === review.user && (
-                      <Button 
-                        size="small" 
-                        color="error" 
-                        onClick={() => handleDeleteReview(review.id)}
-                      >
-                        Delete
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              ))
-          ) : (
-            <Typography variant="body2">No reviews yet</Typography>
-          )}
-        </CardContent>
-      </Card>
+          {/* Reviews list */}
+          {book.reviews.map((review, index) => (
+            <div key={index} className="review-card">
+              <div className="review-header">
+                <Typography variant="subtitle2" fontWeight="bold">
+                  {review.user}
+                </Typography>
+                <Rating value={review.rating} readOnly size="small" />
+              </div>
+              <div className="review-content-wrapper">
+                <Typography className="review-content">
+                  {review.content}
+                </Typography>
+                {user && user.username === review.user && (
+                  <Button 
+                    size="small" 
+                    color="error" 
+                    onClick={() => handleDeleteReview(review.id)}
+                    className="delete-button"
+                  >
+                    Delete
+                  </Button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
