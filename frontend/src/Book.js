@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
-import { Typography, Rating, Button } from '@mui/material';
+import { Typography, Rating, Button, Modal, Box } from '@mui/material';
+import LoadingModal from './component/LoadingModal';
 import './style/Book.css';
 
 function Book() {
@@ -9,6 +10,12 @@ function Book() {
   const [user, setUser] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [newReview, setNewReview] = useState({ rating: 0, content: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [responseModal, setResponseModal] = useState({
+    open: false,
+    message: '',
+    isSuccess: false
+  });
 
   useEffect(() => {
     // Add user check
@@ -34,14 +41,38 @@ function Book() {
 
   const handleBorrow = () => {
     if (book) {
+      setIsLoading(true);
       axiosInstance.post('borrow_book_api', { book_id: book.isbn })
         .then(response => {
-          alert(response.data.message);
+          setResponseModal({
+            open: true,
+            message: response.data.message,
+            isSuccess: true
+          });
+          // Reload book data to update available copies
+          axiosInstance.get(`/book/${book.isbn}/`)
+            .then(response => {
+              setBook(response.data);
+            })
+            .catch(error => {
+              console.error('Error refreshing book data:', error);
+            });
         })
         .catch(error => {
-          alert(error.response?.data?.error || 'Error borrowing book');
+          setResponseModal({
+            open: true,
+            message: error.response?.data?.error || 'Error borrowing book',
+            isSuccess: false
+          });
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     }
+  };
+
+  const handleCloseResponseModal = () => {
+    setResponseModal(prev => ({ ...prev, open: false }));
   };
 
   const handleWishlist = () => {
@@ -102,6 +133,51 @@ function Book() {
 
   return (
     <div className="book-container">
+      <LoadingModal show={isLoading} />
+
+      <Modal
+        open={responseModal.open}
+        onClose={handleCloseResponseModal}
+        aria-labelledby="borrow-response-modal"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+          textAlign: 'center'
+        }}>
+          <Typography 
+            variant="h6" 
+            component="h2"
+            sx={{ 
+              color: responseModal.isSuccess ? 'success.main' : 'error.main',
+              mb: 2
+            }}
+          >
+            {responseModal.isSuccess ? 'Success!' : 'Error'}
+          </Typography>
+          <Typography sx={{ mb: 2 }}>
+            {responseModal.message}
+          </Typography>
+          <Button 
+            onClick={handleCloseResponseModal}
+            variant="contained"
+            sx={{ 
+              backgroundColor: '#394e75',
+              '&:hover': { backgroundColor: '#2c3c59' }
+            }}
+          >
+            Close
+          </Button>
+        </Box>
+      </Modal>
+
       <div className="book-cover-section">
         {book.cover && (
           <img
