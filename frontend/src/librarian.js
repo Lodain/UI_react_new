@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
+import './style/librarian.css';
+import LoadingModal from './component/LoadingModal';
 
 function Librarian() {
   const [borrowedBooks, setBorrowedBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [message, setMessage] = useState('');
   const [showAddBook, setShowAddBook] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [newBook, setNewBook] = useState({
     isbn: '',
     title: '',
@@ -17,19 +20,71 @@ function Librarian() {
   });
   const [availableAuthors, setAvailableAuthors] = useState([]);
   const [availableGenres, setAvailableGenres] = useState([]);
+  const [isReturning, setIsReturning] = useState(false);
 
   useEffect(() => {
     fetchBorrowedBooks();
     fetchAuthorsAndGenres();
   }, []);
 
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      setIsLoading(true);
+      const timeoutId = setTimeout(() => {
+        axiosInstance.get(`/search_borrowed_books/?query=${searchQuery}`)
+          .then(response => {
+            const formattedBooks = response.data.map(book => ({
+              ...book,
+              return_on: book.return_on || 'N/A',
+              borrowed_on: book.borrowed_on || 'N/A'
+            }));
+            setBorrowedBooks(formattedBooks);
+          })
+          .catch(error => {
+            console.error('Error searching books:', error);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }, 300);
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      fetchBorrowedBooks();
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    let timeoutId;
+    if (message && !message.includes('error')) {
+      timeoutId = setTimeout(() => {
+        setMessage('');
+      }, 10000);
+    }
+    
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [message]);
+
   const fetchBorrowedBooks = () => {
+    setIsLoading(true);
     axiosInstance.get('/get_borrowed_books/')
       .then(response => {
-        setBorrowedBooks(response.data);
+        const formattedBooks = response.data.map(book => ({
+          ...book,
+          return_on: book.return_on || 'N/A',
+          borrowed_on: book.borrowed_on || 'N/A'
+        }));
+        setBorrowedBooks(formattedBooks);
       })
       .catch(error => {
         console.error('Error fetching borrowed books:', error);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -51,17 +106,8 @@ function Librarian() {
       });
   };
 
-  const handleSearch = () => {
-    axiosInstance.get(`/search_borrowed_books/?query=${searchQuery}`)
-      .then(response => {
-        setBorrowedBooks(response.data);
-      })
-      .catch(error => {
-        console.error('Error searching books:', error);
-      });
-  };
-
   const handleReturn = (bookId, username, quantity) => {
+    setIsReturning(true);
     axiosInstance.post('/return_book_api/', {
       book_id: bookId,
       username: username,
@@ -69,10 +115,14 @@ function Librarian() {
     })
       .then(response => {
         setMessage(response.data.message);
-        fetchBorrowedBooks(); // Refresh the list
+        setSearchQuery('');
+        fetchBorrowedBooks();
       })
       .catch(error => {
         setMessage(error.response?.data?.error || 'An error occurred');
+      })
+      .finally(() => {
+        setIsReturning(false);
       });
   };
 
@@ -147,95 +197,135 @@ function Librarian() {
     });
   };
 
+  const SkeletonRow = () => (
+    <tr className="skeleton-row">
+      <td><div className="skeleton-cell"></div></td>
+      <td><div className="skeleton-cell"></div></td>
+      <td><div className="skeleton-cell"></div></td>
+      <td><div className="skeleton-cell"></div></td>
+      <td><div className="skeleton-cell"></div></td>
+      <td><div className="skeleton-cell"></div></td>
+      <td><div className="skeleton-cell"></div></td>
+    </tr>
+  );
+
+  const isOverdue = (dateString) => {
+    if (dateString === 'N/A') return false;
+    const returnDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return returnDate < today;
+  };
+
   return (
-    <div>
-      <h1>Librarian Dashboard</h1>
+    <div className="librarian-container">
+      <LoadingModal show={isReturning} />
       
-      {message && <div className={message.includes('error') ? 'error' : 'success'}>{message}</div>}
+      <h1 className="dashboard-title">Librarian Dashboard</h1>
       
-      <div>
+      {message && <div className={`message ${message.includes('error') ? 'error' : 'success'}`}>{message}</div>}
+      
+      <div className="search-container">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by username, book title, or ISBN"
+          className="search-input"
         />
-        <button onClick={handleSearch}>Search</button>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Authors</th>
-            <th>Borrowed By</th>
-            <th>Number</th>
-            <th>Borrowed On</th>
-            <th>Return On</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {borrowedBooks.map((book, index) => (
-            <tr key={index}>
-              <td>{book.title}</td>
-              <td>{book.authors.join(', ')}</td>
-              <td>{book.borrowed_by}</td>
-              <td>{book.number}</td>
-              <td>{book.borrowed_on}</td>
-              <td>{book.return_on}</td>
-              <td>
-                <input
-                  type="number"
-                  min="1"
-                  max={book.number}
-                  defaultValue="1"
-                  onChange={(e) => book.returnQuantity = e.target.value}
-                />
-                <button onClick={() => handleReturn(book.isbn, book.borrowed_by, book.returnQuantity || 1)}>
-                  Return Book
-                </button>
-              </td>
+      <div className="table-container">
+        <table className="books-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Authors</th>
+              <th>Borrowed By</th>
+              <th>Number</th>
+              <th>Borrowed On</th>
+              <th>Return On</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              [...Array(5)].map((_, index) => (
+                <SkeletonRow key={index} />
+              ))
+            ) : (
+              borrowedBooks.map((book, index) => {
+                const isBookOverdue = isOverdue(book.return_on);
+                return (
+                  <tr key={index} className={isBookOverdue ? 'overdue-row' : ''}>
+                    <td>{book.title}</td>
+                    <td>{book.authors.join(', ')}</td>
+                    <td>{book.borrowed_by}</td>
+                    <td>{book.number}</td>
+                    <td>{book.borrowed_on}</td>
+                    <td className={isBookOverdue ? 'overdue-date' : ''}>
+                      {book.return_on}
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        min="1"
+                        max={book.number}
+                        defaultValue="1"
+                        onChange={(e) => book.returnQuantity = e.target.value}
+                      />
+                      <button onClick={() => handleReturn(book.isbn, book.borrowed_by, book.returnQuantity || 1)}>
+                        Return Book
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      <button onClick={() => setShowAddBook(!showAddBook)}>
+      <button 
+        onClick={() => setShowAddBook(!showAddBook)} 
+        className="toggle-form-button"
+      >
         {showAddBook ? 'Hide Add Book Form' : 'Add New Book'}
       </button>
 
       {showAddBook && (
-        <form onSubmit={handleAddBook}>
-          <div>
+        <form onSubmit={handleAddBook} className="add-book-form">
+          <div className="form-group">
             <label>ISBN:</label>
             <input
               type="text"
               value={newBook.isbn}
               onChange={(e) => setNewBook({...newBook, isbn: e.target.value})}
               required
+              className="form-input"
             />
           </div>
           
-          <div>
+          <div className="form-group">
             <label>Title:</label>
             <input
               type="text"
               value={newBook.title}
               onChange={(e) => setNewBook({...newBook, title: e.target.value})}
               required
+              className="form-input"
             />
           </div>
 
-          <div>
+          <div className="form-group">
             <label>Authors:</label>
-            <div>
+            <div className="dynamic-fields">
               {newBook.authors.map((author, index) => (
-                <div key={index} style={{ marginBottom: '10px' }}>
+                <div key={index} className="field-row">
                   <select
                     value={author}
                     onChange={(e) => handleFieldChange('authors', index, e.target.value)}
-                    style={{ width: '200px' }}
+                    className="field-select"
                   >
                     <option value="">Select or type new author</option>
                     {availableAuthors.map((existingAuthor) => (
@@ -249,28 +339,36 @@ function Librarian() {
                     value={author}
                     onChange={(e) => handleFieldChange('authors', index, e.target.value)}
                     placeholder="Or type new author name"
-                    style={{ marginLeft: '10px' }}
+                    className="field-input"
                   />
-                  <button type="button" onClick={() => removeField('authors', index)} style={{ marginLeft: '10px' }}>
+                  <button 
+                    type="button" 
+                    onClick={() => removeField('authors', index)}
+                    className="remove-button"
+                  >
                     Remove
                   </button>
                 </div>
               ))}
-              <button type="button" onClick={() => addField('authors')}>
+              <button 
+                type="button" 
+                onClick={() => addField('authors')}
+                className="add-button"
+              >
                 Add Another Author
               </button>
             </div>
           </div>
 
-          <div>
+          <div className="form-group">
             <label>Genres:</label>
-            <div>
+            <div className="dynamic-fields">
               {newBook.genres.map((genre, index) => (
-                <div key={index} style={{ marginBottom: '10px' }}>
+                <div key={index} className="field-row">
                   <select
                     value={genre}
                     onChange={(e) => handleFieldChange('genres', index, e.target.value)}
-                    style={{ width: '200px' }}
+                    className="field-select"
                   >
                     <option value="">Select or type new genre</option>
                     {availableGenres.map((existingGenre) => (
@@ -284,20 +382,28 @@ function Librarian() {
                     value={genre}
                     onChange={(e) => handleFieldChange('genres', index, e.target.value)}
                     placeholder="Or type new genre name"
-                    style={{ marginLeft: '10px' }}
+                    className="field-input"
                   />
-                  <button type="button" onClick={() => removeField('genres', index)} style={{ marginLeft: '10px' }}>
+                  <button 
+                    type="button" 
+                    onClick={() => removeField('genres', index)}
+                    className="remove-button"
+                  >
                     Remove
                   </button>
                 </div>
               ))}
-              <button type="button" onClick={() => addField('genres')}>
+              <button 
+                type="button" 
+                onClick={() => addField('genres')}
+                className="add-button"
+              >
                 Add Another Genre
               </button>
             </div>
           </div>
 
-          <div>
+          <div className="form-group">
             <label>Copies:</label>
             <input
               type="number"
@@ -305,10 +411,11 @@ function Librarian() {
               onChange={(e) => setNewBook({...newBook, copies: parseInt(e.target.value)})}
               min="1"
               required
+              className="form-input"
             />
           </div>
 
-          <div>
+          <div className="form-group">
             <label>Year:</label>
             <input
               type="number"
@@ -317,19 +424,21 @@ function Librarian() {
               min="1000"
               max={new Date().getFullYear()}
               required
+              className="form-input"
             />
           </div>
 
-          <div>
+          <div className="form-group">
             <label>Cover Image:</label>
             <input
               type="file"
               accept="image/*"
               onChange={(e) => setNewBook({...newBook, cover: e.target.files[0]})}
+              className="form-input"
             />
           </div>
 
-          <button type="submit">Add Book</button>
+          <button type="submit" className="submit-button">Add Book</button>
         </form>
       )}
     </div>

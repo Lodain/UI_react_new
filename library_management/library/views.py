@@ -236,7 +236,8 @@ def search_borrowed_books(request):
             "authors": book.book.authors.all().values_list('name', flat=True),
             "borrowed_by": book.user.username,
             "number": book.number,
-            "borrowed_on": book.borrowed_on
+            "borrowed_on": book.borrowed_on,
+            "return_on": book.return_on
         }
         for book in searched_books
     ]
