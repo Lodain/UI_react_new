@@ -96,15 +96,15 @@
 }
 
 .toggle-form-button {
-  width: 100%;
-  padding: 1rem;
+  width: fit-content;
+  padding: 0.75rem 1.5rem;
   background-color: #394e75;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 2rem;
   transition: background-color 0.3s;
+  font-size: 0.9rem;
 }
 
 .toggle-form-button:hover {
@@ -116,6 +116,7 @@
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
 .form-group {
@@ -338,4 +339,14 @@
 .books-table td.overdue-date {
   color: #dc3545 !important; /* Use !important to override row color */
   font-weight: 500;
+}
+
+.top-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.search-container {
+  width: 100%;
 }

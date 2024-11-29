@@ -21,6 +21,7 @@ function Librarian() {
   const [availableAuthors, setAvailableAuthors] = useState([]);
   const [availableGenres, setAvailableGenres] = useState([]);
   const [isReturning, setIsReturning] = useState(false);
+  const [isAddingBook, setIsAddingBook] = useState(false);
 
   useEffect(() => {
     fetchBorrowedBooks();
@@ -128,6 +129,7 @@ function Librarian() {
 
   const handleAddBook = async (e) => {
     e.preventDefault();
+    setIsAddingBook(true);
     const formData = new FormData();
     
     // Add basic book info
@@ -169,6 +171,8 @@ function Librarian() {
     } catch (error) {
       console.error('Error Response:', error.response?.data);
       setMessage(error.response?.data?.error || 'Error adding book');
+    } finally {
+      setIsAddingBook(false);
     }
   };
 
@@ -219,12 +223,170 @@ function Librarian() {
 
   return (
     <div className="librarian-container">
-      <LoadingModal show={isReturning} />
+      <LoadingModal show={isReturning || isAddingBook} />
       
       <h1 className="dashboard-title">Librarian Dashboard</h1>
       
+      <div className="top-controls">
+        <button 
+          onClick={() => setShowAddBook(!showAddBook)} 
+          className="toggle-form-button"
+        >
+          {showAddBook ? 'Hide Add Book Form' : 'Add New Book'}
+        </button>
+      </div>
+
       {message && <div className={`message ${message.includes('error') ? 'error' : 'success'}`}>{message}</div>}
       
+      {showAddBook && (
+        <form onSubmit={handleAddBook} className="add-book-form">
+          <div className="form-group">
+            <label>ISBN:</label>
+            <input
+              type="text"
+              value={newBook.isbn}
+              onChange={(e) => setNewBook({...newBook, isbn: e.target.value})}
+              required
+              className="form-input"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>Title:</label>
+            <input
+              type="text"
+              value={newBook.title}
+              onChange={(e) => setNewBook({...newBook, title: e.target.value})}
+              required
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Authors:</label>
+            <div className="dynamic-fields">
+              {newBook.authors.map((author, index) => (
+                <div key={index} className="field-row">
+                  <select
+                    value={author}
+                    onChange={(e) => handleFieldChange('authors', index, e.target.value)}
+                    className="field-select"
+                  >
+                    <option value="">Select author</option>
+                    {availableAuthors.map((existingAuthor) => (
+                      <option key={existingAuthor} value={existingAuthor}>
+                        {existingAuthor}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={author}
+                    onChange={(e) => handleFieldChange('authors', index, e.target.value)}
+                    placeholder="Type author name"
+                    className="field-input"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => removeField('authors', index)}
+                    className="remove-button"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button 
+                type="button" 
+                onClick={() => addField('authors')}
+                className="add-button"
+              >
+                Add Another Author
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Genres:</label>
+            <div className="dynamic-fields">
+              {newBook.genres.map((genre, index) => (
+                <div key={index} className="field-row">
+                  <select
+                    value={genre}
+                    onChange={(e) => handleFieldChange('genres', index, e.target.value)}
+                    className="field-select"
+                  >
+                    <option value="">Select genre</option>
+                    {availableGenres.map((existingGenre) => (
+                      <option key={existingGenre} value={existingGenre}>
+                        {existingGenre}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={genre}
+                    onChange={(e) => handleFieldChange('genres', index, e.target.value)}
+                    placeholder="Type genre name"
+                    className="field-input"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => removeField('genres', index)}
+                    className="remove-button"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button 
+                type="button" 
+                onClick={() => addField('genres')}
+                className="add-button"
+              >
+                Add Another Genre
+              </button>
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Copies:</label>
+            <input
+              type="number"
+              value={newBook.copies}
+              onChange={(e) => setNewBook({...newBook, copies: parseInt(e.target.value)})}
+              min="1"
+              required
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Year:</label>
+            <input
+              type="number"
+              value={newBook.year}
+              onChange={(e) => setNewBook({...newBook, year: parseInt(e.target.value)})}
+              min="1000"
+              max={new Date().getFullYear()}
+              required
+              className="form-input"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Cover Image:</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setNewBook({...newBook, cover: e.target.files[0]})}
+              className="form-input"
+            />
+          </div>
+
+          <button type="submit" className="submit-button">Add Book</button>
+        </form>
+      )}
+
       <div className="search-container">
         <input
           type="text"
@@ -285,162 +447,6 @@ function Librarian() {
           </tbody>
         </table>
       </div>
-
-      <button 
-        onClick={() => setShowAddBook(!showAddBook)} 
-        className="toggle-form-button"
-      >
-        {showAddBook ? 'Hide Add Book Form' : 'Add New Book'}
-      </button>
-
-      {showAddBook && (
-        <form onSubmit={handleAddBook} className="add-book-form">
-          <div className="form-group">
-            <label>ISBN:</label>
-            <input
-              type="text"
-              value={newBook.isbn}
-              onChange={(e) => setNewBook({...newBook, isbn: e.target.value})}
-              required
-              className="form-input"
-            />
-          </div>
-          
-          <div className="form-group">
-            <label>Title:</label>
-            <input
-              type="text"
-              value={newBook.title}
-              onChange={(e) => setNewBook({...newBook, title: e.target.value})}
-              required
-              className="form-input"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Authors:</label>
-            <div className="dynamic-fields">
-              {newBook.authors.map((author, index) => (
-                <div key={index} className="field-row">
-                  <select
-                    value={author}
-                    onChange={(e) => handleFieldChange('authors', index, e.target.value)}
-                    className="field-select"
-                  >
-                    <option value="">Select or type new author</option>
-                    {availableAuthors.map((existingAuthor) => (
-                      <option key={existingAuthor} value={existingAuthor}>
-                        {existingAuthor}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    value={author}
-                    onChange={(e) => handleFieldChange('authors', index, e.target.value)}
-                    placeholder="Or type new author name"
-                    className="field-input"
-                  />
-                  <button 
-                    type="button" 
-                    onClick={() => removeField('authors', index)}
-                    className="remove-button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button 
-                type="button" 
-                onClick={() => addField('authors')}
-                className="add-button"
-              >
-                Add Another Author
-              </button>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Genres:</label>
-            <div className="dynamic-fields">
-              {newBook.genres.map((genre, index) => (
-                <div key={index} className="field-row">
-                  <select
-                    value={genre}
-                    onChange={(e) => handleFieldChange('genres', index, e.target.value)}
-                    className="field-select"
-                  >
-                    <option value="">Select or type new genre</option>
-                    {availableGenres.map((existingGenre) => (
-                      <option key={existingGenre} value={existingGenre}>
-                        {existingGenre}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    value={genre}
-                    onChange={(e) => handleFieldChange('genres', index, e.target.value)}
-                    placeholder="Or type new genre name"
-                    className="field-input"
-                  />
-                  <button 
-                    type="button" 
-                    onClick={() => removeField('genres', index)}
-                    className="remove-button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button 
-                type="button" 
-                onClick={() => addField('genres')}
-                className="add-button"
-              >
-                Add Another Genre
-              </button>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Copies:</label>
-            <input
-              type="number"
-              value={newBook.copies}
-              onChange={(e) => setNewBook({...newBook, copies: parseInt(e.target.value)})}
-              min="1"
-              required
-              className="form-input"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Year:</label>
-            <input
-              type="number"
-              value={newBook.year}
-              onChange={(e) => setNewBook({...newBook, year: parseInt(e.target.value)})}
-              min="1000"
-              max={new Date().getFullYear()}
-              required
-              className="form-input"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Cover Image:</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setNewBook({...newBook, cover: e.target.files[0]})}
-              className="form-input"
-            />
-          </div>
-
-          <button type="submit" className="submit-button">Add Book</button>
-        </form>
-      )}
     </div>
   );
 }
