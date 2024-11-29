@@ -133,7 +133,7 @@ function App() {
             <div className="search-container">
               <input
                 type="text"
-                placeholder="Search books by title, ISBN, author, or genre"
+                placeholder="Title, ISBN, author, genre"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
