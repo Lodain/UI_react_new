@@ -24,6 +24,10 @@ function Librarian() {
   const [isAddingBook, setIsAddingBook] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     fetchBorrowedBooks();
     fetchAuthorsAndGenres();
   }, []);

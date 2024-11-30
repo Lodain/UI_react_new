@@ -6,6 +6,10 @@ import './style/Book.css';
 import { useParams } from 'react-router-dom';
 
 function Book() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { isbn } = useParams();
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
@@ -19,10 +23,6 @@ function Book() {
     isSuccess: false
   });
   const [isPageLoading, setIsPageLoading] = useState(true);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   useEffect(() => {
     // Add user check

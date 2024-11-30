@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import axiosInstance from './axiosConfig';
 import './style/Borrow.css';
 import { Card, CardMedia, CardContent, Typography, Skeleton } from '@mui/material';
@@ -50,6 +50,10 @@ const Borrow = () => {
   const [borrowedBook, setBorrowedBook] = useState(null);
   const [isBorrowing, setIsBorrowing] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const searchBooks = useCallback(() => {
     axiosInstance.get(`borrow_book_api?query=${query}`)

@@ -274,38 +274,41 @@
 }
 
 /* Adjust specific column widths */
+.books-table th:nth-child(1),
+.books-table td:nth-child(1) {
+  width: 200px; /* Match the width of the Title skeleton cell */
+}
+
+.books-table th:nth-child(2),
+.books-table td:nth-child(2) {
+  width: 150px; /* Match the width of the Authors skeleton cell */
+}
+
+.books-table th:nth-child(3),
+.books-table td:nth-child(3) {
+  width: 120px; /* Match the width of the Borrowed By skeleton cell */
+}
+
+.books-table th:nth-child(4),
+.books-table td:nth-child(4) {
+  width: 60px; /* Match the width of the Number skeleton cell */
+}
+
+.books-table th:nth-child(5),
+.books-table td:nth-child(5) {
+  width: 100px; /* Match the width of the Borrowed On skeleton cell */
+}
+
 .books-table th:nth-child(6),
 .books-table td:nth-child(6) {
-  min-width: 120px; /* Increased width for Return On column */
-  width: 120px;
+  width: 120px; /* Match the width of the Return On skeleton cell */
 }
 
-/* Update skeleton width to match */
-.skeleton-row td:nth-child(6) .skeleton-cell { 
-  width: 120px; /* Match the width of the Return On column */
-}
-
-/* Align the last column (Actions) to the right */
-.books-table th:last-child,
-.books-table td:last-child {
+.books-table th:nth-child(7),
+.books-table td:nth-child(7) {
+  width: 150px;
   text-align: right;
-  padding-right: 1.5rem; /* Add some padding from the right edge */
-}
-
-/* Stack input and button vertically */
-.books-table td:last-child {
-  display: flex;
-  flex-direction: column; /* Stack vertically */
-  align-items: flex-end; /* Align to the right */
-  gap: 0.5rem; /* Space between input and button */
-  padding: 0.75rem 1.5rem 0.75rem 0.75rem; /* Adjust padding */
-}
-
-.books-table input[type="number"] {
-  width: 80px; /* Slightly wider for better visibility */
-  padding: 0.4rem;
-  font-size: 0.85rem;
-  text-align: right;
+  padding-right: 1rem;
 }
 
 /* Update skeleton for the last column */

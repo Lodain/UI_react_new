@@ -27,6 +27,10 @@ function Account() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     // Fetch user information from session storage
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (storedUser) {
