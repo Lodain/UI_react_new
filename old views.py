@@ -1,3 +1,4 @@
+#this is the old views.py file that is not used anymore
 import threading
 from datetime import date
 from django.shortcuts import render, redirect
