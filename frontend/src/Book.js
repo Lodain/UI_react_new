@@ -18,6 +18,7 @@ function Book() {
     message: '',
     isSuccess: false
   });
+  const [isPageLoading, setIsPageLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -36,12 +37,16 @@ function Book() {
 
   const fetchBookDetails = (isbn) => {
     if (isbn) {
+      setIsPageLoading(true);
       axiosInstance.get(`/book/${isbn}/`)
         .then(response => {
           setBook(response.data);
         })
         .catch(error => {
           setError(error.response?.data?.error || 'An error occurred');
+        })
+        .finally(() => {
+          setIsPageLoading(false);
         });
     }
   };
@@ -136,7 +141,8 @@ function Book() {
   };
 
   if (error) return <div>Error: {error}</div>;
-  if (!book) return <div>Loading...</div>;
+  if (isPageLoading) return <LoadingModal show={true} />;
+  if (!book) return null;
 
   return (
     <div className="book-container">
