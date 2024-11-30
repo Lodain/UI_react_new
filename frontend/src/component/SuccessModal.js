@@ -14,6 +14,7 @@ const SuccessModal = ({ show, onClose }) => {
       <div className="modal-content">
         <h2>Success</h2>
         <p>Your account has been created successfully!</p>
+        <p>Please check your email for verification.</p>
         <button onClick={handleOk}>OK</button>
       </div>
     </div>

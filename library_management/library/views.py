@@ -1,20 +1,19 @@
-from django.shortcuts import render, redirect, get_object_or_404
+# This file contains the views for the library management system.
+# These functions were written separately by each team member.
+# It is based on the first version of the views.py file, which served as a template.  
+# The original version was collaboratively written by all team members,  
+# but it did not implement the API and was not compatible with the frontend.
+# - Danilo Spera, xsperad00
+from django.shortcuts import redirect, get_object_or_404
 from rest_framework.views import APIView 
 from .models import *
 from rest_framework.response import Response
 from .serializers import * 
-from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import serializers
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
-from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -24,11 +23,10 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 import json
 from django.db.models import Avg
 
+#This view returns the book data to the homepage
 class ReactView(APIView):
     def get(self, request):
         output = [
@@ -42,12 +40,13 @@ class ReactView(APIView):
         ]
         return Response(output)
 
+#This view returns the user data to the navbar
 @api_view(['POST'])
 def get_user_info(request):
     username = request.data.get('username')
     try:
         user = User.objects.get(username=username)
-        if not user.is_active:
+        if not user.is_active:  #If the user is inactive he has not verified his email
             return Response({'error': 'User account is inactive. Please verify your email.'}, status=403)
         user_data = {
             'username': user.username,
@@ -61,6 +60,7 @@ def get_user_info(request):
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=404)
 
+#this view returns the list of books that the user borrowed
 @api_view(['GET'])
 def get_lended_books(request):
     user = request.user
@@ -80,6 +80,7 @@ def get_lended_books(request):
     ]
     return Response(output)
 
+#this view returns the list of books that the user inserted in the wishlist
 @api_view(['GET'])
 def get_wishlist(request):
     user = request.user
@@ -95,6 +96,8 @@ def get_wishlist(request):
     ]
     return Response(output)
 
+#this view handles the registration, and if the user is registered successfully
+#it sends a verification email to the user
 @api_view(['POST'])
 def register_user(request):
     first_name = request.data.get('first_name')
@@ -131,6 +134,7 @@ def register_user(request):
     except Exception as e:
         return Response({'error': str(e)}, status=400)
 
+#this view verifies the email of the user and redirects to the frontend
 @api_view(['GET'])
 def verify_email(request, uidb64, token):
     User = get_user_model()
@@ -147,6 +151,9 @@ def verify_email(request, uidb64, token):
     else:
         return redirect('http://localhost:3000/verify-email?status=failed')
 
+#this view handles the borrowing of a book, if the book is available it is borrowed
+#and added to the lended books list, and if the book is not available it returns an error
+#if the book is in the wishlist it is automatically removed from the wishlist
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def borrow_book_api(request):
@@ -198,6 +205,7 @@ def borrow_book_api(request):
         else:
             return Response({'error': "Sorry, this book is currently unavailable for borrowing."}, status=400)
 
+#returns the list of all books borrowed by all users
 @api_view(['GET'])
 def get_borrowed_books(request):
     borrowed_books = LendedBook.objects.select_related('book', 'user').all()
@@ -215,6 +223,8 @@ def get_borrowed_books(request):
     ]
     return Response(output)
 
+#allows the bookseller to search for books that have been borrowed 
+#using the username, the title of the books, the isbn and the authors
 @api_view(['GET'])
 def search_borrowed_books(request):
     query = request.GET.get('query', '').strip()
@@ -243,6 +253,8 @@ def search_borrowed_books(request):
     ]
     return Response(output)
 
+#this view allows the librarian to return a book, if the book is returned
+#correctly it is removed from the lended books list and the book copies are updated
 @api_view(['POST'])
 def return_book_api(request):
     book_id = request.data.get('book_id')
@@ -267,6 +279,7 @@ def return_book_api(request):
     except LendedBook.DoesNotExist:
         return Response({'error': "Book not found."}, status=404)
 
+#this view allows the librarian to add a new book to the library
 @api_view(['POST'])
 def add_book_api(request):
     try:
@@ -308,7 +321,7 @@ def add_book_api(request):
             genre = Genre.objects.get(name=genre_name)
             book.genres.add(genre)
             
-        # Handle cover image if provided
+        # Handle cover image
         if 'cover' in request.FILES:
             book.cover = request.FILES['cover']
             book.save()
@@ -317,7 +330,7 @@ def add_book_api(request):
     except json.JSONDecodeError:
         return Response({'error': 'Invalid JSON format for authors or genres'}, status=400)
     except Exception as e:
-        if 'book' in locals():  # Clean up if book was created
+        if 'book' in locals():  # If the book was created, it is deleted
             book.delete()
         return Response({'error': str(e)}, status=400)
 
@@ -326,11 +339,13 @@ def get_authors_api(request):
     authors = Author.objects.all().values_list('name', flat=True)
     return Response(list(authors))
 
+#this view returns the list of all genres
 @api_view(['GET'])
 def get_genres_api(request):
     genres = Genre.objects.all().values_list('name', flat=True)
     return Response(list(genres))
 
+#this view returns the details of a book and the reviews, it is used in the book page
 @api_view(['GET'])
 def get_book_details(request, isbn):
     try:
@@ -367,6 +382,7 @@ def get_book_details(request, isbn):
     except Book.DoesNotExist:
         return Response({'error': 'Book not found'}, status=404)
 
+#this view allows the user to add a book to the wishlist
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def toggle_wishlist(request, isbn):
@@ -384,6 +400,8 @@ def toggle_wishlist(request, isbn):
     except Book.DoesNotExist:
         return Response({'error': 'Book not found'}, status=404)
 
+#this view allows the user to add a review to a book, every user can add only one review to a book
+#only logged users can add a review
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_review(request, isbn):
@@ -416,6 +434,7 @@ def add_review(request, isbn):
     except Exception as e:
         return Response({'error': str(e)}, status=400)
 
+#this view allows the user to delete his review from a book
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_review(request, isbn, review_id):
@@ -434,6 +453,7 @@ def delete_review(request, isbn, review_id):
     except Review.DoesNotExist:
         return Response({'error': 'Review not found or you are not authorized to delete it'}, status=404)
 
+#this view allows the user to change his password
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password_api(request):
@@ -449,6 +469,7 @@ def change_password_api(request):
     
     return Response({'message': 'Password changed successfully'}, status=200)
 
+#this view allows the user to request a password reset email
 @api_view(['POST'])
 def forgot_password(request):
     email = request.data.get('email')
@@ -479,6 +500,7 @@ def forgot_password(request):
     except User.DoesNotExist:
         return Response({'error': 'No user found with this email address'}, status=404)
 
+#this view allows the user to reset his password
 @api_view(['POST'])
 def reset_password_confirm(request):
     uid = request.data.get('uid')
@@ -499,6 +521,7 @@ def reset_password_confirm(request):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         return Response({'error': 'Invalid reset link'}, status=400)
 
+#this view allows the user to delete his account, it requires the username and the password
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_account_api(request):
@@ -521,6 +544,7 @@ def delete_account_api(request):
     except Exception as e:
         return Response({'error': 'Failed to delete account'}, status=400)
 
+#this view allows the user to resend the verification email
 @api_view(['POST'])
 def resend_verification_email(request):
     email = request.data.get('email')
@@ -541,6 +565,7 @@ def resend_verification_email(request):
     except User.DoesNotExist:
         return Response({'error': 'No inactive user found with this email address'}, status=404)
 
+#this view allows the user to search for a book using the title, the isbn and the authors
 @api_view(['GET'])
 def search_books(request):
     query = request.GET.get('query', '')
