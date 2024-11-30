@@ -3,7 +3,7 @@
 
 .App {
   text-align: center;
-  min-height: calc(100vh - 60px);
+  min-height: calc(200vh - 200px);
   display: flex;
   flex-direction: column;
   width: 100%;
