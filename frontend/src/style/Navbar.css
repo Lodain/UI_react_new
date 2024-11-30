@@ -93,32 +93,71 @@ nav.top-right-buttons {
     align-items: center;
 }
 
-.left-buttons button, .right-buttons button {
-    background-color: #3C76F1;
-    border: none;
-    color: #F5F7FA;
-    padding: 10px 20px;
+/* Common styles for all buttons and links in navbar */
+.left-buttons .nav-link,
+.right-buttons button,
+.left-buttons button {
+    background-color: #3c76f1;
+    color: white;
+    padding: 8px 16px;
     margin: 0 5px;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    border: none;
+    font-size: 14px;
+    line-height: 1.5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 36px;
+    box-sizing: border-box;
 }
 
-.left-buttons button:hover, .right-buttons button:hover {
-    background-color: #366AD9;
+.left-buttons .nav-link:hover,
+.right-buttons button:hover,
+.left-buttons button:hover {
+    background-color: #244791;
+    color: white;
+}
+
+.left-buttons .nav-link.active {
+    background-color: #244791;
+    color: white;
 }
 
 .navbar-title {
-    font-family: 'Lobster', cursive; /* Use the Lobster font */
-    font-size: 1.5rem; /* Adjust size as needed */
-    color: #4A90E2; /* Use the same color as the banner title */
-    margin-right: 20px; /* Space between title and buttons */
+    font-family: 'Lobster', cursive;
+    font-size: 1.5rem;
+    color: #4A90E2;
+    margin-right: 20px;
 }
 
+/* Specific right buttons styles */
 .right-buttons {
-    display: flex;
-    align-items: center;
     margin-right: 20px;
+}
+
+.right-buttons button {
+    margin-left: 10px;
+}
+
+/* Reset any default link styles */
+.nav-link {
+    text-decoration: none;
+    color: white;
+}
+
+/* Ensure consistent height and width */
+.left-buttons .nav-link,
+.right-buttons button,
+.left-buttons button {
+    height: 36px;
+    min-width: 80px;
+    padding: 8px 16px;
+    white-space: nowrap;
 }
 
 .login-modal-body {
@@ -136,9 +175,4 @@ nav.top-right-buttons {
 .login-form {
   flex: 1;
   padding: 20px;
-}
-
-.left-buttons button.active, .right-buttons button.active {
-    background-color: #244791; 
-    color: #FFFFFF;
 }

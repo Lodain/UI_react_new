@@ -525,24 +525,33 @@ def reset_password_confirm(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_account_api(request):
-    user = request.user
     username = request.data.get('username')
     password = request.data.get('password')
 
-    if not username or not password:
-        return Response({'error': 'Please provide both username and password'}, status=400)
-
-    if username != user.username:
-        return Response({'error': 'Username does not match'}, status=400)
-
-    if not user.check_password(password):
-        return Response({'error': 'Password is incorrect'}, status=400)
-
     try:
-        user.delete()
-        return Response({'message': 'Account deleted successfully'}, status=200)
-    except Exception as e:
-        return Response({'error': 'Failed to delete account'}, status=400)
+        user = User.objects.get(username=username)
+        
+        # Check if user has any borrowed books
+        has_borrowed_books = LendedBook.objects.filter(user=user).exists()
+        if has_borrowed_books:
+            return Response(
+                {'error': 'You need to return all borrowed books before deleting your account.'}, 
+                status=400
+            )
+
+        # Verify password
+        if not user.check_password(password):
+            return Response({'error': 'Invalid password.'}, status=400)
+
+        # If username matches logged-in user and password is correct, delete account
+        if user == request.user:
+            user.delete()
+            return Response({'message': 'Account deleted successfully.'}, status=200)
+        else:
+            return Response({'error': 'You can only delete your own account.'}, status=403)
+
+    except User.DoesNotExist:
+        return Response({'error': 'User not found.'}, status=404)
 
 #this view allows the user to resend the verification email
 @api_view(['POST'])

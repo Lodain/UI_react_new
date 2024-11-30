@@ -3,6 +3,7 @@ import axiosInstance from './axiosConfig';
 import './style/Borrow.css';
 import { Card, CardMedia, CardContent, Typography, Skeleton } from '@mui/material';
 import LoadingModal from './component/LoadingModal';
+import { useNavigate } from 'react-router-dom';
 
 const SuccessModal = ({ book, onClose, onGoToAccount }) => {
   if (!book) return null;
@@ -48,6 +49,7 @@ const Borrow = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [borrowedBook, setBorrowedBook] = useState(null);
   const [isBorrowing, setIsBorrowing] = useState(false);
+  const navigate = useNavigate();
 
   const searchBooks = useCallback(() => {
     axiosInstance.get(`borrow_book_api?query=${query}`)
@@ -147,7 +149,7 @@ const Borrow = () => {
   };
 
   const handleGoToAccount = () => {
-    window.location.href = '/account';
+    navigate('/account');
   };
 
   return (
@@ -190,7 +192,7 @@ const Borrow = () => {
                     height: 300,
                     cursor: 'pointer'
                   }}
-                  onClick={() => window.location.href = `/book/${book.isbn}`}
+                  onClick={() => navigate(`/book/${book.isbn}`)}
                 />
                 <CardContent sx={{ 
                   padding: '4px',

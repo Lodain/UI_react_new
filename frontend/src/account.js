@@ -52,6 +52,22 @@ function Account() {
       });
   }, []);
 
+  useEffect(() => {
+    let timeoutId;
+    if (error) {
+      timeoutId = setTimeout(() => {
+        setError('');
+      }, 5000); // 5 seconds
+    }
+    
+    // Cleanup function to clear timeout if component unmounts or error changes
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [error]); // Only run effect when error changes
+
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     setError('');
@@ -98,7 +114,12 @@ function Account() {
 
       setShowDeleteSuccessModal(true);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to delete account');
+      const errorMessage = err.response?.data?.error || 'Failed to delete account';
+      setError(errorMessage);
+      
+      if (errorMessage.includes('borrowed books')) {
+        setActiveTab('borrowed');
+      }
     } finally {
       setIsLoading(false);
     }

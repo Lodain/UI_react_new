@@ -4,9 +4,12 @@ import axiosInstance from './axiosConfig';
 import RegisterModal from './RegisterModal';
 import LoadingModal from './component/LoadingModal';
 import LoginImage from './img/Login.PNG';
+import { Link, useLocation } from 'react-router-dom';
 
-const Navbar = ({ user, setUser, currentPath }) => {
-  const isActive = (path) => currentPath === path;
+
+const Navbar = ({ user, setUser }) => {
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -115,13 +118,22 @@ const Navbar = ({ user, setUser, currentPath }) => {
     <nav className="top-right-buttons">
       <div className="left-buttons">
         <span className="navbar-title">BiblioBase</span>
-        <button className={isActive('/') ? 'active' : ''} onClick={() => window.location.href = '/'}>Home</button>
+        <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</Link>
         {user && (
           <>
-            <button className={isActive('/account') ? 'active' : ''} onClick={() => window.location.href = '/account'}>Account</button>
-            <button className={isActive('/borrow') ? 'active' : ''} onClick={() => window.location.href = '/borrow'}>Borrow</button>
-            {user.superuser && <button className={isActive('/librarian') ? 'active' : ''} onClick={() => window.location.href = '/librarian'}>Librarian</button>}
-            {user.superuser && user.staff && <button className={isActive('http://127.0.0.1:8080/admin/') ? 'active' : ''} onClick={() => window.location.href = 'http://127.0.0.1:8080/admin/'}>Admin</button>}
+            <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`}>Account</Link>
+            <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`}>Borrow</Link>
+            {user.staff && (
+              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`}>Librarian</Link>
+            )}
+            {user.superuser && user.staff && (
+              <a href="http://127.0.0.1:8080/admin/" 
+                 className="nav-link" 
+                 target="_blank" 
+                 rel="noopener noreferrer">
+                Admin
+              </a>
+            )}
           </>
         )}
       </div>

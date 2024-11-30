@@ -1,46 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import './App.css';
 import Navbar from './Navbar';
+import Home from './Home';
+import Account from './account';
+import Book from './Book';
 import Borrow from './Borrow';
 import Librarian from './librarian';
-import Account from './account';
 import EmailVerification from './EmailVerification';
 import ResetPassword from './ResetPassword';
-import Book from './Book';
-import Home from './Home';
-import './App.css';
 
 function App() {
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
 
-  React.useEffect(() => {
-    const storedUser = JSON.parse(sessionStorage.getItem('user'));
-    if (storedUser) {
-      setUser(storedUser);
+  // Protected Route component
+  const ProtectedRoute = ({ children, requireStaff = false }) => {
+    // Check if user is logged in
+    if (!user) {
+      return <Navigate to="/" />;
     }
-  }, []);
+    
+    // Check if route requires staff access
+    if (requireStaff && !user.staff) {
+      return <Navigate to="/" />;
+    }
 
-  // Function to extract uid and token from URL
-  const getResetPasswordParams = () => {
-    const path = window.location.pathname;
-    const match = path.match(/\/reset-password\/([^/]+)\/([^/]+)/);
-    return match ? { uid: match[1], token: match[2] } : null;
+    return children;
   };
 
   return (
-    <div className="App">
-      <Navbar user={user} setUser={setUser} currentPath={window.location.pathname} />
-      <div className="main-content">
-        {window.location.pathname === '/' && <Home />}
-        {window.location.pathname === '/account' && <Account />}
-        {window.location.pathname === '/borrow' && <Borrow />}
-        {window.location.pathname.startsWith('/verify-email') && <EmailVerification />}
-        {window.location.pathname === '/librarian' && <Librarian />}
-        {window.location.pathname.startsWith('/book/') && <Book />}
-        {window.location.pathname.startsWith('/reset-password/') && (
-          <ResetPassword {...getResetPasswordParams()} />
-        )}
+    <Router>
+      <div className="App">
+        <Navbar 
+          user={user} 
+          setUser={setUser} 
+          currentPath={window.location.pathname}
+        />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/book/:isbn" element={<Book />} />
+          <Route 
+            path="/account" 
+            element={
+              <ProtectedRoute>
+                <Account />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/borrow" 
+            element={
+              <ProtectedRoute>
+                <Borrow />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/librarian" 
+            element={
+              <ProtectedRoute requireStaff={true}>
+                <Librarian />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/verify-email" element={<EmailVerification />} />
+          <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
 

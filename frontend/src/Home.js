@@ -4,6 +4,7 @@ import home from './img/home.png';
 import axiosInstance from './axiosConfig';
 import axios from 'axios';
 import './App.css';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [details, setDetails] = useState([]);
@@ -151,6 +152,8 @@ function Home() {
 
 // Helper component for book cards
 function BookCard({ book }) {
+  const navigate = useNavigate();
+  
   return (
     <div className="card-container">
       <Card 
@@ -162,7 +165,7 @@ function BookCard({ book }) {
           overflow: 'hidden',
           cursor: 'pointer'
         }}
-        onClick={() => window.location.href = `/book/${book.isbn}`}
+        onClick={() => navigate(`/book/${book.isbn}`)}
       >
         <CardMedia
           className="card-media"

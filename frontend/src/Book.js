@@ -3,8 +3,10 @@ import axiosInstance from './axiosConfig';
 import { Typography, Rating, Button, Modal, Box } from '@mui/material';
 import LoadingModal from './component/LoadingModal';
 import './style/Book.css';
+import { useParams } from 'react-router-dom';
 
 function Book() {
+  const { isbn } = useParams();
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
@@ -18,6 +20,10 @@ function Book() {
   });
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     // Add user check
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (storedUser) {
@@ -25,9 +31,10 @@ function Book() {
     }
 
     // Extract ISBN from URL path
-    const pathSegments = window.location.pathname.split('/');
-    const isbn = pathSegments[pathSegments.length - 1];
+    fetchBookDetails(isbn);
+  }, [isbn]);
 
+  const fetchBookDetails = (isbn) => {
     if (isbn) {
       axiosInstance.get(`/book/${isbn}/`)
         .then(response => {
@@ -37,7 +44,7 @@ function Book() {
           setError(error.response?.data?.error || 'An error occurred');
         });
     }
-  }, []);
+  };
 
   const handleBorrow = () => {
     if (book) {

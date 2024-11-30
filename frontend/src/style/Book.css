@@ -1,10 +1,10 @@
 .book-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 40px;
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 30px;
+  grid-template-columns: 300px minmax(800px, 1fr);
+  gap: 60px;
 }
 
 .book-cover-section {
@@ -15,12 +15,19 @@
 
 .book-cover-section img {
   width: 100%;
+  max-width: 300px;
+  height: auto;
+  min-height: 400px;
+  object-fit: contain;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .book-details-section {
   background: white;
-  padding: 20px;
+  padding: 40px;
+  min-height: 600px;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .book-actions {
