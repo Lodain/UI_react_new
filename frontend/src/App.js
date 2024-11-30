@@ -1,3 +1,5 @@
+/*In this file I implement the main app structure, including the navbar, routes, and protected routes.
+Every team member writed their own pages separately - Spera Danilo - xsperad00 */
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
