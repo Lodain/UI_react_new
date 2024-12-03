@@ -161,3 +161,19 @@
   margin-bottom: 4px;
   font-style: italic;
 }
+
+@media (max-width: 480px) {
+  .card-container {
+    width: 100%;
+    margin: 5px;
+  }
+
+  .card-media {
+    height: 200px;
+  }
+
+  .borrow-button {
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+}

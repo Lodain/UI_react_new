@@ -8,6 +8,8 @@
   flex-direction: column;
   width: 100%;
   overflow-x: hidden;
+  scrollbar-width: none;
+  
 }
 
 .App-logo {
@@ -102,6 +104,7 @@
   padding-left: 50px;
   padding-right: 50px;
   box-sizing: border-box;
+  margin-top: 50px;
 }
 
 .banner-text {
@@ -201,14 +204,17 @@
   overflow: hidden;
 }
 
-body {
-  position: relative;
-  margin: 0;
-  padding-top: 60px;
-  background-color: #ECF1FE;
-  min-height: 100vh;
+body, html {
   overflow-x: hidden;
+  overflow-y: scroll;
+  margin: 0;
+  padding: 0;
   width: 100%;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 .banner-title {
@@ -441,4 +447,32 @@ body {
   color: #4A90E2;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+@media (max-width: 680px) {
+  .search-container {
+    margin-left: 20px; /* Adjust margin if needed */
+    width: 80%; /* Adjust width for smaller screens */
+  }
+
+  .search-input {
+    width: 90% !important; /* Make input take full width of the container */
+    max-width: none; /* Remove max-width constraint */
+    font-size: 12px; /* Smaller font size for smaller screens */
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 100%;
+}
+
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  font-size: 0.9rem;
 }
