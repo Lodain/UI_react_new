@@ -121,8 +121,8 @@ const Navbar = ({ user, setUser }) => {
 
   return (
     <nav className="top-right-buttons">
+      <span className="navbar-title">BiblioBase</span>
       <div className="left-buttons">
-        <span className="navbar-title">BiblioBase</span>
         <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</Link>
         {user && (
           <>
