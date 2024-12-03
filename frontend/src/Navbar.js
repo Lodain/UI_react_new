@@ -24,6 +24,7 @@ const Navbar = ({ user, setUser }) => {
   const [loginErrorMessage, setLoginErrorMessage] = useState('');
   const [isUserInactive, setIsUserInactive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleBodyOverflow = (isModalOpen) => {
     document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
@@ -114,6 +115,10 @@ const Navbar = ({ user, setUser }) => {
       });
   };
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <nav className="top-right-buttons">
       <div className="left-buttons">
@@ -138,6 +143,49 @@ const Navbar = ({ user, setUser }) => {
         )}
       </div>
       <div className="right-buttons">
+        {user ? (
+          <button onClick={() => {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            sessionStorage.removeItem('user');
+            setUser(null);
+            delete axiosInstance.defaults.headers.common['Authorization'];
+            window.location.href = '/';
+          }}>Logout</button>
+        ) : (
+          <>
+            <button onClick={() => setShowRegisterModal(true)}>Register</button>
+            <button onClick={() => setShowLoginModal(true)}>Login</button>
+          </>
+        )}
+      </div>
+
+      <span
+        className={`menu-icon ${menuOpen ? 'open' : ''}`}
+        onClick={toggleMenu}
+      >
+        {menuOpen ? '✖' : '☰'}
+      </span>
+
+      <div className={`navbar-menu ${menuOpen ? 'active' : ''}`}>
+        <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</Link>
+        {user && (
+          <>
+            <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`}>Account</Link>
+            <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`}>Borrow</Link>
+            {user.staff && (
+              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`}>Librarian</Link>
+            )}
+            {user.superuser && user.staff && (
+              <a href="http://127.0.0.1:8080/admin/" 
+                 className={`nav-link ${isActive('/admin') ? 'active' : ''}`} 
+                 target="_blank" 
+                 rel="noopener noreferrer">
+                Admin
+              </a>
+            )}
+          </>
+        )}
         {user ? (
           <button onClick={() => {
             localStorage.removeItem('access_token');
