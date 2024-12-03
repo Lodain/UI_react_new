@@ -124,12 +124,26 @@
   font-size: 1.5rem;
 }
 
+/* Add media query to hide <p> inside banner-text on smaller screens */
+@media (max-width: 768px) {
+  .banner-text p {
+    display: none;
+  }
+}
+
 .banner-content {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-left: -20px;
-  margin-right:10%;
+  margin-right: 10%;
+}
+
+/* Add media query to hide banner-content on smaller screens */
+@media (max-width: 1200px) {
+  .banner-content {
+    display: none;
+  }
 }
 
 .banner-image {
