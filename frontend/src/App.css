@@ -125,8 +125,15 @@
 }
 
 /* Add media query to hide <p> inside banner-text on smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 920px) {
   .banner-text p {
+    display: none;
+  }
+}
+
+/* Add media query to hide <h2> inside banner-text on even smaller screens */
+@media (max-width: 680px) {
+  .banner-text h2 {
     display: none;
   }
 }

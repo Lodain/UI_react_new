@@ -77,7 +77,7 @@ function Home() {
       <div className="banner">
         <div className="banner-text">
           <h2>Welcome to BiblioBase</h2>
-          <p>Discover a world of books and knowledge.</p>
+          <p>Your journey through the pages starts here.</p>
         </div>
         <div className="banner-center-image">
           <img 
