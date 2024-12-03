@@ -73,54 +73,62 @@ button:hover {
 
 /* Add styles for the navbar */
 nav.top-right-buttons {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background-color: #D8E4FC;
-    background-image: radial-gradient(#C5D6FB 1px, transparent 1px);
-    background-size: 10px 10px;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #D8E4FC;
+  background-image: radial-gradient(#C5D6FB 1px, transparent 1px);
+  background-size: 10px 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .left-buttons, .right-buttons {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+}
+
+.left-buttons {
+  margin-right: auto;
+}
+
+.right-buttons {
+  margin-left: auto;
 }
 
 /* Common styles for all buttons and links in navbar */
 .left-buttons .nav-link,
 .right-buttons button,
 .left-buttons button {
-    background-color: #3c76f1;
-    color: white;
-    padding: 8px 16px;
-    margin: 0 5px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-    border: none;
-    font-size: 14px;
-    line-height: 1.5;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 80px;
-    height: 36px;
-    box-sizing: border-box;
+  background-color: #3c76f1;
+  color: white;
+  padding: 8px 16px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+  border: none;
+  font-size: 14px;
+  line-height: 1.5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 36px;
+  box-sizing: border-box;
 }
 
 .left-buttons .nav-link:hover,
 .right-buttons button:hover,
 .left-buttons button:hover {
-    background-color: #244791;
-    color: white;
+  background-color: #244791;
+  color: white;
 }
 
 .left-buttons .nav-link.active,
@@ -130,26 +138,26 @@ nav.top-right-buttons {
 }
 
 .navbar-title {
-    font-family: 'Lobster', cursive;
-    font-size: 1.5rem;
-    color: #4A90E2;
-    margin-right: 20px;
-    display: block;
+  font-family: 'Lobster', cursive;
+  font-size: 1.5rem;
+  color: #4A90E2;
+  margin-right: 20px;
+  display: block;
 }
 
 /* Specific right buttons styles */
 .right-buttons {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 
 .right-buttons button {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 /* Reset any default link styles */
 .nav-link {
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
 }
 
 /* Ensure consistent height and width */
@@ -157,10 +165,10 @@ nav.top-right-buttons {
 .right-buttons button,
 .left-buttons button,
 .navbar-menu .nav-link {
-    height: 36px;
-    min-width: 80px;
-    padding: 8px 16px;
-    white-space: nowrap;
+  height: 36px;
+  min-width: 80px;
+  padding: 8px 16px;
+  white-space: nowrap;
 }
 
 .login-modal-body {
@@ -195,6 +203,10 @@ nav.top-right-buttons {
   transform: rotate(90deg);
 }
 
+.navbar-menu {
+  display: none;
+}
+
 /* Responsive styles */
 @media (max-width: 768px) {
   .left-buttons, .right-buttons {
@@ -211,6 +223,10 @@ nav.top-right-buttons {
   }
 
   .navbar-menu {
+    display: none;
+  }
+
+  .navbar-menu.active {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -222,13 +238,9 @@ nav.top-right-buttons {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 1001;
     padding: 10px;
-    width: 100px;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-  }
-
-  .navbar-menu.active {
+    width: 220px;
     transform: translateX(0);
+    transition: transform 0.3s ease;
   }
 
   .navbar-menu .nav-link,

@@ -119,23 +119,28 @@ const Navbar = ({ user, setUser }) => {
     setMenuOpen(!menuOpen);
   };
 
+  const handleMenuClose = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <nav className="top-right-buttons">
       <span className="navbar-title">BiblioBase</span>
       <div className="left-buttons">
-        <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</Link>
+        <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`} onClick={handleMenuClose}>Home</Link>
         {user && (
           <>
-            <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`}>Account</Link>
-            <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`}>Borrow</Link>
+            <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`} onClick={handleMenuClose}>Account</Link>
+            <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`} onClick={handleMenuClose}>Borrow</Link>
             {user.staff && (
-              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`}>Librarian</Link>
+              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`} onClick={handleMenuClose}>Librarian</Link>
             )}
             {user.superuser && user.staff && (
               <a href="http://127.0.0.1:8080/admin/" 
                  className="nav-link" 
                  target="_blank" 
-                 rel="noopener noreferrer">
+                 rel="noopener noreferrer"
+                 onClick={handleMenuClose}>
                 Admin
               </a>
             )}
@@ -151,11 +156,12 @@ const Navbar = ({ user, setUser }) => {
             setUser(null);
             delete axiosInstance.defaults.headers.common['Authorization'];
             window.location.href = '/';
+            handleMenuClose();
           }}>Logout</button>
         ) : (
           <>
-            <button onClick={() => setShowRegisterModal(true)}>Register</button>
-            <button onClick={() => setShowLoginModal(true)}>Login</button>
+            <button onClick={() => { setShowRegisterModal(true); handleMenuClose(); }}>Register</button>
+            <button onClick={() => { setShowLoginModal(true); handleMenuClose(); }}>Login</button>
           </>
         )}
       </div>
@@ -168,19 +174,20 @@ const Navbar = ({ user, setUser }) => {
       </span>
 
       <div className={`navbar-menu ${menuOpen ? 'active' : ''}`}>
-        <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>Home</Link>
+        <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`} onClick={handleMenuClose}>Home</Link>
         {user && (
           <>
-            <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`}>Account</Link>
-            <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`}>Borrow</Link>
+            <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`} onClick={handleMenuClose}>Account</Link>
+            <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`} onClick={handleMenuClose}>Borrow</Link>
             {user.staff && (
-              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`}>Librarian</Link>
+              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`} onClick={handleMenuClose}>Librarian</Link>
             )}
             {user.superuser && user.staff && (
               <a href="http://127.0.0.1:8080/admin/" 
                  className={`nav-link ${isActive('/admin') ? 'active' : ''}`} 
                  target="_blank" 
-                 rel="noopener noreferrer">
+                 rel="noopener noreferrer"
+                 onClick={handleMenuClose}>
                 Admin
               </a>
             )}
@@ -194,11 +201,12 @@ const Navbar = ({ user, setUser }) => {
             setUser(null);
             delete axiosInstance.defaults.headers.common['Authorization'];
             window.location.href = '/';
+            handleMenuClose();
           }}>Logout</button>
         ) : (
           <>
-            <button onClick={() => setShowRegisterModal(true)}>Register</button>
-            <button onClick={() => setShowLoginModal(true)}>Login</button>
+            <button onClick={() => { setShowRegisterModal(true); handleMenuClose(); }}>Register</button>
+            <button onClick={() => { setShowLoginModal(true); handleMenuClose(); }}>Login</button>
           </>
         )}
       </div>
