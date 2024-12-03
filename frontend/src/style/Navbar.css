@@ -30,6 +30,7 @@
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .close:hover,
@@ -261,5 +262,18 @@ nav.top-right-buttons {
   .navbar-menu .nav-link:hover,
   .navbar-menu button:hover {
     background-color: #244791;
+  }
+
+}
+
+@media (max-width: 680px) {
+  /* Hide the login image on small screens */
+  .login-image {
+    display: none;
+  }
+
+  /* Hide the register image on smaller screens */
+  .register-image {
+    display: none;
   }
 }
