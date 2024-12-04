@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
 
+/* Main application container styles */
 .App {
   text-align: center;
   min-height: calc(200vh - 200px);
@@ -10,20 +11,9 @@
   overflow-x: hidden;
   scrollbar-width: none;
   background-color: #ECF1FE;
-  
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
+/* Header styles */
 .App-header {
   background-color: #ECF1FE;
   min-height: 100vh;
@@ -35,19 +25,13 @@
   color: #F5F7FA;
 }
 
+/* Link styles */
 .App-link {
   color: #50E3C2;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
+/* Card container styles */
 .card-container {
   justify-content: center;
   display: inline-block;
@@ -58,12 +42,14 @@
   overflow: hidden;
 }
 
+/* Card media styles */
 .card-media {
   height: 300px !important;
   object-fit: contain !important;
   background-color: #f5f5f5;
 }
 
+/* Card title styles */
 .card-title {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -77,6 +63,7 @@
   min-height: 2.4em;
 }
 
+/* Card authors styles */
 .card-authors {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,6 +95,7 @@
   margin-top: 50px;
 }
 
+/* Banner text styles */
 .banner-text {
   max-width: 300px;
   text-align: left;
@@ -128,20 +116,21 @@
   font-size: 1.5rem;
 }
 
-/* Add media query to hide <p> inside banner-text on smaller screens */
+/* Media query to hide <p> inside banner-text on smaller screens */
 @media (max-width: 920px) {
   .banner-text p {
     display: none;
   }
 }
 
-/* Add media query to hide <h2> inside banner-text on even smaller screens */
+/* Media query to hide <h2> inside banner-text on even smaller screens */
 @media (max-width: 680px) {
   .banner-text h2 {
     display: none;
   }
 }
 
+/* Banner content styles */
 .banner-content {
   display: flex;
   justify-content: center;
@@ -150,13 +139,14 @@
   margin-right: 10%;
 }
 
-/* Add media query to hide banner-content on smaller screens */
+/* Media query to hide banner-content on smaller screens */
 @media (max-width: 1200px) {
   .banner-content {
     display: none;
   }
 }
 
+/* Banner image styles */
 .banner-image {
   width: 300px;
   height: 450px;
@@ -175,6 +165,7 @@
   animation: slideOut 0.5s ease-in-out forwards;
 }
 
+/* Slide in animation */
 @keyframes slideIn {
   0% {
     transform: translateX(200%);
@@ -186,6 +177,7 @@
   }
 }
 
+/* Slide out animation */
 @keyframes slideOut {
   0% {
     transform: translateX(0);
@@ -205,6 +197,7 @@
   overflow: hidden;
 }
 
+/* Body and HTML styles */
 body, html {
   overflow-x: hidden;
   overflow-y: scroll;
@@ -218,6 +211,7 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+/* Banner title styles */
 .banner-title {
   position: absolute;
   top: 0;
@@ -230,18 +224,21 @@ body::-webkit-scrollbar {
   text-align: left;
 }
 
+/* Banner heading styles */
 .banner-heading {
     font-size: 2rem;
     color: #4A90E2;
     margin-bottom: 10px;
 }
 
+/* Banner description styles */
 .banner-description {
     font-size: 1.2rem;
     color: #333;
     margin-bottom: 20px;
 }
 
+/* Banner call-to-action button styles */
 .banner-cta {
     background-color: #58DDD9;
     color: #fff;
@@ -256,6 +253,7 @@ body::-webkit-scrollbar {
     background-color: #4AC0B8;
 }
 
+/* Skeleton image styles for loading */
 .skeleton-image {
   width: 300px;
   height: 450px;
@@ -264,6 +262,7 @@ body::-webkit-scrollbar {
   animation: pulse 1.5s infinite; /* Add a pulsing animation */
 }
 
+/* Pulse animation for skeletons */
 @keyframes pulse {
   0% {
     background-color: #e0e0e0;
@@ -276,6 +275,7 @@ body::-webkit-scrollbar {
   }
 }
 
+/* Skeleton card styles */
 .skeleton-card {
   width: 300px;
   height: 450px;
@@ -286,6 +286,7 @@ body::-webkit-scrollbar {
   display: inline-block; /* Ensure cards are inline */
 }
 
+/* Skeleton container styles */
 .skeleton-container {
   display: flex; /* Use flexbox to arrange skeletons in a row */
   justify-content: center; /* Center the skeletons horizontally */
@@ -296,6 +297,7 @@ body::-webkit-scrollbar {
   overflow-x: hidden;
 }
 
+/* Login modal styles */
 .login-modal {
   background-color: #ECF1FE; /* Use the page's background color */
   border-radius: 10px;
@@ -351,6 +353,7 @@ body::-webkit-scrollbar {
   color: #4A90E2;
 }
 
+/* Search container styles */
 .search-container {
   display: flex;
   justify-content: flex-start;
@@ -361,6 +364,7 @@ body::-webkit-scrollbar {
   overflow-x: hidden;
 }
 
+/* Search input styles */
 .search-input {
   width: 30%;
   max-width: 300px;
@@ -376,6 +380,7 @@ body::-webkit-scrollbar {
   border-color: #58DDD9;
 }
 
+/* Main content styles */
 .main-content {
   flex: 1;
   min-height: calc(100vh - 60px);
@@ -428,6 +433,8 @@ body {
 ::-webkit-scrollbar-corner {
   background-color: rgba(0, 0, 0, 0);
 }
+
+/* Banner center image styles */
 .banner-center-image {
   position: absolute;
   left: 50%;
@@ -441,6 +448,7 @@ body {
   object-fit: contain;
 }
 
+/* Books title styles */
 .books-title {
   text-align: left;
   margin-left: 50px;
@@ -450,6 +458,7 @@ body {
   margin-bottom: 20px;
 }
 
+/* Media query adjustments for smaller screens */
 @media (max-width: 680px) {
   .search-container {
     margin-left: 20px; /* Adjust margin if needed */
@@ -463,6 +472,7 @@ body {
   }
 }
 
+/* Table container styles */
 .table-container {
   overflow-x: auto;
   margin-bottom: 2rem;
@@ -471,6 +481,7 @@ body {
   width: 100%;
 }
 
+/* Books table styles */
 .books-table {
   width: 100%;
   border-collapse: collapse;

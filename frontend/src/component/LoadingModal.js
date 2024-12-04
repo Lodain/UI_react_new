@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/LoadingModal.css'; // Ensure you have some basic styles
+import '../style/LoadingModal.css';
 
 const LoadingModal = ({ show }) => {
   if (!show) return null;
@@ -7,7 +7,7 @@ const LoadingModal = ({ show }) => {
   return (
     <div className="loading-modal">
       <div className="loading-content">
-        <div className="spinner"></div> {/* Add your loading animation here */}
+        <div className="spinner"></div> 
         <p>Loading...</p>
       </div>
     </div>

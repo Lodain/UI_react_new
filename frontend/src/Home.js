@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
 import home from './img/home.png';
+import placeholder from './img/Image-not-found.png';
 import axiosInstance from './axiosConfig';
 import axios from 'axios';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  // State variables to manage book details, current book index, loading state, etc.
   const [details, setDetails] = useState([]);
   const [currentBookIndex, setCurrentBookIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -15,60 +17,62 @@ function Home() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Fetch initial data
+  // Fetch initial data when component mounts
   useEffect(() => {
     axiosInstance.get('/')
       .then(res => {
-        setDetails(res.data);
-        setLoading(false);
+        setDetails(res.data); // Set book details from response
+        setLoading(false); // Set loading to false after data is fetched
       })
       .catch(err => {
-        console.log(err);
-        setLoading(false);
+        console.log(err); // Log any errors
+        setLoading(false); // Ensure loading is false even if there's an error
       });
   }, []);
 
-  // Book rotation effect
+  // Effect to handle book rotation every 3 seconds
   useEffect(() => {
-    if (details.length === 0) return;
-    
+    if (details.length === 0) return; // Exit if no details
+
     const interval = setInterval(() => {
-      setIsTransitioning(true);
-      
+      setIsTransitioning(true); // Start transition effect
+
       setTimeout(() => {
+        // Update current book index, cycling back to start if at the end
         setCurrentBookIndex((prevIndex) => 
           prevIndex === details.length - 1 ? 0 : prevIndex + 1
         );
-        setIsTransitioning(false);
+        setIsTransitioning(false); // End transition effect
       }, 500);
       
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup interval on unmount
   }, [details]);
 
-  // Search debouncing
+  // Effect to debounce search input
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchQuery) {
-        searchBooks(searchQuery);
+        searchBooks(searchQuery); // Perform search if query exists
       } else {
-        setSearchResults([]);
+        setSearchResults([]); // Clear results if query is empty
       }
     }, 300);
 
-    return () => clearTimeout(delayDebounceFn);
+    return () => clearTimeout(delayDebounceFn); // Cleanup timeout on unmount
   }, [searchQuery]);
 
+  // Function to search books based on query
   const searchBooks = async (query) => {
-    setIsSearching(true);
+    setIsSearching(true); // Set searching state to true
     try {
       const response = await axios.get(`http://127.0.0.1:8080/search-books/?query=${query}`);
-      setSearchResults(response.data);
+      setSearchResults(response.data); // Set search results from response
     } catch (error) {
-      console.error('Error searching books:', error);
+      console.error('Error searching books:', error); // Log any errors
     } finally {
-      setIsSearching(false);
+      setIsSearching(false); // Set searching state to false
     }
   };
 
@@ -88,7 +92,7 @@ function Home() {
         </div>
         <div className="banner-content">
           {loading ? (
-            <div className="skeleton-image"></div>
+            <div className="skeleton-image"></div> // Show skeleton while loading
           ) : (
             details.length > 0 && (
               <img
@@ -124,24 +128,24 @@ function Home() {
           isSearching ? (
             <div className="skeleton-container">
               {Array.from({ length: 4 }).map((_, index) => (
-                <div className="skeleton-card" key={index}></div>
+                <div className="skeleton-card" key={index}></div> // Show skeletons while searching
               ))}
             </div>
           ) : (
             searchResults.map((book, id) => (
-              <BookCard key={id} book={book} />
+              <BookCard key={id} book={book} /> // Display search results
             ))
           )
         ) : (
           loading ? (
             <div className="skeleton-container">
               {Array.from({ length: 4 }).map((_, index) => (
-                <div className="skeleton-card" key={index}></div>
+                <div className="skeleton-card" key={index}></div> // Show skeletons while loading
               ))}
             </div>
           ) : (
             details.map((output, id) => (
-              <BookCard key={id} book={output} />
+              <BookCard key={id} book={output} /> // Display book details
             ))
           )
         )}
@@ -150,7 +154,7 @@ function Home() {
   );
 }
 
-// Helper component for book cards
+// Helper component for rendering individual book cards
 function BookCard({ book }) {
   const navigate = useNavigate();
   
@@ -165,12 +169,12 @@ function BookCard({ book }) {
           overflow: 'hidden',
           cursor: 'pointer'
         }}
-        onClick={() => navigate(`/book/${book.isbn}`)}
+        onClick={() => navigate(`/book/${book.isbn}`)} // Navigate to book details on click
       >
         <CardMedia
           className="card-media"
           component="img"
-          image={book.cover ? `http://127.0.0.1:8080${book.cover}` : 'placeholder-image-url'}
+          image={book.cover ? `http://127.0.0.1:8080${book.cover}` : placeholder}
           alt={book.title}
           sx={{
             padding: '10px',
