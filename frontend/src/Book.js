@@ -23,6 +23,7 @@ function Book() {
     isSuccess: false
   });
   const [isPageLoading, setIsPageLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
 
   useEffect(() => {
     // Add user check
@@ -34,6 +35,15 @@ function Book() {
     // Extract ISBN from URL path
     fetchBookDetails(isbn);
   }, [isbn]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 480);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const fetchBookDetails = (isbn) => {
     if (isbn) {
@@ -208,8 +218,8 @@ function Book() {
                 mb: 1, 
                 backgroundColor: '#394e75', 
                 '&:hover': { backgroundColor: '#2c3c59' },
-                height: '52px',
-                fontSize: '0.9rem'  // Smaller font
+                height: { xs: '32px', sm: '36px', md: '52px' },  // Further reduced height
+                fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.9rem' }  // Further reduced font size
               }}
               onClick={handleBorrow}
               disabled={book.copies <= book.lended}
@@ -226,8 +236,8 @@ function Book() {
                   borderColor: '#2c3c59',
                   backgroundColor: 'rgba(57, 78, 117, 0.04)'
                 },
-                height: '52px',
-                fontSize: '0.9rem'  // Smaller font
+                height: { xs: '32px', sm: '36px', md: '52px' },  // Further reduced height
+                fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.9rem' }  // Further reduced font size
               }}
               onClick={handleWishlist}
             >
@@ -275,21 +285,44 @@ function Book() {
             </Typography>
             
             {user && !book.reviews.some(review => review.user === user.username) && !showReviewForm && (
-              <Button 
-                variant="outlined" 
-                onClick={handleAddReview}
-                startIcon={<span>✎</span>}
-                sx={{ 
-                  fontSize: '0.8rem',
-                  padding: '4px 12px',
-                  width: 'fit-content',
-                  '&:hover': {
-                    backgroundColor: '#d8e4fc'
-                  }
-                }}
-              >
-                Write a review
-              </Button>
+              isMobile ? (
+                <Button 
+                  variant="outlined" 
+                  onClick={handleAddReview}
+                  className="write-review-button"
+                  sx={{ 
+                    width: '40px',
+                    height: '40px',
+                    minWidth: '40px',
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    '&:hover': {
+                      backgroundColor: '#d8e4fc'
+                    }
+                  }}
+                >
+                  <span role="img" aria-label="write-review">✎</span>
+                </Button>
+              ) : (
+                <Button 
+                  variant="outlined" 
+                  onClick={handleAddReview}
+                  startIcon={<span>✎</span>}
+                  className="write-review-button"
+                  sx={{ 
+                    fontSize: '0.8rem',
+                    padding: '4px 12px',
+                    width: 'fit-content',
+                    '&:hover': {
+                      backgroundColor: '#d8e4fc'
+                    }
+                  }}
+                >
+                  <span className="button-text">Write a review</span>
+                </Button>
+              )
             )}
           </div>
           
