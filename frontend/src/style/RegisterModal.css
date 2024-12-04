@@ -1,12 +1,15 @@
+/* Styles for error messages */
 .error-message {
     color: red;
 }
 
+/* Styles for the modal body */
 .register-modal-body {
     display: flex;
     align-items: center;
 }
 
+/* Styles for the image */
 .register-image {
     width: 50%;
     height: auto;
@@ -14,11 +17,13 @@
     border-radius: 10px 0 0 10px;
 }
 
+/* Styles for the form  */
 .register-form {
     flex: 1;
     padding: 20px;
 }
 
+/* Styles for the modal content */
 .modal-content {
     background-color: #ECF1FE;
     margin: 10% auto;

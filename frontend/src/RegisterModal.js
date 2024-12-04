@@ -5,7 +5,9 @@ import SuccessModal from './component/SuccessModal';
 import './style/RegisterModal.css';
 import RegisterImage from './img/Register.PNG';
 
+// RegisterModal component definition
 const RegisterModal = ({ show, onClose }) => {
+  // State for form data
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -13,44 +15,52 @@ const RegisterModal = ({ show, onClose }) => {
     email: '',
     password: ''
   });
+  // State for loading status
   const [isLoading, setIsLoading] = useState(false);
+  // State for error messages
   const [errorMessage, setErrorMessage] = useState('');
+  // State for success status
   const [isSuccess, setIsSuccess] = useState(false);
 
+  // Handle input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-    setErrorMessage('');
+    setErrorMessage(''); // Clear error message on input change
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setErrorMessage('');
+    setIsLoading(true); // Show loading modal
+    setErrorMessage(''); // Clear previous error messages
     axios.post('http://127.0.0.1:8080/register/', formData)
       .then(response => {
-        setIsSuccess(true);
-        setIsLoading(false);
+        setIsSuccess(true); // Show success modal
+        setIsLoading(false); // Hide loading modal
       })
       .catch(error => {
         console.error('Registration error:', error);
         setErrorMessage(error.response.data.error || 'Registration failed. Please try again.');
-        setIsLoading(false);
+        setIsLoading(false); // Hide loading modal
       });
-    console.log(formData);
+    console.log(formData); // Log form data for debugging
   };
 
+  // Toggle body overflow to prevent background scrolling when modal is open
   const toggleBodyOverflow = (isModalOpen) => {
     document.body.style.overflow = isModalOpen ? 'hidden' : 'auto';
   };
 
+  // Effect to handle body overflow when modal visibility changes
   useEffect(() => {
     toggleBodyOverflow(show);
     return () => toggleBodyOverflow(false); // Reset overflow when component unmounts
   }, [show]);
 
+  // Return null if modal is not shown
   if (!show) return null;
 
   return (
