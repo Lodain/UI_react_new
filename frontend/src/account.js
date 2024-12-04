@@ -79,6 +79,21 @@ function Account() {
     };
   }, [error]);
 
+  useEffect(() => {
+    let timeoutId;
+    if (success) {
+      timeoutId = setTimeout(() => {
+        setSuccess('');
+      }, 5000);
+    }
+    
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [success]);
+
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     setError('');

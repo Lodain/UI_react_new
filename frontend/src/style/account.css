@@ -5,6 +5,13 @@
     border-radius: 4px;
     margin-bottom: 20px;
     border: 1px solid #c8e6c9;
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    width: 90%;
+    max-width: 600px;
   }
   
   .error-message {
@@ -14,6 +21,13 @@
     border-radius: 4px;
     margin-bottom: 20px;
     border: 1px solid #f5c6cb;
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    width: 90%;
+    max-width: 600px;
   }
   
   .button {
@@ -195,7 +209,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     width: 32px;
     height: 32px;
-    display: flex;
     justify-content: center;
     align-items: center;
     line-height: 1;
@@ -235,7 +248,7 @@
     }
   
     .account-menu-icon {
-      display: block;
+      display: flex;
     }
   
     .account-container {
