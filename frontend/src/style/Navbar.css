@@ -1,3 +1,4 @@
+/* Modal styles for displaying login/register modals */
 .modal {
   display: flex;
   justify-content: center;
@@ -9,9 +10,10 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
 }
 
+/* Styles for the content inside the modal */
 .modal-content {
   background-color: #ECF1FE;
   margin: 10% auto;
@@ -21,9 +23,10 @@
   width: 95% !important;
   max-width: 1000px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out; /* Fade-in animation */
 }
 
+/* Close button styles for modals */
 .close {
   color: #4A90E2;
   float: right;
@@ -40,6 +43,7 @@
   cursor: pointer;
 }
 
+/* Input styles for text, password, and email fields */
 input[type="text"],
 input[type="password"],
 input[type="email"] {
@@ -52,6 +56,7 @@ input[type="email"] {
   box-sizing: border-box;
 }
 
+/* Button styles */
 button {
   background-color: #4A90E2;
   color: white;
@@ -67,12 +72,13 @@ button:hover {
   background-color: #007bff;
 }
 
+/* Keyframe animation for fade-in effect */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-/* Add styles for the navbar */
+/* Navbar styles */
 nav.top-right-buttons {
   position: fixed;
   top: 0;
@@ -89,6 +95,7 @@ nav.top-right-buttons {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Styles for left and right button groups in the navbar */
 .left-buttons, .right-buttons {
   display: flex;
   align-items: center;
@@ -138,6 +145,7 @@ nav.top-right-buttons {
   color: white;
 }
 
+/* Navbar title styles */
 .navbar-title {
   font-family: 'Lobster', cursive;
   font-size: 1.5rem;
@@ -172,11 +180,13 @@ nav.top-right-buttons {
   white-space: nowrap;
 }
 
+/* Login modal body styles */
 .login-modal-body {
   display: flex;
   align-items: center;
 }
 
+/* Login image styles */
 .login-image {
   width: 50%;
   height: auto;
@@ -184,12 +194,13 @@ nav.top-right-buttons {
   border-radius: 10px 0 0 10px;
 }
 
+/* Login form styles */
 .login-form {
   flex: 1;
   padding: 20px;
 }
 
-/* Add styles for the menu icon */
+/* Menu icon styles for responsive design */
 .menu-icon {
   display: none;
   font-size: 28px;
@@ -204,11 +215,12 @@ nav.top-right-buttons {
   transform: rotate(90deg);
 }
 
+/* Navbar menu styles */
 .navbar-menu {
   display: none;
 }
 
-/* Responsive styles */
+/* Responsive styles for smaller screens */
 @media (max-width: 768px) {
   .left-buttons, .right-buttons {
     display: none;
@@ -263,7 +275,6 @@ nav.top-right-buttons {
   .navbar-menu button:hover {
     background-color: #244791;
   }
-
 }
 
 @media (max-width: 680px) {
