@@ -133,11 +133,11 @@ const Navbar = ({ user, setUser }) => {
             <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`} onClick={handleMenuClose}>Account</Link>
             <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`} onClick={handleMenuClose}>Borrow</Link>
             {user.staff && (
-              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`} onClick={handleMenuClose}>Librarian</Link>
+              <Link to="/librarian" className={`nav-link librarian ${isActive('/librarian') ? 'active' : ''}`} onClick={handleMenuClose}>Librarian</Link>
             )}
             {user.superuser && user.staff && (
               <a href="http://127.0.0.1:8080/admin/" 
-                 className="nav-link" 
+                 className={`nav-link admin ${isActive('/admin') ? 'active' : ''}`} 
                  target="_blank" 
                  rel="noopener noreferrer"
                  onClick={handleMenuClose}>
@@ -180,11 +180,11 @@ const Navbar = ({ user, setUser }) => {
             <Link to="/account" className={`nav-link ${isActive('/account') ? 'active' : ''}`} onClick={handleMenuClose}>Account</Link>
             <Link to="/borrow" className={`nav-link ${isActive('/borrow') ? 'active' : ''}`} onClick={handleMenuClose}>Borrow</Link>
             {user.staff && (
-              <Link to="/librarian" className={`nav-link ${isActive('/librarian') ? 'active' : ''}`} onClick={handleMenuClose}>Librarian</Link>
+              <Link to="/librarian" className={`nav-link librarian ${isActive('/librarian') ? 'active' : ''}`} onClick={handleMenuClose}>Librarian</Link>
             )}
             {user.superuser && user.staff && (
               <a href="http://127.0.0.1:8080/admin/" 
-                 className={`nav-link ${isActive('/admin') ? 'active' : ''}`} 
+                 className={`nav-link admin ${isActive('/admin') ? 'active' : ''}`} 
                  target="_blank" 
                  rel="noopener noreferrer"
                  onClick={handleMenuClose}>

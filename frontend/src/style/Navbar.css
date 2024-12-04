@@ -277,3 +277,10 @@ nav.top-right-buttons {
     display: none;
   }
 }
+
+@media (max-width: 600px) {
+  .navbar-menu .nav-link.admin,
+  .navbar-menu .nav-link.librarian {
+    display: none;
+  }
+}
