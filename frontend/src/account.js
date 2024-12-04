@@ -7,7 +7,9 @@ import LoadingModal from './component/LoadingModal';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
+/* Main Account component */
 function Account() {
+  // State variables for user data, UI states, and form data
   const [user, setUser] = useState(null);
   const [lendedBooks, setLendedBooks] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -29,18 +31,22 @@ function Account() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Function to toggle the sidebar visibility
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  // Function to close the sidebar
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
 
+  // Effect to scroll to top on component mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Effect to fetch user data and lists on component mount
   useEffect(() => {
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (storedUser) {
@@ -64,6 +70,7 @@ function Account() {
       });
   }, []);
 
+  // Effect to clear error messages after 5 seconds
   useEffect(() => {
     let timeoutId;
     if (error) {
@@ -79,6 +86,7 @@ function Account() {
     };
   }, [error]);
 
+  // Effect to clear success messages after 5 seconds
   useEffect(() => {
     let timeoutId;
     if (success) {
@@ -94,6 +102,7 @@ function Account() {
     };
   }, [success]);
 
+  // Function to handle password change form submission
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     setError('');
@@ -126,6 +135,7 @@ function Account() {
     }
   };
 
+  // Function to handle account deletion form submission
   const handleDeleteAccount = async (e) => {
     e.preventDefault();
     setError('');
@@ -151,6 +161,7 @@ function Account() {
     }
   };
 
+  // Function to render content based on the active tab
   const renderContent = () => {
     switch(activeTab) {
       case 'account':
@@ -446,27 +457,38 @@ function Account() {
     }
   };
 
+  // Main return statement for rendering the component
+  // Main component return statement
   return (
     <div>
+      {/* Loading spinner modal component */}
       <LoadingModal show={isLoading} />
+
+      {/* Mobile menu toggle button that shows/hides sidebar */}
       <div className={`account-menu-icon ${isSidebarOpen ? 'open' : ''}`} onClick={toggleSidebar}>
         <span className="icon">{isSidebarOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}</span>
       </div>
+
+      {/* Success message banner */}
       {success && (
         <div className="success-message">
           {success}
         </div>
       )}
 
+      {/* Error message banner */}
       {error && (
         <div className="error-message">
           {error}
         </div>
       )}
 
+      {/* Main account page container */}
       <div className={`account-container ${isSidebarOpen ? 'open' : ''}`}>
+        {/* Sidebar navigation menu */}
         <div className={`account-sidebar ${isSidebarOpen ? 'open' : ''}`}>
           <div className="account-menu">
+            {/* Account info tab button */}
             <button 
               className={`menu-button ${activeTab === 'account' ? 'active' : ''}`}
               onClick={() => {
@@ -476,6 +498,8 @@ function Account() {
             >
               Account Information
             </button>
+
+            {/* Borrowed books tab button */}
             <button 
               className={`menu-button ${activeTab === 'borrowed' ? 'active' : ''}`}
               onClick={() => {
@@ -485,6 +509,8 @@ function Account() {
             >
               Borrowed Books
             </button>
+
+            {/* Wishlist tab button */}
             <button 
               className={`menu-button ${activeTab === 'wishlist' ? 'active' : ''}`}
               onClick={() => {
@@ -495,16 +521,21 @@ function Account() {
               Wishlist
             </button>
           </div>
+
+          {/* Decorative account image in sidebar */}
           <img src={AccountImage} alt="Account" style={{ width: '100%', borderRadius: '8px', marginBottom: '20px' }} />
         </div>
 
+        {/* Main content area */}
         <div className="account-content">
           <div className="content-container">
+            {/* Renders content based on selected tab */}
             {renderContent()}
           </div>
         </div>
       </div>
 
+      {/* Account deletion success modal */}
       {showDeleteSuccessModal && (
         <div className="modal">
           <div className="modal-content">
@@ -512,6 +543,7 @@ function Account() {
             <p>Your account has been permanently deleted.</p>
             <button
               onClick={() => {
+                // Clear session and redirect to home page
                 sessionStorage.clear();
                 window.location.href = '/';
               }}
