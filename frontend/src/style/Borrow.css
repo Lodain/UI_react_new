@@ -1,3 +1,4 @@
+/* Styles for the book list container */
 .book-list {
   opacity: 0;
   transform: translateY(20px);
@@ -5,11 +6,13 @@
   padding: 20px;
 }
 
+/* Visible state for the book list */
 .book-list.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
+/* Styles for the search input field */
 .search-input {
   width: 100%;
   max-width: 400px;
@@ -19,6 +22,7 @@
   border-radius: 4px;
 }
 
+/* Container for each book card */
 .card-container {
   display: inline-block;
   width: 300px;
@@ -26,6 +30,7 @@
   vertical-align: top;
 }
 
+/* Transition effect for card media on hover */
 .card-media {
   transition: transform 0.2s;
 }
@@ -34,12 +39,14 @@
   transform: scale(1.05);
 }
 
+/* Styles for the card title */
 .card-title {
   font-size: 0.9rem !important;
   line-height: 1.2 !important;
   margin-bottom: 4px !important;
 }
 
+/* Styles for the borrow button */
 .borrow-button {
   width: 100%;
   padding: 6px;
@@ -55,6 +62,7 @@
   background-color: #0EBAB5;
 }
 
+/* Disabled state for the borrow button */
 .borrow-button.disabled {
   background-color: #c8c8c8;
   cursor: not-allowed;
@@ -64,6 +72,7 @@
   background-color: #c8c8c8;
 }
 
+/* Styles for the modal overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -77,6 +86,7 @@
   z-index: 1000;
 }
 
+/* Styles for the modal content */
 .modal-content {
   background-color: white;
   padding: 20px;
@@ -87,6 +97,7 @@
   animation: modalAppear 0.3s ease;
 }
 
+/* Animation for modal appearance */
 @keyframes modalAppear {
   from {
     opacity: 0;
@@ -98,6 +109,7 @@
   }
 }
 
+/* Styles for the modal header */
 .modal-header {
   margin-bottom: 20px;
 }
@@ -107,6 +119,7 @@
   margin: 0;
 }
 
+/* Styles for the modal body */
 .modal-body {
   margin-bottom: 20px;
 }
@@ -122,12 +135,14 @@
   margin: 10px 0;
 }
 
+/* Styles for the modal footer */
 .modal-footer {
   display: flex;
   justify-content: center;
   gap: 10px;
 }
 
+/* Styles for modal buttons */
 .modal-close-button,
 .modal-account-button {
   padding: 8px 16px;
@@ -155,6 +170,7 @@
   background-color: #0EBAB5;
 }
 
+/* Styles for card genres */
 .card-genres {
   font-size: 0.8rem;
   color: #e0e0e0;
@@ -162,6 +178,7 @@
   font-style: italic;
 }
 
+/* Responsive styles for small screens */
 @media (max-width: 480px) {
   .card-container {
     width: 100%;

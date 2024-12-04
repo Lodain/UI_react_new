@@ -5,6 +5,7 @@ import { Card, CardMedia, CardContent, Typography, Skeleton } from '@mui/materia
 import LoadingModal from './component/LoadingModal';
 import { useNavigate } from 'react-router-dom';
 
+// Modal component to show success message when a book is borrowed
 const SuccessModal = ({ book, onClose, onGoToAccount }) => {
   if (!book) return null;
   
@@ -42,19 +43,22 @@ const SuccessModal = ({ book, onClose, onGoToAccount }) => {
   );
 };
 
+// Main component for borrowing books
 const Borrow = () => {
-  const [query, setQuery] = useState('');
-  const [books, setBooks] = useState([]);
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [borrowedBook, setBorrowedBook] = useState(null);
-  const [isBorrowing, setIsBorrowing] = useState(false);
-  const navigate = useNavigate();
+  const [query, setQuery] = useState(''); // State for search query
+  const [books, setBooks] = useState([]); // State for list of books
+  const [message, setMessage] = useState(''); // State for messages
+  const [isLoading, setIsLoading] = useState(false); // State for loading status
+  const [borrowedBook, setBorrowedBook] = useState(null); // State for borrowed book
+  const [isBorrowing, setIsBorrowing] = useState(false); // State for borrowing status
+  const navigate = useNavigate(); // Hook for navigation
 
+  // Effect to scroll to top on component mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  // Function to search books based on query
   const searchBooks = useCallback(() => {
     axiosInstance.get(`borrow_book_api?query=${query}`)
       .then(response => {
@@ -68,6 +72,7 @@ const Borrow = () => {
       });
   }, [query]);
 
+  // Effect to handle debounced search
   React.useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (query) {
@@ -81,6 +86,7 @@ const Borrow = () => {
     return () => clearTimeout(delayDebounce);
   }, [query, searchBooks]);
 
+  // Component to show loading skeletons
   const LoadingSkeleton = () => (
     <div className="card-container">
       <Card sx={{ 
@@ -131,6 +137,7 @@ const Borrow = () => {
     </div>
   );
 
+  // Function to handle borrowing a book
   const borrowBook = (isbn) => {
     const book = books.find(b => b.isbn === isbn);
     setIsBorrowing(true);
@@ -147,11 +154,13 @@ const Borrow = () => {
       });
   };
 
+  // Function to close the success modal
   const handleCloseModal = () => {
     setBorrowedBook(null);
     searchBooks();
   };
 
+  // Function to navigate to the account page
   const handleGoToAccount = () => {
     navigate('/account');
   };
@@ -228,12 +237,12 @@ const Borrow = () => {
                       mb: 0.5
                     }}
                   >
-                    Available: {book.copies - book.lended} of {book.copies}
+                    Available: {book.copies - book.lended} of {book.copies} {/* Display available copies */}
                   </Typography>
                   <button 
                     onClick={() => borrowBook(book.isbn)}
                     className={`borrow-button ${book.copies - book.lended === 0 ? 'disabled' : ''}`}
-                    disabled={book.copies - book.lended === 0}
+                    disabled={book.copies - book.lended === 0} //disable borrow button if no copies are available
                   >
                     Borrow this book
                   </button>
