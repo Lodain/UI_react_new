@@ -1,3 +1,4 @@
+/* Main layout container using grid for structure */
 .book-container {
   max-width: 1400px;
   margin: 20px auto;
@@ -8,29 +9,31 @@
   padding-top: 4rem;
 }
 
+/* Sticky positioning for the book cover */
 .book-cover-section {
   position: sticky;
   top: 20px;
   align-self: start;
 }
 
+/* Styling for the book cover image */
 .book-cover-section img {
   width: 100%;
   max-width: 300px;
-  height: auto;
   min-height: 400px;
   object-fit: contain;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* Styling for the book details area */
 .book-details-section {
   background: white;
   padding: 40px;
   min-height: 600px;
-  width: 100%;
   max-width: 1000px;
 }
 
+/* Layout for action buttons */
 .book-actions {
   margin: 20px 0;
   display: flex;
@@ -41,6 +44,7 @@
   margin-top: 30px;
 }
 
+/* Styling for the review form */
 .review-form {
   background: #f9f9f9;
   border: 1px solid #eee;
@@ -62,6 +66,7 @@
   resize: none;
 }
 
+/* Styling for individual review cards */
 .review-card {
   border-bottom: 1px solid #eee;
   padding: 15px 0;
@@ -100,6 +105,7 @@
   margin-bottom: 10px;
 }
 
+/* Layout for genre tags */
 .genres-container {
   display: flex;
   flex-wrap: wrap;
@@ -124,6 +130,7 @@
   color: #aaa; /* Placeholder color */
 }
 
+/* Responsive adjustments for medium screens */
 @media (max-width: 1049px) {
   .book-container {
     grid-template-columns: 1fr;
@@ -159,6 +166,7 @@
   }
 }
 
+/* Responsive adjustments for small screens */
 @media (max-width: 480px) {
   .book-container {
     padding: 5px 10px;
@@ -200,6 +208,7 @@
   }
 
   .write-review-button {
+    /* Compact button styling for small screens */
     width: 40px;
     height: 40px;
     padding: 0;

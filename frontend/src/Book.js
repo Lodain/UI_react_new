@@ -7,77 +7,77 @@ import { useParams } from 'react-router-dom';
 
 function Book() {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); // Scroll to top when component mounts
   }, []);
 
-  const { isbn } = useParams();
-  const [book, setBook] = useState(null);
-  const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [newReview, setNewReview] = useState({ rating: 0, content: '' });
-  const [isLoading, setIsLoading] = useState(false);
+  const { isbn } = useParams(); // Get ISBN from URL parameters
+  const [book, setBook] = useState(null); // State to store book details
+  const [error, setError] = useState(null); // State to store any errors
+  const [user, setUser] = useState(null); // State to store user information
+  const [showReviewForm, setShowReviewForm] = useState(false); // State to toggle review form visibility
+  const [newReview, setNewReview] = useState({ rating: 0, content: '' }); // State for new review data
+  const [isLoading, setIsLoading] = useState(false); // State to manage loading state
   const [responseModal, setResponseModal] = useState({
     open: false,
     message: '',
     isSuccess: false
-  });
-  const [isPageLoading, setIsPageLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
+  }); // State for response modal
+  const [isPageLoading, setIsPageLoading] = useState(true); // State for page loading
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480); // State to check if the view is mobile
 
   useEffect(() => {
-    // Add user check
+    // Check for stored user in session storage
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (storedUser) {
       setUser(storedUser);
     }
 
-    // Extract ISBN from URL path
+    // Fetch book details using the ISBN
     fetchBookDetails(isbn);
   }, [isbn]);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 480);
+      setIsMobile(window.innerWidth <= 480); // Update mobile state on window resize
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize); // Add resize event listener
+    return () => window.removeEventListener('resize', handleResize); // Clean up event listener
   }, []);
 
   const fetchBookDetails = (isbn) => {
     if (isbn) {
-      setIsPageLoading(true);
+      setIsPageLoading(true); // Set page loading state
       axiosInstance.get(`/book/${isbn}/`)
         .then(response => {
-          setBook(response.data);
+          setBook(response.data); // Set book data from response
         })
         .catch(error => {
-          setError(error.response?.data?.error || 'An error occurred');
+          setError(error.response?.data?.error || 'An error occurred'); // Set error message
         })
         .finally(() => {
-          setIsPageLoading(false);
+          setIsPageLoading(false); // Reset page loading state
         });
     }
   };
 
   const handleBorrow = () => {
     if (book) {
-      setIsLoading(true);
+      setIsLoading(true); // Set loading state
       axiosInstance.post('borrow_book_api', { book_id: book.isbn })
         .then(response => {
           setResponseModal({
             open: true,
             message: response.data.message,
             isSuccess: true
-          });
+          }); // Show success message
           // Reload book data to update available copies
           axiosInstance.get(`/book/${book.isbn}/`)
             .then(response => {
-              setBook(response.data);
+              setBook(response.data); // Update book data
             })
             .catch(error => {
-              console.error('Error refreshing book data:', error);
+              console.error('Error refreshing book data:', error); // Log error
             });
         })
         .catch(error => {
@@ -85,16 +85,16 @@ function Book() {
             open: true,
             message: error.response?.data?.error || 'Error borrowing book',
             isSuccess: false
-          });
+          }); // Show error message
         })
         .finally(() => {
-          setIsLoading(false);
+          setIsLoading(false); // Reset loading state
         });
     }
   };
 
   const handleCloseResponseModal = () => {
-    setResponseModal(prev => ({ ...prev, open: false }));
+    setResponseModal(prev => ({ ...prev, open: false })); // Close response modal
   };
 
   const handleWishlist = () => {
@@ -104,16 +104,16 @@ function Book() {
           setBook({
             ...book,
             in_wishlist: !book.in_wishlist
-          });
+          }); // Toggle wishlist status
         })
         .catch(error => {
-          alert(error.response?.data?.error || 'Error updating wishlist');
+          alert(error.response?.data?.error || 'Error updating wishlist'); // Show error alert
         });
     }
   };
 
   const handleAddReview = () => {
-    setShowReviewForm(true);
+    setShowReviewForm(true); // Show review form
   };
 
   const handleReviewSubmit = () => {
@@ -124,12 +124,12 @@ function Book() {
             ...book,
             reviews: [...book.reviews, response.data],
             average_rating: response.data.average_rating
-          });
-          setShowReviewForm(false);
-          setNewReview({ rating: 0, content: '' });
+          }); // Add new review and update average rating
+          setShowReviewForm(false); // Hide review form
+          setNewReview({ rating: 0, content: '' }); // Reset new review state
         })
         .catch(error => {
-          alert(error.response?.data?.error || 'Error adding review');
+          alert(error.response?.data?.error || 'Error adding review'); // Show error alert
         });
     }
   };
@@ -142,21 +142,21 @@ function Book() {
             ...book,
             reviews: book.reviews.filter(review => review.id !== reviewId),
             average_rating: response.data.average_rating
-          });
+          }); // Remove review and update average rating
         })
         .catch(error => {
-          alert(error.response?.data?.error || 'Error deleting review');
+          alert(error.response?.data?.error || 'Error deleting review'); // Show error alert
         });
     }
   };
 
-  if (error) return <div>Error: {error}</div>;
-  if (isPageLoading) return <LoadingModal show={true} />;
-  if (!book) return null;
+  if (error) return <div>Error: {error}</div>; // Display error message
+  if (isPageLoading) return <LoadingModal show={true} />; // Show loading modal
+  if (!book) return null; // Return null if no book data
 
   return (
     <div className="book-container">
-      <LoadingModal show={isLoading} />
+      <LoadingModal show={isLoading} /> {/* Show loading modal if loading */}
 
       <Modal
         open={responseModal.open}
@@ -183,10 +183,10 @@ function Book() {
               mb: 2
             }}
           >
-            {responseModal.isSuccess ? 'Success!' : 'Error'}
+            {responseModal.isSuccess ? 'Success!' : 'Error'} {/* Display success or error */}
           </Typography>
           <Typography sx={{ mb: 2 }}>
-            {responseModal.message}
+            {responseModal.message} {/* Display response message */}
           </Typography>
           <Button 
             onClick={handleCloseResponseModal}
@@ -196,7 +196,7 @@ function Book() {
               '&:hover': { backgroundColor: '#2c3c59' }
             }}
           >
-            Close
+            Close {/* Close button */}
           </Button>
         </Box>
       </Modal>
@@ -206,7 +206,7 @@ function Book() {
           <img
             src={`http://127.0.0.1:8080${book.cover}`}
             alt={book.title}
-          />
+          /> // Display book cover image
         )}
         
         {user && (
@@ -222,9 +222,9 @@ function Book() {
                 fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.9rem' }  // Further reduced font size
               }}
               onClick={handleBorrow}
-              disabled={book.copies <= book.lended}
+              disabled={book.copies <= book.lended} // Disable if no copies available
             >
-              Borrow
+              Borrow {/* Borrow button */}
             </Button>
             <Button 
               variant="outlined"
@@ -236,12 +236,12 @@ function Book() {
                   borderColor: '#2c3c59',
                   backgroundColor: 'rgba(57, 78, 117, 0.04)'
                 },
-                height: { xs: '32px', sm: '36px', md: '52px' },  // Further reduced height
-                fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.9rem' }  // Further reduced font size
+                height: { xs: '32px', sm: '36px', md: '52px' },  
+                fontSize: { xs: '0.6rem', sm: '0.7rem', md: '0.9rem' }  
               }}
               onClick={handleWishlist}
             >
-              {book.in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              {book.in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist'} {/* Wishlist toggle */}
             </Button>
           </div>
         )}
@@ -249,22 +249,22 @@ function Book() {
 
       <div className="book-details-section">
         <Typography variant="h4" gutterBottom>
-          {book.title}
+          {book.title} {/* Display book title */}
         </Typography>
         <Typography variant="h6" color="text.secondary" gutterBottom>
-          by {book.authors.join(', ')}
+          by {book.authors.join(', ')} {/* Display book authors */}
         </Typography>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-          <Rating value={book.average_rating} readOnly precision={0.5} />
+          <Rating value={book.average_rating} readOnly precision={0.5} /> {/* Display average rating */}
           <Typography variant="body2" color="text.secondary">
-            {book.average_rating.toFixed(1)} · {book.reviews.length} ratings
+            {book.average_rating.toFixed(1)} · {book.reviews.length} ratings {/* Display rating count */}
           </Typography>
         </div>
 
         {/* Book details */}
         <Typography variant="body2" color="text.secondary" paragraph>
-          ISBN: {book.isbn} · Published {book.year} · {book.copies - book.lended} available copies
+          ISBN: {book.isbn} · Published {book.year} · {book.copies - book.lended} available copies {/* Display book details */}
         </Typography>
 
         {/* Add genres display */}
@@ -272,7 +272,7 @@ function Book() {
           <div className="genres-container">
             {book.genres.map((genre, index) => (
               <span key={index} className="genre-tag">
-                {genre}
+                {genre} {/* Display genre tags */}
               </span>
             ))}
           </div>
@@ -281,7 +281,7 @@ function Book() {
         <div className="review-section">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <Typography variant="h6">
-              Reviews
+              Reviews {/* Reviews section header */}
             </Typography>
             
             {user && !book.reviews.some(review => review.user === user.username) && !showReviewForm && (
@@ -303,7 +303,7 @@ function Book() {
                     }
                   }}
                 >
-                  <span role="img" aria-label="write-review">✎</span>
+                  <span role="img" aria-label="write-review">✎</span> {/* Mobile write review button */}
                 </Button>
               ) : (
                 <Button 
@@ -320,7 +320,7 @@ function Book() {
                     }
                   }}
                 >
-                  <span className="button-text">Write a review</span>
+                  <span className="button-text">Write a review</span> {/* Desktop write review button */}
                 </Button>
               )
             )}
@@ -351,7 +351,7 @@ function Book() {
                   }
                 }}
               >
-                Post Review
+                Post Review {/* Submit review button */}
               </Button>
             </div>
           )}
@@ -361,13 +361,13 @@ function Book() {
             <div key={index} className="review-card">
               <div className="review-header">
                 <Typography variant="subtitle2" fontWeight="bold">
-                  {review.user}
+                  {review.user} {/* Display reviewer's username */}
                 </Typography>
-                <Rating value={review.rating} readOnly size="small" />
+                <Rating value={review.rating} readOnly size="small" /> {/* Display review rating */}
               </div>
               <div className="review-content-wrapper">
                 <Typography className="review-content">
-                  {review.content}
+                  {review.content} {/* Display review content */}
                 </Typography>
                 {user && user.username === review.user && (
                   <Button 
@@ -376,7 +376,7 @@ function Book() {
                     onClick={() => handleDeleteReview(review.id)}
                     className="delete-button"
                   >
-                    Delete
+                    Delete {/* Delete review button */}
                   </Button>
                 )}
               </div>
