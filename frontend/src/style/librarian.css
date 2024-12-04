@@ -49,20 +49,6 @@
   box-shadow: 0 0 0 2px rgba(57, 78, 117, 0.2);
 }
 
-.search-button {
-  padding: 0.75rem 1.5rem;
-  background-color: #394e75;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.search-button:hover {
-  background-color: #2c3c59;
-}
-
 .table-container {
   overflow-x: auto;
   margin-bottom: 2rem;
