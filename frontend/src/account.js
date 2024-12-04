@@ -4,6 +4,8 @@ import './style/account.css';
 import AccountImage from './img/Account.png';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import LoadingModal from './component/LoadingModal';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 function Account() {
   const [user, setUser] = useState(null);
@@ -25,19 +27,26 @@ function Account() {
   const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
   const [activeTab, setActiveTab] = useState('account');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    // Fetch user information from session storage
     const storedUser = JSON.parse(sessionStorage.getItem('user'));
     if (storedUser) {
       setUser(storedUser);
     }
 
-    // Fetch lended books
     axiosInstance.get('/lended-books/')
       .then(res => {
         setLendedBooks(res.data);
@@ -46,7 +55,6 @@ function Account() {
         console.error('Error fetching lended books:', err);
       });
 
-    // Fetch wishlist
     axiosInstance.get('/wishlist/')
       .then(res => {
         setWishlist(res.data);
@@ -61,16 +69,15 @@ function Account() {
     if (error) {
       timeoutId = setTimeout(() => {
         setError('');
-      }, 5000); // 5 seconds
+      }, 5000);
     }
     
-    // Cleanup function to clear timeout if component unmounts or error changes
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
     };
-  }, [error]); // Only run effect when error changes
+  }, [error]);
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -145,7 +152,10 @@ function Account() {
 
             <div>
               <button 
-                onClick={() => setShowPasswordForm(!showPasswordForm)}
+                onClick={() => {
+                  setShowPasswordForm(!showPasswordForm);
+                  closeSidebar();
+                }}
                 className={`button change-password-button`}
               >
                 {showPasswordForm ? 'Cancel' : 'Change Password'}
@@ -204,7 +214,10 @@ function Account() {
             {!showPasswordForm && (
               <div>
                 <button 
-                  onClick={() => setShowDeleteForm(!showDeleteForm)}
+                  onClick={() => {
+                    setShowDeleteForm(!showDeleteForm);
+                    closeSidebar();
+                  }}
                   className={`button delete-account-button`}
                 >
                   {showDeleteForm ? 'Cancel' : 'Delete Account'}
@@ -421,6 +434,9 @@ function Account() {
   return (
     <div>
       <LoadingModal show={isLoading} />
+      <div className={`account-menu-icon ${isSidebarOpen ? 'open' : ''}`} onClick={toggleSidebar}>
+        <span className="icon">{isSidebarOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}</span>
+      </div>
       {success && (
         <div className="success-message">
           {success}
@@ -433,24 +449,33 @@ function Account() {
         </div>
       )}
 
-      <div className="account-container">
-        <div className="account-sidebar">
+      <div className={`account-container ${isSidebarOpen ? 'open' : ''}`}>
+        <div className={`account-sidebar ${isSidebarOpen ? 'open' : ''}`}>
           <div className="account-menu">
             <button 
               className={`menu-button ${activeTab === 'account' ? 'active' : ''}`}
-              onClick={() => setActiveTab('account')}
+              onClick={() => {
+                setActiveTab('account');
+                closeSidebar();
+              }}
             >
               Account Information
             </button>
             <button 
               className={`menu-button ${activeTab === 'borrowed' ? 'active' : ''}`}
-              onClick={() => setActiveTab('borrowed')}
+              onClick={() => {
+                setActiveTab('borrowed');
+                closeSidebar();
+              }}
             >
               Borrowed Books
             </button>
             <button 
               className={`menu-button ${activeTab === 'wishlist' ? 'active' : ''}`}
-              onClick={() => setActiveTab('wishlist')}
+              onClick={() => {
+                setActiveTab('wishlist');
+                closeSidebar();
+              }}
             >
               Wishlist
             </button>
