@@ -84,6 +84,7 @@
     gap: 20px;
     min-height: calc(100vh - 100px); /* Adjust based on your header/footer */
     padding: 20px;
+    padding-top: 4rem;
   }
   
   .account-sidebar {
