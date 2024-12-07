@@ -22,3 +22,6 @@ djangorestframework==3.14.0
 
 #For Cross-Origin Resource Sharing
 django-cors-headers==4.3.1
+
+#For web tokens
+djangorestframework-simplejwt==5.3.0
