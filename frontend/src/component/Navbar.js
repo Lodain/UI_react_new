@@ -1,9 +1,9 @@
-import './style/Navbar.css';
+import '../style/Navbar.css';
 import React, { useState, useEffect } from 'react';
-import axiosInstance from './axiosConfig';
+import axiosInstance from '../axiosConfig';
 import RegisterModal from './RegisterModal';
-import LoadingModal from './component/LoadingModal';
-import LoginImage from './img/Login.PNG';
+import LoadingModal from './LoadingModal';
+import LoginImage from '../img/Login.PNG';
 import { Link, useLocation } from 'react-router-dom';
 
 // Navbar component to handle navigation and user authentication

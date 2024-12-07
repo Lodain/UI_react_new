@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from './axiosConfig';
-import './style/account.css';
-import AccountImage from './img/Account.png';
+import axiosInstance from '../axiosConfig';
+import '../style/account.css';
+import AccountImage from '../img/Account.png';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
-import LoadingModal from './component/LoadingModal';
+import LoadingModal from './LoadingModal';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 

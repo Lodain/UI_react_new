@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import LoadingModal from './component/LoadingModal';
-import SuccessModal from './component/SuccessModal';
-import './style/RegisterModal.css';
-import RegisterImage from './img/Register.PNG';
+import LoadingModal from './LoadingModal';
+import SuccessModal from './SuccessModal';
+import '../style/RegisterModal.css';
+import RegisterImage from '../img/Register.PNG';
 
 // RegisterModal component definition
 const RegisterModal = ({ show, onClose }) => {

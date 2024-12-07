@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import axiosInstance from './axiosConfig';
-import './style/Borrow.css';
+import axiosInstance from '../axiosConfig';
+import '../style/Borrow.css';
 import { Card, CardMedia, CardContent, Typography, Skeleton } from '@mui/material';
-import LoadingModal from './component/LoadingModal';
+import LoadingModal from './LoadingModal';
 import { useNavigate } from 'react-router-dom';
 
 // Modal component to show success message when a book is borrowed

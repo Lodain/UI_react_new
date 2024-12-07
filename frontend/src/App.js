@@ -7,14 +7,14 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 // Import styles
 import './App.css';
 // Import components
-import Navbar from './Navbar';
-import Home from './Home';
-import Account from './account';
-import Book from './Book';
-import Borrow from './Borrow';
-import Librarian from './librarian';
-import EmailVerification from './EmailVerification';
-import ResetPassword from './ResetPassword';
+import Navbar from './component/Navbar';
+import Home from './component/Home';
+import Account from './component/account';
+import Book from './component/Book';
+import Borrow from './component/Borrow';
+import Librarian from './component/librarian';
+import EmailVerification from './component/EmailVerification';
+import ResetPassword from './component/ResetPassword';
 
 function App() {
   // State to manage the current user, initialized from session storage

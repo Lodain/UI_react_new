@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from './axiosConfig';
+import axiosInstance from '../axiosConfig';
 import { Typography, Rating, Button, Modal, Box } from '@mui/material';
-import LoadingModal from './component/LoadingModal';
-import './style/Book.css';
+import LoadingModal from './LoadingModal';
+import '../style/Book.css';
 import { useParams } from 'react-router-dom';
 
 function Book() {

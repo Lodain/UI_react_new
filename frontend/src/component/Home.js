@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardMedia, Typography } from '@mui/material';
-import home from './img/home.png';
-import placeholder from './img/Image-not-found.png';
-import axiosInstance from './axiosConfig';
+import home from '../img/home.png';
+import placeholder from '../img/Image-not-found.png';
+import axiosInstance from '../axiosConfig';
 import axios from 'axios';
-import './App.css';
+import '../App.css';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {

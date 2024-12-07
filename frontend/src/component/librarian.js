@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from './axiosConfig';
-import './style/librarian.css';
-import LoadingModal from './component/LoadingModal';
+import axiosInstance from '../axiosConfig';
+import '../style/librarian.css';
+import LoadingModal from './LoadingModal';
 
 function Librarian() {
   // State variables to manage the component's data and UI states

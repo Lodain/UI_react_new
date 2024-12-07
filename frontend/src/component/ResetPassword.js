@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './style/ResetPassword.css';
+import '../style/ResetPassword.css';
 
 function ResetPassword() {
   // Extracting uid and token from URL parameters
